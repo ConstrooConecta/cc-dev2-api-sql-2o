@@ -6,9 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    Optional<Usuario> findById(Long usuarioId);
-    List<Usuario> findByUuid(String uuid);
+public interface UsuarioRepository extends JpaRepository<Usuario, String> {
+    Optional<Usuario> findById(String uuid);
     List<Usuario> findByNomeCompletoLikeIgnoreCase(String nomeCompleto);
     List<Usuario> findByNomeUsuarioLikeIgnoreCase(String nomeUsuario);
     List<Usuario> findByCpf(String cpf);

@@ -8,6 +8,7 @@ import java.util.List;
 
 @Service
 public class UsuarioService {
+
     private final UsuarioRepository usuarioRepository;
 
     public UsuarioService(UsuarioRepository usuarioRepository) { this.usuarioRepository = usuarioRepository; }
@@ -17,19 +18,18 @@ public class UsuarioService {
     @Transactional
     public Usuario saveUsers( Usuario usuario ) { return usuarioRepository.save( usuario ); }
 
+    public Usuario findUsersByUuid ( String uuid ) {
+        return usuarioRepository.findById(uuid).orElseThrow(() ->
+                new RuntimeException("Cliente não encontrado."));
+    }
+
     @Transactional
-    public Usuario deleteUser ( Long usuarioId ) {
-        Usuario usuario = findUsersByUsuarioId(usuarioId);
+    public Usuario deleteUser ( String uuid ) {
+        Usuario usuario = findUsersByUuid(uuid);
         usuarioRepository.delete(usuario);
         return usuario;
     }
 
-    public Usuario findUsersByUsuarioId ( Long usuarioId ) {
-        return usuarioRepository.findById(usuarioId).orElseThrow(() ->
-                new RuntimeException("Cliente não encontrado."));
-    }
-
-    public List<Usuario> findByUuid ( String uuid ) { return usuarioRepository.findByUuid(uuid); }
     public List<Usuario> findByNomeCompleto ( String nomeCompleto ) { return usuarioRepository.findByNomeCompletoLikeIgnoreCase(nomeCompleto); }
     public List<Usuario> findByNomeUsuario ( String nomeUsuario ) { return usuarioRepository.findByNomeUsuarioLikeIgnoreCase(nomeUsuario); }
     public List<Usuario> findByCpf ( String cpf ) { return usuarioRepository.findByCpf(cpf); }
