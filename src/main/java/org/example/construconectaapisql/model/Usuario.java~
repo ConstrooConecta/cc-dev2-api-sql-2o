@@ -1,6 +1,5 @@
 package org.example.construconectaapisql.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -48,39 +47,30 @@ public class Usuario {
     @Temporal(TemporalType.DATE)
     private Date dataNascimento;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<EnderecoUsuario> enderecos;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<PlanoUsuario> planosUsuarios;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<PagamentoPlano> pagamentosPlanos;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<Produto> produtos;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<Servico> servicos;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<Carrinho> carrinhos;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<Pedido> pedidos;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<PagamentoProduto> pagamentosProdutos;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<PagamentoServico> pagamentosServicos;
 
