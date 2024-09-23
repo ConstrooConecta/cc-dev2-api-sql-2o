@@ -247,6 +247,15 @@ public class UsuarioController {
     }
 
     @GetMapping("/searchByGenero/{genero}")
+    @Operation(summary = "Search users by gender", description = "Returns a list of users with the specified gender")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Users found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Usuario.class))),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "text/plain"))
+    })
     public ResponseEntity<?> searchByGenero ( @PathVariable Integer genero ) {
         List<Usuario> lUsuario = usuarioService.findByGenero(genero);
         if (!lUsuario.isEmpty()) {
