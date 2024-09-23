@@ -1,5 +1,6 @@
 package org.example.construconectaapisql.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,9 +12,9 @@ import java.util.Set;
 public class Usuario {
 
     @Id
-    @Column(name = "uuid", nullable = false, unique = true)
-    @Size(min = 36, max = 36, message = "O UUID inválido")
-    private String uuid;
+    @Column(name = "uid", nullable = false, unique = true)
+    @Size(min = 36, max = 36, message = "O UID inválido")
+    private String uid;
 
     @CPF(message = "CPF Inválido!")
     @Column(nullable = false, unique = true)
@@ -47,30 +48,39 @@ public class Usuario {
     @Temporal(TemporalType.DATE)
     private Date dataNascimento;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<EnderecoUsuario> enderecos;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<PlanoUsuario> planosUsuarios;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<PagamentoPlano> pagamentosPlanos;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<Produto> produtos;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<Servico> servicos;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<Carrinho> carrinhos;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<Pedido> pedidos;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<PagamentoProduto> pagamentosProdutos;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private Set<PagamentoServico> pagamentosServicos;
 
@@ -78,7 +88,7 @@ public class Usuario {
     public Usuario() {}
 
     public Usuario(
-            String uuid,
+            String uid,
             String cpf,
             String nomeCompleto,
             String nomeUsuario,
@@ -88,7 +98,7 @@ public class Usuario {
             Integer genero,
             Date dataNascimento
     ) {
-        this.uuid = uuid;
+        this.uid = uid;
         this.cpf = cpf;
         this.nomeCompleto = nomeCompleto;
         this.nomeUsuario = nomeUsuario;
@@ -99,9 +109,9 @@ public class Usuario {
         this.dataNascimento = dataNascimento;
     }
 
-    public String getUuid() { return uuid; }
+    public String getUuid() { return uid; }
 
-    public void setUuid(String uuid) { this.uuid = uuid; }
+    public void setUuid(String uid) { this.uid = uid; }
 
     public String getCpf() {
         return cpf;
@@ -242,7 +252,7 @@ public class Usuario {
     @Override
     public String toString() {
         return "Usuario{" +
-                "uuid='" + uuid + '\'' +
+                "uid='" + uid + '\'' +
                 ", cpf='" + cpf + '\'' +
                 ", nomeCompleto='" + nomeCompleto + '\'' +
                 ", nomeUsuario='" + nomeUsuario + '\'' +

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, String> {
-    Optional<Usuario> findById(String uuid);
+    Optional<Usuario> findById(String uid);
     List<Usuario> findByNomeCompletoLikeIgnoreCase(String nomeCompleto);
     List<Usuario> findByNomeUsuarioLikeIgnoreCase(String nomeUsuario);
     List<Usuario> findByCpf(String cpf);
