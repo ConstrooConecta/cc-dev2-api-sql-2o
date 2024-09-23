@@ -83,8 +83,8 @@ public class UsuarioController {
 
     }
 
-    @DeleteMapping("/drop/{uuid}")
-    @Operation(summary = "Delete a user", description = "Deletes the user with the specified UUID")
+    @DeleteMapping("/drop/{uid}")
+    @Operation(summary = "Delete a user", description = "Deletes the user with the specified UID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User deleted successfully",
                     content = @Content(mediaType = "text/plain")),
@@ -93,13 +93,13 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> dropUserByUsuarioId ( @PathVariable String uuid ) {
-        usuarioService.deleteUser(uuid);
+    public ResponseEntity<?> dropUserByUsuarioId ( @PathVariable String uid ) {
+        usuarioService.deleteUser(uid);
         return ResponseEntity.ok("Usuário excluído com sucesso");
     }
 
-    @PatchMapping("/update/{uuid}")
-    @Operation(summary = "Update a user", description = "Updates the user data with the specified UUID")
+    @PatchMapping("/update/{uid}")
+    @Operation(summary = "Update a user", description = "Updates the user data with the specified UID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User updated successfully",
                     content = @Content(mediaType = "text/plain")),
@@ -110,10 +110,10 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updateUser ( @Valid @PathVariable String uuid,
+    public ResponseEntity<?> updateUser ( @Valid @PathVariable String uid,
                                           @RequestBody Map<String, Object> updates ) {
         try {
-            Usuario usuario = usuarioService.findUsersByUuid(uuid);
+            Usuario usuario = usuarioService.findUsersByUid(uid);
             if (updates.containsKey("cpf") ) { usuario.setCpf((String) updates.get("cpf")); }
             if (updates.containsKey("nomeCompleto") ) { usuario.setNomeCompleto((String) updates.get("nomeCompleto")); }
             if (updates.containsKey("nomeUsuario") ) { usuario.setNomeUsuario((String) updates.get("nomeUsuario")); }
@@ -131,14 +131,14 @@ public class UsuarioController {
             }
 
             usuarioService.saveUsers(usuario);
-            return ResponseEntity.ok("O produto com uuid " + uuid + " foi atualizado com sucesso.");
+            return ResponseEntity.ok("O produto com uid " + uid + " foi atualizado com sucesso.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    @GetMapping("/findByUuid/{uuid}")
-    @Operation(summary = "Find user by UUID", description = "Returns the user with the specified UUID")
+    @GetMapping("/findByUid/{uid}")
+    @Operation(summary = "Find user by UID", description = "Returns the user with the specified UID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Usuario.class))),
@@ -147,8 +147,8 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findUsersByUuid ( @PathVariable String uuid ) {
-        return ResponseEntity.ok(usuarioService.findUsersByUuid(uuid));
+    public ResponseEntity<?> findUsersByUid ( @PathVariable String uid ) {
+        return ResponseEntity.ok(usuarioService.findUsersByUid(uid));
     }
 
     @GetMapping("/findByNomeCompleto/{nomeCompleto}")

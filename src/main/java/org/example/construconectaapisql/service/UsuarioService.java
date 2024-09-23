@@ -18,14 +18,14 @@ public class UsuarioService {
     @Transactional
     public Usuario saveUsers( Usuario usuario ) { return usuarioRepository.save( usuario ); }
 
-    public Usuario findUsersByUuid ( String uuid ) {
-        return usuarioRepository.findById(uuid).orElseThrow(() ->
+    public Usuario findUsersByUid ( String uid ) {
+        return usuarioRepository.findById(uid).orElseThrow(() ->
                 new RuntimeException("Cliente não encontrado."));
     }
 
     @Transactional
-    public Usuario deleteUser ( String uuid ) {
-        Usuario usuario = findUsersByUuid(uuid);
+    public Usuario deleteUser ( String uid ) {
+        Usuario usuario = findUsersByUid(uid);
         usuarioRepository.delete(usuario);
         return usuario;
     }

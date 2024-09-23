@@ -12,9 +12,9 @@ import java.util.Set;
 public class Usuario {
 
     @Id
-    @Column(name = "uuid", nullable = false, unique = true)
-    @Size(min = 36, max = 36, message = "O UUID inválido")
-    private String uuid;
+    @Column(name = "uid", nullable = false, unique = true)
+    @Size(min = 28, max = 28, message = "O UID inválido")
+    private String uid;
 
     @CPF(message = "CPF Inválido!")
     @Column(nullable = false, unique = true)
@@ -88,7 +88,7 @@ public class Usuario {
     public Usuario() {}
 
     public Usuario(
-            String uuid,
+            String uid,
             String cpf,
             String nomeCompleto,
             String nomeUsuario,
@@ -98,7 +98,7 @@ public class Usuario {
             Integer genero,
             Date dataNascimento
     ) {
-        this.uuid = uuid;
+        this.uid = uid;
         this.cpf = cpf;
         this.nomeCompleto = nomeCompleto;
         this.nomeUsuario = nomeUsuario;
@@ -109,9 +109,9 @@ public class Usuario {
         this.dataNascimento = dataNascimento;
     }
 
-    public String getUuid() { return uuid; }
+    public String getUid() { return uid; }
 
-    public void setUuid(String uuid) { this.uuid = uuid; }
+    public void setUid(String uid) { this.uid = uid; }
 
     public String getCpf() {
         return cpf;
@@ -252,7 +252,7 @@ public class Usuario {
     @Override
     public String toString() {
         return "Usuario{" +
-                "uuid='" + uuid + '\'' +
+                "uid='" + uid + '\'' +
                 ", cpf='" + cpf + '\'' +
                 ", nomeCompleto='" + nomeCompleto + '\'' +
                 ", nomeUsuario='" + nomeUsuario + '\'' +
