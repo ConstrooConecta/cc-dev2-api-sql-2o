@@ -22,7 +22,7 @@ import org.springframework.validation.Validator;
 import java.util.*;
 
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/user")
 public class UsuarioController {
 
     private UsuarioService usuarioService;
@@ -137,7 +137,7 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping("/find/{uuid}")
+    @GetMapping("/findByUuid/{uuid}")
     @Operation(summary = "Find user by UUID", description = "Returns the user with the specified UUID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User found",
@@ -151,7 +151,7 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.findUsersByUuid(uuid));
     }
 
-    @GetMapping("/searchByNomeCompleto/{nomeCompleto}")
+    @GetMapping("/findByNomeCompleto/{nomeCompleto}")
     @Operation(summary = "Search users by full name", description = "Returns a list of users with the specified full name")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Users found",
@@ -170,7 +170,7 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping("/searchByNomeUsuario/{nomeUsuario}")
+    @GetMapping("/findByNomeUsuario/{nomeUsuario}")
     @Operation(summary = "Search users by username", description = "Returns a list of users with the specified username")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Users found",
@@ -189,7 +189,7 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping("/searchByCpf/{cpf}")
+    @GetMapping("/findByCpf/{cpf}")
     @Operation(summary = "Search users by username", description = "Returns a list of users with the specified username")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Users found",
@@ -208,7 +208,7 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping("/searchByEmail/{email}")
+    @GetMapping("/findByEmail/{email}")
     @Operation(summary = "Search users by email", description = "Returns a list of users with the specified email")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Users found",
@@ -227,7 +227,7 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping("/searchByTelefone/{telefone}")
+    @GetMapping("/findByTelefone/{telefone}")
     @Operation(summary = "Search users by phone number", description = "Returns a list of users with the specified phone number")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Users found",
@@ -246,7 +246,7 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping("/searchByGenero/{genero}")
+    @GetMapping("/findByGenero/{genero}")
     @Operation(summary = "Search users by gender", description = "Returns a list of users with the specified gender")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Users found",
