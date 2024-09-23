@@ -109,9 +109,9 @@ public class Usuario {
         this.dataNascimento = dataNascimento;
     }
 
-    public String getUuid() { return uid; }
+    public String getUid() { return uid; }
 
-    public void setUuid(String uid) { this.uid = uid; }
+    public void setUid(String uid) { this.uid = uid; }
 
     public String getCpf() {
         return cpf;

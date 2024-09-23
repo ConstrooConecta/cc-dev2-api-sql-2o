@@ -13,7 +13,7 @@ public class Usuario {
 
     @Id
     @Column(name = "uid", nullable = false, unique = true)
-    @Size(min = 36, max = 36, message = "O UID inválido")
+    @Size(min = 28, max = 28, message = "O UID inválido")
     private String uid;
 
     @CPF(message = "CPF Inválido!")
