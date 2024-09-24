@@ -272,4 +272,5 @@ public class Usuario {
                 ", pagamentosServicos=" + pagamentosServicos +
                 '}';
     }
+
 }
