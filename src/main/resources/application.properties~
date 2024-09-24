@@ -1,5 +1,0 @@
-spring.application.name=ConstruConectaApiSQL
-spring.datasource.url=${CC_DB_URL}
-spring.datasource.username=${CC_DB_USER}
-spring.datasource.password=${CC_DB_PASSWORD}
-spring.jpa.hibernate.ddl-auto=update
