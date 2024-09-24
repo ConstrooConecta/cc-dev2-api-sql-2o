@@ -48,8 +48,12 @@ public class UsuarioController {
     @PostMapping("/add")
     @Operation(summary = "Add a new user", description = "Creates a new user and saves it to the database")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User created successfully",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Usuario.class))),
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "User created successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Usuario.class))),
             @ApiResponse(responseCode = "400", description = "Validation error or user already exists",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "409", description = "Data integrity violation",
@@ -57,8 +61,8 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> addUser ( @RequestBody Usuario usuario, BindingResult result ) {
-        if ( result.hasErrors() ) {
+    public ResponseEntity<?> addUser(@RequestBody Usuario usuario, BindingResult result) {
+        if (result.hasErrors()) {
             StringBuilder sb = new StringBuilder("Erros de validação: ");
             result.getAllErrors().forEach(error -> {
                 sb.append(" | ");
@@ -68,20 +72,21 @@ public class UsuarioController {
         }
 
         try {
-            if (usuarioService.saveUsers(usuario) != null) {
-                return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso.");
+            Usuario savedUsuario = usuarioService.saveUsers(usuario);
+            if (savedUsuario != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(savedUsuario);
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário ja existe.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já existe.");
             }
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: \n" + e.getMessage());
         } catch (DataAccessException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao adicionar usuario: \n" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao adicionar usuário: \n" + e.getMessage());
         }
-
     }
+
 
     @DeleteMapping("/drop/{uid}")
     @Operation(summary = "Delete a user", description = "Deletes the user with the specified UID")
