@@ -64,22 +64,18 @@ public class UsuarioService {
 
     // Método para validar se os campos únicos já existem
     private void validateUniqueFields(Usuario usuario) {
-        // Verificar se já existe um usuário com o mesmo CPF
         if (!usuarioRepository.findByCpf(usuario.getCpf()).isEmpty()) {
             throw new RuntimeException("CPF já está em uso.");
         }
 
-        // Verificar se já existe um usuário com o mesmo email
         if (!usuarioRepository.findByEmailLikeIgnoreCase(usuario.getEmail()).isEmpty()) {
             throw new RuntimeException("E-mail já está em uso.");
         }
 
-        // Verificar se já existe um usuário com o mesmo nome de usuário
         if (!usuarioRepository.findByNomeUsuarioLikeIgnoreCase(usuario.getNomeUsuario()).isEmpty()) {
             throw new RuntimeException("Nome de usuário já está em uso.");
         }
 
-        // Verificar se já existe um usuário com o mesmo telefone
         if (!usuarioRepository.findByTelefone(usuario.getTelefone()).isEmpty()) {
             throw new RuntimeException("Telefone já está em uso.");
         }

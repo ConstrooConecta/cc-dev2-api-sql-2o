@@ -49,7 +49,7 @@ public class UsuarioController {
     @Operation(summary = "Add a new user", description = "Creates a new user and saves it to the database")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "201",
+                    responseCode = "200",
                     description = "User created successfully",
                     content = @Content(
                             mediaType = "application/json",
@@ -136,7 +136,7 @@ public class UsuarioController {
             }
 
             usuarioService.saveUsers(usuario);
-            return ResponseEntity.ok("O produto com uid " + uid + " foi atualizado com sucesso.");
+            return ResponseEntity.ok("O usuário com uid " + uid + " foi atualizado com sucesso.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -277,7 +277,4 @@ public class UsuarioController {
         }
         return errors;
     }
-
-
-
 }

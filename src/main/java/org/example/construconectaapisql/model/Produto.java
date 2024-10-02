@@ -1,5 +1,6 @@
 package org.example.construconectaapisql.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,17 +12,18 @@ public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "produto_id")
+    @JsonIgnore
     private Long produtoId;
 
     @NotNull
-    @Size(max = 100, message = "O nome do produto deve ter no máximo 100 caracteres")
+    @Size(min = 6, max = 250, message = "O nome do produto deve ter no mínimo 6 e no máximo 250 caracteres")
     private String nomeProduto;
 
     @NotNull
     private Integer estoque;
 
     @NotNull
-    @Size(max = 300, message = "A descrição deve ter no máximo 300 caracteres")
+    @Size(max = 500, message = "A descrição deve ter no máximo 500 caracteres")
     private String descricao;
 
     @NotNull
@@ -34,14 +36,36 @@ public class Produto {
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal desconto;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+/*    @Column(precision = 10, scale = 2, nullable = false)
+    @JsonIgnore
+    private BigDecimal total;
+
+    // Método que é chamado antes de persistir a entidade no banco de dados
+    @PrePersist
+    @PreUpdate
+    public void calcularTotal() {
+        if (this.total == null && this.preco != null && this.desconto != null) {
+            this.total = this.preco.subtract(this.desconto);
+        }
+    }*/
+
+    @Column(name = "usuario_id", nullable = false)
+    private String usuarioId;
 
     // Constructors, Getters and Setters
     public Produto() {}
 
-    public Produto(Long produtoId, String nomeProduto, Integer estoque, String descricao, BigDecimal preco, Boolean condicao, BigDecimal desconto, Usuario usuario) {
+    public Produto(
+            Long produtoId,
+            String nomeProduto,
+            Integer estoque,
+            String descricao,
+            BigDecimal preco,
+            Boolean condicao,
+            BigDecimal desconto,
+//            BigDecimal total,
+            String usuarioId
+    ) {
         this.produtoId = produtoId;
         this.nomeProduto = nomeProduto;
         this.estoque = estoque;
@@ -49,7 +73,8 @@ public class Produto {
         this.preco = preco;
         this.condicao = condicao;
         this.desconto = desconto;
-        this.usuario = usuario;
+//        this.total = total;
+        this.usuarioId = usuarioId;
     }
 
     // Getters and Setters
@@ -74,6 +99,9 @@ public class Produto {
     public BigDecimal getDesconto() { return desconto; }
     public void setDesconto(BigDecimal desconto) { this.desconto = desconto; }
 
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+/*    public BigDecimal getTotal() { return total; }
+    public void setTotal(BigDecimal total) { this.total = total; }*/
+
+    public String getUsuario() { return usuarioId; }
+    public void setUsuario(String usuarioId) { this.usuarioId = usuarioId; }
 }
