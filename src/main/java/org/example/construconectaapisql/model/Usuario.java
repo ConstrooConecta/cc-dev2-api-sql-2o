@@ -13,7 +13,7 @@ public class Usuario {
 
     @Id
     @Column(name = "uid", nullable = false, unique = true)
-    @Size(min = 28, max = 28, message = "O UID inválido")
+    @Size(min = 28, max = 28, message = "O UID deve ter 28 caracteress")
     private String uid;
 
     @CPF(message = "CPF Inválido!")
@@ -26,11 +26,11 @@ public class Usuario {
     private String nomeCompleto;
 
     @Column(name = "nome_usuario", nullable = false, unique = true)
-    @Size(min = 6, max = 20, message = "O nome de usuário deve ter no mínimo 4 e no máximo 20 caracteres")
+    @Size(min = 6, max = 20, message = "O nome de usuário deve ter no mínimo 6 e no máximo 20 caracteres")
     private String nomeUsuario;
 
     @Column(nullable = false, unique = true)
-    @Size(max = 250, message = "O e-mail deve ter no máximo 250 caracteres.")
+    @Size(min = 5, max = 250, message = "O e-mail deve ter no mínimo 5 e no máximo 250 caracteres.")
     private String email;
 
     @NotNull

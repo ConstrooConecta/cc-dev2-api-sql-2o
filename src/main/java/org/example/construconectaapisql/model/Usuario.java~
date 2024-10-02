@@ -26,11 +26,11 @@ public class Usuario {
     private String nomeCompleto;
 
     @Column(name = "nome_usuario", nullable = false, unique = true)
-    @Size(min = 6, max = 20, message = "O nome de usuário deve ter no mínimo 4 e no máximo 20 caracteres")
+    @Size(min = 6, max = 20, message = "O nome de usuário deve ter no mínimo 6 e no máximo 20 caracteres")
     private String nomeUsuario;
 
     @Column(nullable = false, unique = true)
-    @Size(max = 250, message = "O e-mail deve ter no máximo 250 caracteres.")
+    @Size(min = 5, max = 250, message = "O e-mail deve ter no mínimo 5 e no máximo 250 caracteres.")
     private String email;
 
     @NotNull
@@ -60,9 +60,9 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private Set<PagamentoPlano> pagamentosPlanos;
 
-    @JsonIgnore
+/*    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
-    private Set<Produto> produtos;
+    private Set<Produto> produtos;*/
 
     @JsonIgnore
     @OneToMany(mappedBy = "usuario")
@@ -201,13 +201,13 @@ public class Usuario {
         this.pagamentosPlanos = pagamentosPlanos;
     }
 
-    public Set<Produto> getProdutos() {
+/*    public Set<Produto> getProdutos() {
         return produtos;
     }
 
     public void setProdutos(Set<Produto> produtos) {
         this.produtos = produtos;
-    }
+    }*/
 
     public Set<Servico> getServicos() {
         return servicos;
@@ -264,7 +264,7 @@ public class Usuario {
                 ", enderecos=" + enderecos +
                 ", planosUsuarios=" + planosUsuarios +
                 ", pagamentosPlanos=" + pagamentosPlanos +
-                ", produtos=" + produtos +
+                ", produtos="/* + produtos*/ +
                 ", servicos=" + servicos +
                 ", carrinhos=" + carrinhos +
                 ", pedidos=" + pedidos +

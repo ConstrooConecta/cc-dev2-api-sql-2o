@@ -16,14 +16,14 @@ public class Produto {
     private Long produtoId;
 
     @NotNull
-    @Size(max = 100, message = "O nome do produto deve ter no máximo 100 caracteres")
+    @Size(min = 6, max = 250, message = "O nome do produto deve ter no mínimo 6 e no máximo 250 caracteres")
     private String nomeProduto;
 
     @NotNull
     private Integer estoque;
 
     @NotNull
-    @Size(max = 500, message = "A descrição deve ter no máximo 300 caracteres")
+    @Size(max = 500, message = "A descrição deve ter no máximo 500 caracteres")
     private String descricao;
 
     @NotNull
