@@ -49,7 +49,6 @@ public class Produto {
             BigDecimal preco,
             Boolean condicao,
             BigDecimal desconto,
-            String imagem,
             String usuarioId
     ) {
         this.produtoId = produtoId;
@@ -59,7 +58,6 @@ public class Produto {
         this.preco = preco;
         this.condicao = condicao;
         this.desconto = desconto;
-        this.imagem = imagem;
         this.usuarioId = usuarioId;
     }
 
@@ -87,7 +85,4 @@ public class Produto {
 
     public String getUsuario() { return usuarioId; }
     public void setUsuario(String usuarioId) { this.usuarioId = usuarioId; }
-
-    public String getImagem() { return imagem; }
-    public void setImagem(String imagem) { this.imagem = imagem; }
 }

@@ -4,7 +4,6 @@ import org.example.construconectaapisql.model.Usuario;
 import org.example.construconectaapisql.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service

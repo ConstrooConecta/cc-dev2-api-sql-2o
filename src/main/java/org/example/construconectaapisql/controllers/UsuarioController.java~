@@ -27,7 +27,6 @@ public class UsuarioController {
 
     private UsuarioService usuarioService;
     private final Validator validator;
-
     @Autowired
     public UsuarioController(Validator validator, UsuarioService usuarioService) {
         this.usuarioService = usuarioService;

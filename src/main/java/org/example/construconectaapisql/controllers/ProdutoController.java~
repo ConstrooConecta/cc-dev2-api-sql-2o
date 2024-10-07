@@ -137,7 +137,6 @@ public class ProdutoController {
             if (updates.containsKey("preco")) { produto.setPreco((BigDecimal) updates.get("preco")); }
             if (updates.containsKey("condicao")) { produto.setCondicao((Boolean) updates.get("condicao")); }
             if (updates.containsKey("desconto")) { produto.setDesconto((BigDecimal) updates.get("desconto")); }
-            if (updates.containsKey("imagem")) { produto.setImagem((String) updates.get("imagem")); }
             DataBinder binder = new DataBinder(produto);
             binder.setValidator(validator);
             binder.validate();

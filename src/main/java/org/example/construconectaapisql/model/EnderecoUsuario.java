@@ -1,5 +1,6 @@
 package org.example.construconectaapisql.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,38 +14,37 @@ public class EnderecoUsuario {
     private Long enderecoUsuarioId;
 
     @NotNull
-    @Size(min = 8, max = 8, message = "O CEP deve ter exatamente 8 caracteres")
+    @Size(min = 8, max = 8, message = "O CEP deve ter 8 caracteres")
     private String cep;
 
     @NotNull
-    @Size(min = 2, max = 2, message = "A UF deve ter exatamente 2 caracteres")
+    @Size(min = 2, max = 2, message = "A UF deve ter 2 caracteres")
     private String uf;
 
     @NotNull
-    @Size(min = 1, max = 23, message = "A cidade deve ter no máximo 23 caracteres")
+    @Size(max = 23, message = "A cidade deve ter no máximo 23 caracteres")
     private String cidade;
 
-    @Size(max = 53, message = "O bairro deve ter no máximo 53 caracteres")
+    @Size(min = 1, max = 53, message = "O bairro deve ter no mínimo 1 e no máximo 53 caracteres")
     private String bairro;
 
     @NotNull
-    @Size(min = 1, max = 50, message = "A rua deve ter no máximo 50 caracteres")
+    @Size(max = 50, message = "A rua deve ter no máximo 50 caracteres")
     private String rua;
 
-    @Size(max = 20, message = "O número deve ter no máximo 20 caracteres")
+    @Size(min = 1, max = 20, message = "O número deve ter no mínimo 1 e no máximo 20 caracteres")
     private String numero;
 
     @Size(max = 250, message = "O complemento deve ter no máximo 250 caracteres")
     private String complemento;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @Column(name = "usuario_id", nullable = false)
+    private String usuario;
 
     // Constructors, Getters and Setters
     public EnderecoUsuario() {}
 
-    public EnderecoUsuario(Long enderecoUsuarioId, String cep, String uf, String cidade, String bairro, String rua, String numero, String complemento, Usuario usuario) {
+    public EnderecoUsuario(Long enderecoUsuarioId, String cep, String uf, String cidade, String bairro, String rua, String numero, String complemento, String usuario) {
         this.enderecoUsuarioId = enderecoUsuarioId;
         this.cep = cep;
         this.uf = uf;
@@ -81,6 +81,6 @@ public class EnderecoUsuario {
     public String getComplemento() { return complemento; }
     public void setComplemento(String complemento) { this.complemento = complemento; }
 
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
 }

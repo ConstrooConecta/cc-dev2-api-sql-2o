@@ -25,7 +25,7 @@ public class PagamentoPlano {
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal valor;
 
-    @Column(name = "tipo_pagamento", nullable = false)
+    @Column(name = "tipo_pagamento", nullable = false);
     @Size(max = 20, message = "O tipo de pagamento deve ter no máximo 20 caracteres")
     private String tipoPagamento;
 

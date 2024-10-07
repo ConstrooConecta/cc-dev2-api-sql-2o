@@ -7,6 +7,7 @@ import java.util.Date;
 @Entity
 public class PlanoUsuario {
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "plano_usuario_id")
     private Long planoUsuarioId;
