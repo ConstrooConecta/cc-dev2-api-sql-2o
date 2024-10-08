@@ -4,6 +4,7 @@ import org.example.construconectaapisql.model.Usuario;
 import org.example.construconectaapisql.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
@@ -21,7 +22,8 @@ public class UsuarioService {
 
     @Transactional
     public Usuario saveUsers(Usuario usuario) {
-        validateUniqueFields(usuario); // Validação de campos únicos
+        boolean isUpdate = usuario.getUid() != null && usuarioRepository.existsById(usuario.getUid());
+        validateUniqueFields(usuario, isUpdate); // Validação de campos únicos, passando o estado de update
         return usuarioRepository.save(usuario);
     }
 
@@ -62,21 +64,33 @@ public class UsuarioService {
     }
 
     // Método para validar se os campos únicos já existem
-    private void validateUniqueFields(Usuario usuario) {
-        if (!usuarioRepository.findByCpf(usuario.getCpf()).isEmpty()) {
-            throw new RuntimeException("CPF já está em uso.");
+    private void validateUniqueFields(Usuario usuario, boolean isUpdate) {
+        // Se não for uma atualização ou o CPF for diferente do CPF existente, validar
+        if (!isUpdate || !usuarioRepository.findById(usuario.getUid()).get().getCpf().equals(usuario.getCpf())) {
+            if (!usuarioRepository.findByCpf(usuario.getCpf()).isEmpty()) {
+                throw new RuntimeException("CPF já está em uso.");
+            }
         }
 
-        if (!usuarioRepository.findByEmailLikeIgnoreCase(usuario.getEmail()).isEmpty()) {
-            throw new RuntimeException("E-mail já está em uso.");
+        // Validação para e-mail
+        if (!isUpdate || !usuarioRepository.findById(usuario.getUid()).get().getEmail().equalsIgnoreCase(usuario.getEmail())) {
+            if (!usuarioRepository.findByEmailLikeIgnoreCase(usuario.getEmail()).isEmpty()) {
+                throw new RuntimeException("E-mail já está em uso.");
+            }
         }
 
-        if (!usuarioRepository.findByNomeUsuarioLikeIgnoreCase(usuario.getNomeUsuario()).isEmpty()) {
-            throw new RuntimeException("Nome de usuário já está em uso.");
+        // Validação para nome de usuário
+        if (!isUpdate || !usuarioRepository.findById(usuario.getUid()).get().getNomeUsuario().equalsIgnoreCase(usuario.getNomeUsuario())) {
+            if (!usuarioRepository.findByNomeUsuarioLikeIgnoreCase(usuario.getNomeUsuario()).isEmpty()) {
+                throw new RuntimeException("Nome de usuário já está em uso.");
+            }
         }
 
-        if (!usuarioRepository.findByTelefone(usuario.getTelefone()).isEmpty()) {
-            throw new RuntimeException("Telefone já está em uso.");
+        // Validação para telefone
+        if (!isUpdate || !usuarioRepository.findById(usuario.getUid()).get().getTelefone().equals(usuario.getTelefone())) {
+            if (!usuarioRepository.findByTelefone(usuario.getTelefone()).isEmpty()) {
+                throw new RuntimeException("Telefone já está em uso.");
+            }
         }
     }
 }

@@ -128,7 +128,7 @@ public class ProdutoController {
                     content = @Content(mediaType = "text/plain"))
     })
     public ResponseEntity<?> updateProduct ( @Valid @PathVariable Long produtoId,
-                                             @RequestBody Map<String, Object> updates ) {
+                                             @RequestBody Map<Long, Object> updates ) {
         try {
             Produto produto = produtoService.findProductsById(produtoId);
             if (updates.containsKey("nomeProduto")) { produto.setNomeProduto((String) updates.get("nomeProduto")); }

@@ -65,7 +65,7 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> addUser(@RequestBody PlanoUsuario planoUsuario, BindingResult result) {
+    public ResponseEntity<?> addUserPlan(@RequestBody PlanoUsuario planoUsuario, BindingResult result) {
         if (result.hasErrors()) {
             StringBuilder sb = new StringBuilder("Erros de validação: ");
             result.getAllErrors().forEach(error -> {
@@ -126,7 +126,7 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updateUser ( @Valid @PathVariable Long planoUsuarioId,
+    public ResponseEntity<?> updateUserPlan( @Valid @PathVariable Long planoUsuarioId,
                                           @RequestBody Map<String, Object> updates ) {
         try {
             PlanoUsuario planoUsuario = planoUsuarioService.findUserPlanById(planoUsuarioId);
@@ -157,7 +157,7 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findUsersById ( @PathVariable Long planoUsuarioId ) {
+    public ResponseEntity<?> findUserPlanById ( @PathVariable Long planoUsuarioId ) {
         return ResponseEntity.ok(planoUsuarioService.findUserPlanById(planoUsuarioId));
     }
 

@@ -1,8 +1,7 @@
 package org.example.construconectaapisql.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
 import java.util.Date;
 
@@ -15,35 +14,41 @@ public class Usuario {
     private String uid;
 
     @Column(name = "nome_completo", nullable = false)
-    @Size(min = 6, max = 300, message = "O nome deve ter no mínimo 6 e no máximo 300 caracteres")
+    @NotBlank(message = "O nome completo é obrigatório.")
+    @Size(min = 5, max = 100, message = "O nome completo deve ter entre 5 e 100 caracteres.")
     private String nomeCompleto;
 
     @Column(name = "nome_usuario", nullable = false, unique = true)
-    @Size(min = 5, max = 20, message = "O nome de usuário deve ter no mínimo 5  e no máximo 20 caracteres")
+    @NotBlank(message = "O nome de usuário é obrigatório.")
+    @Size(min = 5, max = 20, message = "O nome de usuário deve ter entre 5 e 20 caracteres.")
+    @Pattern(regexp = "^[a-zA-Z0-9._]+$", message = "O nome de usuário deve conter apenas letras, números, pontos e sublinhados.")
     private String nomeUsuario;
 
     @CPF(message = "CPF Inválido!")
-    @Column(nullable = false, unique = true)
-    @Size(min = 11, max = 11, message = "O CPF deve ter 11 caracteres")
+    @NotBlank(message = "O CPF é obrigatório.")
+    @Pattern(regexp = "\\d{11}", message = "O CPF deve ter 11 dígitos.")
     private String cpf;
 
-    @Column(nullable = false, unique = true)
+    @Email(message = "O e-mail deve ser válido.")
     @Size(min = 5, max = 250, message = "O e-mail deve ter no mínimo 5 e no máximo 250 caracteres.")
+    @NotBlank(message = "O e-mail é obrigatório.")
     private String email;
 
-    @NotNull
-    @Size(min = 8, max = 500, message = "A senha deve ter no mínimo 8 e no máximo 500 caracteres")
+    @NotBlank(message = "A senha é obrigatória.")
+    @Size(min = 8, message = "A senha deve ter pelo menos 8 caracteres.")
     private String senha;
 
-    @NotNull
-    @Size(min = 11, max = 11, message = "O telefone deve ter 11 caracteres")
+    @NotBlank(message = "O telefone é obrigatório.")
+    @Pattern(regexp = "^\\d{11}$", message = "O telefone deve ter 11 dígitos.")
     private String telefone;
 
     @Column(name = "data_nascimento", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dataNascimento;
 
-    @NotNull
+    @NotNull(message = "O gênero é obrigatório.")
+    @Min(value = 1, message = "O gênero deve ser 1 (masculino), 2 (feminino), 3 (outro) ou 4 (prefiro não dizer).")
+    @Max(value = 4, message = "O gênero deve ser 1 (masculino), 2 (feminino), 3 (outro) ou 4 (prefiro não dizer).")
     private Integer genero;
 
     // Constructors, Getters and Setters

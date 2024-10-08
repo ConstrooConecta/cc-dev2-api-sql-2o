@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.example.construconectaapisql.model.PagamentoPlano;
 import org.example.construconectaapisql.model.PlanoUsuario;
 import org.example.construconectaapisql.service.PagamentoPlanoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ public class PagamentoPlanoController {
     private PagamentoPlanoService pagamentoPlanoService;
     private final Validator validator;
 
+    @Autowired
     public PagamentoPlanoController( PagamentoPlanoService pagamentoPlanoService, Validator validator ) {
         this.pagamentoPlanoService = pagamentoPlanoService;
         this.validator = validator;
@@ -187,7 +189,7 @@ public class PagamentoPlanoController {
         }
     }
 
-    @GetMapping("/findByPlanId/{plano}")
+    @GetMapping("/findByUserId/{usuario}")
     @Operation(summary = "Find payment plan by userId", description = "Returns the user plan with the specified userId")
     @ApiResponses(value = {
             @ApiResponse(

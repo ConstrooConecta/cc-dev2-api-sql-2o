@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.example.construconectaapisql.model.PlanoUsuario;
 import org.example.construconectaapisql.model.Usuario;
 import org.example.construconectaapisql.service.PlanoUsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ public class PlanoUsuarioController {
     private PlanoUsuarioService planoUsuarioService;
     private final Validator validator;
 
+    @Autowired
     public PlanoUsuarioController(Validator validator, PlanoUsuarioService planoUsuarioService) {
         this.validator = validator;
         this.planoUsuarioService = planoUsuarioService;

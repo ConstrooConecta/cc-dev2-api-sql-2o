@@ -19,6 +19,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.Validator;
 
+import javax.xml.crypto.Data;
 import java.util.*;
 
 @RestController
@@ -57,6 +58,7 @@ public class UsuarioController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = Usuario.class))),
+            @ApiResponse(responseCode = "201", description = "User created successfully"),
             @ApiResponse(responseCode = "400", description = "Validation error or user already exists",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "409", description = "Data integrity violation",
@@ -64,11 +66,11 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> addUser(@RequestBody Usuario usuario, BindingResult result) {
+    public ResponseEntity<?> addUser(@Valid @RequestBody Usuario usuario, BindingResult result) {
         if (result.hasErrors()) {
-            StringBuilder sb = new StringBuilder("Erros de validação: ");
+            StringBuilder sb = new StringBuilder("Erros de validação:\n ");
             result.getAllErrors().forEach(error -> {
-                sb.append(" | ");
+                sb.append(" |\n|");
                 sb.append(error.getDefaultMessage());
             });
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sb.toString());
@@ -114,7 +116,7 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "User updated successfully",
+                    description = "User updated successfully.",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = Usuario.class))),
@@ -134,6 +136,7 @@ public class UsuarioController {
             if (updates.containsKey("nomeUsuario") ) { usuario.setNomeUsuario((String) updates.get("nomeUsuario")); }
             if (updates.containsKey("email") ) { usuario.setEmail((String) updates.get("email")); }
             if (updates.containsKey("senha") ) { usuario.setSenha((String) updates.get("senha")); }
+            if (updates.containsKey("telefone")) { usuario.setTelefone((String) updates.get("telefone")); }
             if (updates.containsKey("dataNascimento") ) { usuario.setDataNascimento((Date) updates.get("dataNascimento")); }
             if (updates.containsKey("genero") ) { usuario.setGenero((Integer) updates.get("genero")); }
             DataBinder binder = new DataBinder(usuario);
@@ -144,9 +147,24 @@ public class UsuarioController {
                 Map errors = validate(result);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
             }
-
             usuarioService.saveUsers(usuario);
             return ResponseEntity.ok("O usuário com uid " + uid + " foi atualizado com sucesso.");
+        } catch (DataIntegrityViolationException e) {
+            // Identifica qual campo violou a restrição UNIQUE
+            String message = e.getRootCause().getMessage();
+            if (message.contains("telefone")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Telefone já está em uso.");
+            } else if (message.contains("email")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Email já está em uso.");
+            } else if (message.contains("nomeUsuario")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Nome de usuário já está em uso.");
+            }  else if (message.contains("cpf")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Nome de usuário já está em uso.");
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: " + e.getMessage());
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -162,9 +180,18 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findUsersByUid ( @PathVariable String uid ) {
-        return ResponseEntity.ok(usuarioService.findUsersByUid(uid));
+    public ResponseEntity<?> findUsersByUid (@PathVariable String uid) {
+        try {
+            Usuario usuario = usuarioService.findUsersByUid(uid);
+            if (usuario == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+            }
+            return ResponseEntity.ok(usuario);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: " + e.getMessage());
+        }
     }
+
 
     @GetMapping("/findByNomeCompleto/{nomeCompleto}")
     @Operation(summary = "Search users by full name", description = "Returns a list of users with the specified full name")

@@ -1,7 +1,6 @@
 package org.example.construconectaapisql.service;
 
 import org.example.construconectaapisql.model.PagamentoPlano;
-import org.example.construconectaapisql.model.PlanoUsuario;
 import org.example.construconectaapisql.repository.PagamentoPlanoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
