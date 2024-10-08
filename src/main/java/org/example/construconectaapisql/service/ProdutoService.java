@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Service
 public class ProdutoService {
-
     private final ProdutoRepository produtoRepository;
 
     public ProdutoService(ProdutoRepository produtoRepository) {
@@ -53,9 +52,4 @@ public class ProdutoService {
     public Optional<Produto> findByProdutoId(Long produtoId) {
         return produtoRepository.findById(produtoId);
     }
-
-    /*public Usuario findByUserId(Usuario usuario) {
-        return (Usuario) produtoRepository.findByUserId(usuario);
-    }*/
-
 }

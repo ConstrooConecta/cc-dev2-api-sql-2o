@@ -1,5 +1,6 @@
 package org.example.construconectaapisql.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,14 +14,14 @@ public class Plano {
     @Column(name = "plano_id")
     private Long planoId;
 
-    @NotNull
-    @Size(min = 1, max = 100, message = "O nome do plano deve ter no máximo 100 caracteres")
+    @Column(nullable = false, unique = true)
+    @Size(max = 100, message = "O nome do plano deve ter no máximo 100 caracteres")
     private String nome;
 
-    @Size(max = 255, message = "A descrição deve ter no máximo 255 caracteres")
+    @NotNull
+    @Size(min = 3, max = 255, message = "A descrição deve ter no mínimo 3 e no máximo 255 caracteres")
     private String descricao;
 
-    @NotNull
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal valor;
 

@@ -44,7 +44,9 @@ public class ProdutoController {
                     description = "Successful operation",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = Produto.class)))
+                            schema = @Schema(implementation = Produto.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "text/plain"))
     })
     public List<Produto> findAllProducts() { return produtoService.findAllProducts(); }
 
@@ -86,16 +88,19 @@ public class ProdutoController {
         } catch (DataAccessException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao adicionar usuário: \n" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao adicionar produto: \n" + e.getMessage());
         }
     }
-
 
     @DeleteMapping("/drop/{produtoId}")
     @Operation(summary = "Delete a product", description = "Deletes the product with the specified productId")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product deleted successfully",
-                    content = @Content(mediaType = "text/plain")),
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Product deleted successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Produto.class))),
             @ApiResponse(responseCode = "404", description = "Product not found",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error",
@@ -109,8 +114,12 @@ public class ProdutoController {
     @PatchMapping("/update/{produtoId}")
     @Operation(summary = "Update a product", description = "Updates the product data with the specified produtoId")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product updated successfully",
-                    content = @Content(mediaType = "text/plain")),
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Product updated successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Produto.class))),
             @ApiResponse(responseCode = "400", description = "Validation error",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Product not found",
@@ -119,7 +128,7 @@ public class ProdutoController {
                     content = @Content(mediaType = "text/plain"))
     })
     public ResponseEntity<?> updateProduct ( @Valid @PathVariable Long produtoId,
-                                             @RequestBody Map<String, Object> updates ) {
+                                             @RequestBody Map<Long, Object> updates ) {
         try {
             Produto produto = produtoService.findProductsById(produtoId);
             if (updates.containsKey("nomeProduto")) { produto.setNomeProduto((String) updates.get("nomeProduto")); }
@@ -128,6 +137,7 @@ public class ProdutoController {
             if (updates.containsKey("preco")) { produto.setPreco((BigDecimal) updates.get("preco")); }
             if (updates.containsKey("condicao")) { produto.setCondicao((Boolean) updates.get("condicao")); }
             if (updates.containsKey("desconto")) { produto.setDesconto((BigDecimal) updates.get("desconto")); }
+            if (updates.containsKey("imagem")) { produto.setImagem((String) updates.get("imagem")); }
             DataBinder binder = new DataBinder(produto);
             binder.setValidator(validator);
             binder.validate();

@@ -1,6 +1,5 @@
 package org.example.construconectaapisql.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,11 +7,9 @@ import java.math.BigDecimal;
 
 @Entity
 public class Produto {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "produto_id")
-    @JsonIgnore
     private Long produtoId;
 
     @NotNull
@@ -23,31 +20,20 @@ public class Produto {
     private Integer estoque;
 
     @NotNull
-    @Size(max = 500, message = "A descrição deve ter no máximo 500 caracteres")
+    @Size(min = 10, max = 500, message = "A descrição deve ter no mínimo 10 e no máximo 500 caracteres")
     private String descricao;
 
-    @NotNull
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal preco;
 
     @NotNull
     private Boolean condicao;
 
-    @Column(precision = 10, scale = 2, nullable = false)
+    @Column(precision = 10, scale = 2)
     private BigDecimal desconto;
 
-/*    @Column(precision = 10, scale = 2, nullable = false)
-    @JsonIgnore
-    private BigDecimal total;
-
-    // Método que é chamado antes de persistir a entidade no banco de dados
-    @PrePersist
-    @PreUpdate
-    public void calcularTotal() {
-        if (this.total == null && this.preco != null && this.desconto != null) {
-            this.total = this.preco.subtract(this.desconto);
-        }
-    }*/
+    @Size(max = 500, message = "A imagem deve ter no máximo 500 caracteres")
+    private String imagem;
 
     @Column(name = "usuario_id", nullable = false)
     private String usuarioId;
@@ -63,7 +49,7 @@ public class Produto {
             BigDecimal preco,
             Boolean condicao,
             BigDecimal desconto,
-//            BigDecimal total,
+            String imagem,
             String usuarioId
     ) {
         this.produtoId = produtoId;
@@ -73,7 +59,7 @@ public class Produto {
         this.preco = preco;
         this.condicao = condicao;
         this.desconto = desconto;
-//        this.total = total;
+        this.imagem = imagem;
         this.usuarioId = usuarioId;
     }
 
@@ -99,9 +85,9 @@ public class Produto {
     public BigDecimal getDesconto() { return desconto; }
     public void setDesconto(BigDecimal desconto) { this.desconto = desconto; }
 
-/*    public BigDecimal getTotal() { return total; }
-    public void setTotal(BigDecimal total) { this.total = total; }*/
-
     public String getUsuario() { return usuarioId; }
     public void setUsuario(String usuarioId) { this.usuarioId = usuarioId; }
+
+    public String getImagem() { return imagem; }
+    public void setImagem(String imagem) { this.imagem = imagem; }
 }

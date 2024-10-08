@@ -1,5 +1,6 @@
 package org.example.construconectaapisql.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,32 +16,27 @@ public class PagamentoPlano {
     @Column(name = "pagamento_plano_id")
     private Long pagamentoPlanoId;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "plano_id", nullable = false)
-    private Plano plano;
+    @Column(name = "plano_id", nullable = false)
+    private Integer plano;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @Column(name = "usuario_id", nullable = false)
+    private String usuario;
 
-    @NotNull
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal valor;
 
-    @NotNull
+    @Column(name = "tipo_pagamento", nullable = false)
     @Size(max = 20, message = "O tipo de pagamento deve ter no máximo 20 caracteres")
     private String tipoPagamento;
 
-    @NotNull
     @Temporal(TemporalType.DATE)
+    @Column(name = "data_pagamento", nullable = false)
     private Date dataPagamento;
 
     // Constructors, Getters and Setters
     public PagamentoPlano() {}
 
-    public PagamentoPlano(Long pagamentoPlanoId, Plano plano, Usuario usuario, BigDecimal valor, String tipoPagamento, Date dataPagamento) {
+    public PagamentoPlano(Long pagamentoPlanoId, Integer plano, String usuario, BigDecimal valor, String tipoPagamento, Date dataPagamento) {
         this.pagamentoPlanoId = pagamentoPlanoId;
         this.plano = plano;
         this.usuario = usuario;
@@ -53,11 +49,11 @@ public class PagamentoPlano {
     public Long getPagamentoPlanoId() { return pagamentoPlanoId; }
     public void setPagamentoPlanoId(Long pagamentoPlanoId) { this.pagamentoPlanoId = pagamentoPlanoId; }
 
-    public Plano getPlano() { return plano; }
-    public void setPlano(Plano plano) { this.plano = plano; }
+    public Integer getPlano() { return plano; }
+    public void setPlano(Integer plano) { this.plano = plano; }
 
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
 
     public BigDecimal getValor() { return valor; }
     public void setValor(BigDecimal valor) { this.valor = valor; }
