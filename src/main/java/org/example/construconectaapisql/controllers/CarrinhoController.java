@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.example.construconectaapisql.model.Carrinho;
-import org.example.construconectaapisql.model.Usuario;
 import org.example.construconectaapisql.service.CarrinhoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -19,18 +18,17 @@ import org.springframework.validation.DataBinder;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/shopping-cart")
 public class CarrinhoController {
 
-    private CarrinhoService carrinhoService;
+    private final CarrinhoService carrinhoService;
     private final Validator validator;
 
     @Autowired
@@ -54,7 +52,7 @@ public class CarrinhoController {
     public List<Carrinho> findAllShoppingCarts() { return carrinhoService.findAllShoppingCarts(); }
 
     @PostMapping("/add")
-    @Operation(summary = "Add a new shopping cart", description = "Creates a new shopping cart and saves it to the database")
+    @Operation(summary = "Add a new shopping cart", description = "Create a new shopping cart and saves it to the database")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -71,31 +69,22 @@ public class CarrinhoController {
     })
     public ResponseEntity<?> addShoppingCart(@RequestBody Carrinho carrinho, BindingResult result) {
         if (result.hasErrors()) {
-            StringBuilder sb = new StringBuilder("Erros de validação: ");
-            result.getAllErrors().forEach(error -> {
-                sb.append(" | ");
-                sb.append(error.getDefaultMessage());
-            });
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sb.toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro de validação.");
         }
 
         try {
-            Carrinho savedShoppingCart = carrinhoService.saveShoppingCart(carrinho);
-            if (savedShoppingCart != null) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(savedShoppingCart);
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Carrinho já existe.");
-            }
+            // Salva o carrinho
+            Carrinho savedCarrinho = carrinhoService.saveShoppingCart(carrinho);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedCarrinho);
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: \n" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: " + e.getMessage());
         } catch (DataAccessException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao adicionar carrinho de compras: \n" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: " + e.getMessage());
         }
     }
 
-    @DeleteMapping("/drop/{carrinhoId}")
+
+    @DeleteMapping("/delete/{carrinhoId}")
     @Operation(summary = "Delete a shopping cart", description = "Deletes the shopping cart with the specified carrinhoId")
     @ApiResponses(value = {
             @ApiResponse(
@@ -109,10 +98,36 @@ public class CarrinhoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> dropShoppingCartById ( @PathVariable Long carrinhoId ) {
+    public ResponseEntity<?> deleteShoppingCartById ( @PathVariable Integer carrinhoId ) {
         carrinhoService.deleteShoppingCart(carrinhoId);
         return ResponseEntity.ok("Carrinho de compras excluído com sucesso");
     }
+
+    @DeleteMapping("/deleteByUsuarioId/{usuario}")
+    @Operation(summary = "Delete a shopping cart by userId", description = "Deletes the shopping cart with the specified userId")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Shopping Cart deleted successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Carrinho.class))),
+            @ApiResponse(responseCode = "404", description = "Shopping Cart not found",
+                    content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "text/plain"))
+    })
+    public ResponseEntity<String> deleteCategoryByUsuarioId(@PathVariable String usuario) {
+        try {
+            carrinhoService.deleteShoppingCartByUsuarioId(usuario);
+            return ResponseEntity.ok("Carrinho deletado com sucesso para o usuario: " + usuario);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar carrinho: " + e.getMessage());
+        }
+    }
+
 
     @PatchMapping("/update/{carrinhoId}")
     @Operation(summary = "Update a shopping cart", description = "Updates the shopping cart data with the specified UID")
@@ -130,7 +145,7 @@ public class CarrinhoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updateShoppingCart ( @Valid @PathVariable Long carrinhoId,
+    public ResponseEntity<?> updateShoppingCart ( @Valid @PathVariable Integer carrinhoId,
                                                   @RequestBody Map<String, Object> updates ) {
         try {
             Carrinho carrinho = carrinhoService.findShoppingCartById(carrinhoId);
@@ -164,7 +179,7 @@ public class CarrinhoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findShoppingCartById ( @PathVariable Long carrinhoId ) {
+    public ResponseEntity<?> findShoppingCartById ( @PathVariable Integer carrinhoId ) {
         return ResponseEntity.ok(carrinhoService.findShoppingCartById(carrinhoId));
     }
 
@@ -213,5 +228,4 @@ public class CarrinhoController {
         }
         return errors;
     }
-
 }

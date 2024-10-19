@@ -1,6 +1,5 @@
 package org.example.construconectaapisql.service;
 
-import org.example.construconectaapisql.model.Plano;
 import org.example.construconectaapisql.model.PlanoUsuario;
 import org.example.construconectaapisql.repository.PlanoUsuarioRepository;
 import org.springframework.stereotype.Service;

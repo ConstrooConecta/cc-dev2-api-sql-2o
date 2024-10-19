@@ -1,50 +1,72 @@
 package org.example.construconectaapisql.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
+@Table(name = "Endereco_Usuariox")
 public class EnderecoUsuario {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "endereco_usuario_id")
+    @Schema(description = "Identificador único do Endereço do Usuário.", example = "1")
     private Long enderecoUsuarioId;
 
-    @NotNull
-    @Size(min = 8, max = 8, message = "O CEP deve ter 8 caracteres")
+    @NotBlank(message = "O CEP é obrigatório.")
+    @Size(min = 8, max = 8, message = "O CEP deve ter 8 caracteres.")
+    @Schema(description = "Código de Endereçamento Postal do Endereço do Usuário.", example = "01310930")
     private String cep;
 
-    @NotNull
-    @Size(min = 2, max = 2, message = "A UF deve ter 2 caracteres")
+    @NotBlank(message = "O estado é obrigatório.")
+    @Size(min = 2, max = 2, message = "A UF deve ter 2 caracteres.")
+    @Schema(description = "Estado onde resida o Usuário.", example = "SP")
     private String uf;
 
-    @NotNull
-    @Size(max = 23, message = "A cidade deve ter no máximo 23 caracteres")
+    @NotBlank(message = "A cidade é obrigatória.")
+    @Size(max = 23, message = "A cidade deve ter no máximo 23 caracteres,")
+    @Schema(description = "Cidade onde resida o Usuário.", example = "São Paulo")
     private String cidade;
 
-    @Size(min = 1, max = 53, message = "O bairro deve ter no mínimo 1 e no máximo 53 caracteres")
+    @NotBlank(message = "O bairro é obrigatório.")
+    @Size(min = 1, max = 53, message = "O bairro deve ter no mínimo 1 e no máximo 53 caracteres.")
+    @Schema(description = "Bairro onde resida o Usuário.", example = "Osasco")
     private String bairro;
 
-    @NotNull
-    @Size(max = 50, message = "A rua deve ter no máximo 50 caracteres")
+    @NotBlank(message = "A rua é obrigatória.")
+    @Size(max = 75, message = "A rua deve ter no máximo 50 caracteres.")
+    @Schema(description = "Rua onde resida o Usuário.", example = "Av. Brigadeiro Faria Lima")
     private String rua;
 
-    @Size(min = 1, max = 20, message = "O número deve ter no mínimo 1 e no máximo 20 caracteres")
+    @Size(max = 20, message = "O número deve ter no máximo 20 caracteres.")
+    @Schema(description = "Número da casa onde resida o Usuário.", example = "132C")
     private String numero;
 
-    @Size(max = 250, message = "O complemento deve ter no máximo 250 caracteres")
+    @Size(max = 250, message = "O complemento deve ter no máximo 250 caracteres.")
+    @Schema(description = "Complemento do Endereço do Usuário.", example = "Frente à praça")
     private String complemento;
 
-    @Column(name = "usuario_id", nullable = false)
+    @NotBlank(message = "O UID do usuário é obrigatório.")
+    @Column(name = "usuario_id")
+    @Size(min = 28, max = 28, message = "O UID do usuário deve ter 28 caracteres.")
+    @Schema(description = "UID do Usuário que possui o endereço.", example = "TwbSHSFVasyefyw42SFJAIoQDjJA")
     private String usuario;
 
     // Constructors, Getters and Setters
     public EnderecoUsuario() {}
 
-    public EnderecoUsuario(Long enderecoUsuarioId, String cep, String uf, String cidade, String bairro, String rua, String numero, String complemento, String usuario) {
+    public EnderecoUsuario(
+            Long enderecoUsuarioId,
+            String cep,
+            String uf,
+            String cidade,
+            String bairro,
+            String rua,
+            String numero,
+            String complemento,
+            String usuario
+    ) {
         this.enderecoUsuarioId = enderecoUsuarioId;
         this.cep = cep;
         this.uf = uf;
@@ -83,4 +105,19 @@ public class EnderecoUsuario {
 
     public String getUsuario() { return usuario; }
     public void setUsuario(String usuario) { this.usuario = usuario; }
+
+    @Override
+    public String toString() {
+        return "EnderecoUsuario{" +
+                "enderecoUsuarioId=" + enderecoUsuarioId +
+                ", cep='" + cep + '\'' +
+                ", uf='" + uf + '\'' +
+                ", cidade='" + cidade + '\'' +
+                ", bairro='" + bairro + '\'' +
+                ", rua='" + rua + '\'' +
+                ", numero='" + numero + '\'' +
+                ", complemento='" + complemento + '\'' +
+                ", usuario='" + usuario + '\'' +
+                '}';
+    }
 }

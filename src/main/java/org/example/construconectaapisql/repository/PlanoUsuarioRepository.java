@@ -1,6 +1,5 @@
 package org.example.construconectaapisql.repository;
 
-import org.example.construconectaapisql.model.Plano;
 import org.example.construconectaapisql.model.PlanoUsuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 

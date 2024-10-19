@@ -16,18 +16,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.Validator;
+import org.springframework.web.bind.annotation.*;
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/product")
 public class ProdutoController {
 
-    private ProdutoService produtoService;
+    private final ProdutoService produtoService;
     private final Validator validator;
 
     @Autowired
@@ -51,7 +53,7 @@ public class ProdutoController {
     public List<Produto> findAllProducts() { return produtoService.findAllProducts(); }
 
     @PostMapping("/add")
-    @Operation(summary = "Add a new product", description = "Creates a new product and saves it to the database")
+    @Operation(summary = "Add a new product", description = "Create a new product and saves it to the database")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -68,12 +70,23 @@ public class ProdutoController {
     })
     public ResponseEntity<?> addProduct(@RequestBody Produto produto, BindingResult result) {
         if (result.hasErrors()) {
-            StringBuilder sb = new StringBuilder("Erros de validação: ");
+            StringBuilder sb = new StringBuilder("Erros de validação:\n ");
             result.getAllErrors().forEach(error -> {
-                sb.append(" | ");
+                sb.append(" |\n| ");
                 sb.append(error.getDefaultMessage());
             });
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sb.toString());
+        }
+
+        // Gera um número aleatório entre 1 e 4 se o tópico for nulo
+        if (produto.getTopico() == null) {
+            Random random = new Random();
+            produto.setTopico(random.nextInt(4) + 1); // Gera um número entre 1 e 4
+        }
+
+        // Verifica se o desconto e o frete foram enviados. Se não, atribui 0.
+        if (produto.getDesconto() == null) {
+            produto.setDesconto(BigDecimal.ZERO);
         }
 
         try {
@@ -92,7 +105,7 @@ public class ProdutoController {
         }
     }
 
-    @DeleteMapping("/drop/{produtoId}")
+    @DeleteMapping("/delete/{produtoId}")
     @Operation(summary = "Delete a product", description = "Deletes the product with the specified productId")
     @ApiResponses(value = {
             @ApiResponse(
@@ -106,7 +119,7 @@ public class ProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> dropProductByProdutoId ( @PathVariable Long produtoId ) {
+    public ResponseEntity<?> deleteProductByProdutoId ( @PathVariable Long produtoId ) {
         produtoService.deleteProduct(produtoId);
         return ResponseEntity.ok("Produto excluído com sucesso");
     }
@@ -128,7 +141,7 @@ public class ProdutoController {
                     content = @Content(mediaType = "text/plain"))
     })
     public ResponseEntity<?> updateProduct ( @Valid @PathVariable Long produtoId,
-                                             @RequestBody Map<Long, Object> updates ) {
+                                             @RequestBody Map<String, Object> updates ) {
         try {
             Produto produto = produtoService.findProductsById(produtoId);
             if (updates.containsKey("nomeProduto")) { produto.setNomeProduto((String) updates.get("nomeProduto")); }
@@ -138,6 +151,7 @@ public class ProdutoController {
             if (updates.containsKey("condicao")) { produto.setCondicao((Boolean) updates.get("condicao")); }
             if (updates.containsKey("desconto")) { produto.setDesconto((BigDecimal) updates.get("desconto")); }
             if (updates.containsKey("imagem")) { produto.setImagem((String) updates.get("imagem")); }
+            if (updates.containsKey("topico")) { produto.setTopico((Integer) updates.get("topico")); }
             DataBinder binder = new DataBinder(produto);
             binder.setValidator(validator);
             binder.validate();
@@ -149,6 +163,8 @@ public class ProdutoController {
 
             produtoService.saveProducts(produto);
             return ResponseEntity.ok("O produto com id " + produtoId + " foi atualizado com sucesso.");
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -165,7 +181,15 @@ public class ProdutoController {
                     content = @Content(mediaType = "text/plain"))
     })
     public ResponseEntity<?> findProductById ( @PathVariable Long produtoId ) {
-        return ResponseEntity.ok(produtoService.findByProdutoId(produtoId));
+        try {
+            Produto produto = produtoService.findProductsById(produtoId);
+            if (produto == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado.");
+            }
+            return ResponseEntity.ok(produto);
+        } catch (Exception e) {
+            return ResponseEntity.ok(produtoService.findByProdutoId(produtoId));
+        }
     }
 
     @GetMapping("/findByNomeProduto/{nomeProduto}")
@@ -206,8 +230,7 @@ public class ProdutoController {
         }
     }
 
-
-    @GetMapping("/findByUserId/{usuarioId}")
+    @GetMapping("/findByUserId/{usuario}")
     @Operation(summary = "Search products by usuarioId", description = "Returns a list of products with the specified usuarioId")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product found",
@@ -217,8 +240,8 @@ public class ProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByUsuarioId( @PathVariable String usuarioId ) {
-        List<Produto> lProduto = produtoService.findByUserId(usuarioId);
+    public ResponseEntity<?> searchByUsuarioId( @PathVariable String usuario ) {
+        List<Produto> lProduto = produtoService.findByUserId(usuario);
         if(!lProduto.isEmpty()) {
             return ResponseEntity.ok(lProduto);
         } else {
@@ -226,6 +249,25 @@ public class ProdutoController {
         }
     }
 
+
+    @GetMapping("/findByTopic/{topico}")
+    @Operation(summary = "Search products by topico", description = "Returns a list of products with the specified topico")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Product found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Produto.class))),
+            @ApiResponse(responseCode = "404", description = "Product not found",
+                    content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "text/plain"))
+    })
+    public ResponseEntity<?> searchByTopic( @PathVariable Integer topico ) {
+        List<Produto> lProduto = produtoService.findByTopico(topico);
+        if(!lProduto.isEmpty()) {
+            return ResponseEntity.ok(lProduto);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado.");
+        }
+    }
 
     public Map<String, String> validate( BindingResult resultado ) {
         Map<String, String> errors = new HashMap<>();

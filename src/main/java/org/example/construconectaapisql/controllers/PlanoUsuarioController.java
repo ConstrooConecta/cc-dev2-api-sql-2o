@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.example.construconectaapisql.model.PlanoUsuario;
-import org.example.construconectaapisql.model.Usuario;
 import org.example.construconectaapisql.service.PlanoUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -28,7 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user-plan")
 public class PlanoUsuarioController {
-    private PlanoUsuarioService planoUsuarioService;
+    private final PlanoUsuarioService planoUsuarioService;
     private final Validator validator;
 
     @Autowired
@@ -52,7 +51,7 @@ public class PlanoUsuarioController {
     public List<PlanoUsuario> findAllUserPlans() { return planoUsuarioService.findAllUserPlans(); }
 
     @PostMapping("/add")
-    @Operation(summary = "Add a new user plan", description = "Creates a new user plan and saves it to the database")
+    @Operation(summary = "Add a new user plan", description = "Create a new user plan and saves it to the database")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -93,7 +92,7 @@ public class PlanoUsuarioController {
         }
     }
 
-    @DeleteMapping("/drop/{planoUsuarioId}")
+    @DeleteMapping("/delete/{planoUsuarioId}")
     @Operation(summary = "Delete a user plan", description = "Deletes the user plan with the specified planoUsuarioId")
     @ApiResponses(value = {
             @ApiResponse(
@@ -107,7 +106,7 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> dropUserPlanByPlanoUsuarioId ( @PathVariable Long planoUsuarioId ) {
+    public ResponseEntity<?> deleteUserPlanByPlanoUsuarioId ( @PathVariable Long planoUsuarioId ) {
         planoUsuarioService.deleteUserPlan(planoUsuarioId);
         return ResponseEntity.ok("Plano do usuário excluído com sucesso");
     }
