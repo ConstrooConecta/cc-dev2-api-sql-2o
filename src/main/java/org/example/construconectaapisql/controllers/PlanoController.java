@@ -54,7 +54,7 @@ public class PlanoController {
     }
 
     @PostMapping("/add")
-    @Operation(summary = "Add a new plan", description = "Creates a new plan and saves it to the database")
+    @Operation(summary = "Add a new plan", description = "Create a new plan and saves it to the database")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -95,7 +95,7 @@ public class PlanoController {
         }
     }
 
-    @DeleteMapping("/drop/{planoId}")
+    @DeleteMapping("/delete/{planoId}")
     @Operation(summary = "Delete a plan", description = "Deletes the plan with the specified ID")
     @ApiResponses(value = {
             @ApiResponse(
@@ -109,7 +109,7 @@ public class PlanoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> dropPlanById(@PathVariable Long planoId) {
+    public ResponseEntity<?> deletePlanById(@PathVariable Long planoId) {
         planoService.deletePlan(planoId);
         return ResponseEntity.ok("Plano excluído com sucesso");
     }

@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import org.example.construconectaapisql.model.*;
+import org.example.construconectaapisql.model.Usuario;
 import org.example.construconectaapisql.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -16,21 +16,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.Validator;
+import org.springframework.web.bind.annotation.*;
 
-import javax.xml.crypto.Data;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
 public class UsuarioController {
-
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
     private final Validator validator;
 
     @Autowired
-    public UsuarioController(Validator validator, UsuarioService usuarioService) {
+    public UsuarioController(
+            Validator validator,
+            UsuarioService usuarioService
+    ) {
         this.usuarioService = usuarioService;
         this.validator = validator;
     }
@@ -50,7 +54,7 @@ public class UsuarioController {
     public List<Usuario> findAllUsers() { return usuarioService.findAllUsers(); }
 
     @PostMapping("/add")
-    @Operation(summary = "Add a new user", description = "Creates a new user and saves it to the database")
+    @Operation(summary = "Add a new user", description = "Create a new user and saves it to the database")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -92,7 +96,7 @@ public class UsuarioController {
         }
     }
 
-    @DeleteMapping("/drop/{uid}")
+    @DeleteMapping("/delete/{uid}")
     @Operation(summary = "Delete a user", description = "Deletes the user with the specified UID")
     @ApiResponses(value = {
             @ApiResponse(
@@ -106,7 +110,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> dropUserByUsuarioId ( @PathVariable String uid ) {
+    public ResponseEntity<?> deleteUserByUsuarioId ( @PathVariable String uid ) {
         usuarioService.deleteUser(uid);
         return ResponseEntity.ok("Usuário excluído com sucesso");
     }

@@ -12,18 +12,12 @@ import java.util.Optional;
 public class ProdutoService {
     private final ProdutoRepository produtoRepository;
 
-    public ProdutoService(ProdutoRepository produtoRepository) {
-        this.produtoRepository = produtoRepository;
-    }
+    public ProdutoService(ProdutoRepository produtoRepository) { this.produtoRepository = produtoRepository; }
 
-    public List<Produto> findAllProducts() {
-        return produtoRepository.findAll();
-    }
+    public List<Produto> findAllProducts() { return produtoRepository.findAll(); }
 
     @Transactional
-    public Produto saveProducts(Produto produto) {
-        return produtoRepository.save(produto);
-    }
+    public Produto saveProducts(Produto produto) { return produtoRepository.save(produto); }
 
     public Produto findProductsById(Long produtoId) {
         return produtoRepository.findById(produtoId)
@@ -37,19 +31,13 @@ public class ProdutoService {
         return produto;
     }
 
-    public List<Produto> findByNomeProduto(String nomeProduto) {
-        return produtoRepository.findByNomeProdutoLikeIgnoreCase(nomeProduto);
-    }
+    public List<Produto> findByNomeProduto(String nomeProduto) { return produtoRepository.findByNomeProdutoLikeIgnoreCase(nomeProduto); }
 
-    public List<Produto> findByCondicao(Boolean condicao) {
-        return produtoRepository.findByCondicao(condicao);
-    }
+    public List<Produto> findByCondicao(Boolean condicao) { return produtoRepository.findByCondicao(condicao); }
 
-    public List<Produto> findByUserId (String usuarioId) {
-        return produtoRepository.findByUsuarioId(usuarioId);
-    }
+    public List<Produto> findByUserId (String usuario) { return produtoRepository.findByUsuario(usuario); }
 
-    public Optional<Produto> findByProdutoId(Long produtoId) {
-        return produtoRepository.findById(produtoId);
-    }
+    public List<Produto> findByTopico(Integer topico) { return produtoRepository.findByTopico(topico); }
+
+    public Optional<Produto> findByProdutoId(Long produtoId) { return produtoRepository.findById(produtoId); }
 }

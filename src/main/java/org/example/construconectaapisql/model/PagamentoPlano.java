@@ -1,42 +1,54 @@
 package org.example.construconectaapisql.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
+@Table(name = "Pagamento_Plano")
 public class PagamentoPlano {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pagamento_plano_id")
+    @Schema(description = "Identificador único do Pagamento do Plano.", example = "1")
     private Long pagamentoPlanoId;
 
     @Column(name = "plano_id", nullable = false)
+    @Schema(description = "Identificador do Plano adquirido pelo Usuário.", example = "3")
     private Integer plano;
 
     @Column(name = "usuario_id", nullable = false)
+    @Schema(description = "UID do Usuário que fez o pagamento.", example = "TwbSHSFVasyefyw42SFJAIoQDjJA")
     private String usuario;
 
     @Column(precision = 10, scale = 2, nullable = false)
+    @Schema(description = "Valor do Pagamento.", example = "199.99")
     private BigDecimal valor;
 
     @Column(name = "tipo_pagamento", nullable = false)
-    @Size(max = 20, message = "O tipo de pagamento deve ter no máximo 20 caracteres")
+    @Size(max = 20, message = "O tipo de pagamento deve ter no máximo 20 caracteres.")
+    @Schema(description = "Método de Pagamento utilizado na compra do plano.", example = "PIX")
     private String tipoPagamento;
 
-    @Temporal(TemporalType.DATE)
     @Column(name = "data_pagamento", nullable = false)
+    @Schema(description = "Data do Pagamento.", example = "2024-10-01")
+    @Temporal(TemporalType.DATE)
     private Date dataPagamento;
 
     // Constructors, Getters and Setters
     public PagamentoPlano() {}
 
-    public PagamentoPlano(Long pagamentoPlanoId, Integer plano, String usuario, BigDecimal valor, String tipoPagamento, Date dataPagamento) {
+    public PagamentoPlano(
+            Long pagamentoPlanoId,
+            Integer plano,
+            String usuario,
+            BigDecimal valor,
+            String tipoPagamento,
+            Date dataPagamento
+    ) {
         this.pagamentoPlanoId = pagamentoPlanoId;
         this.plano = plano;
         this.usuario = usuario;
@@ -63,4 +75,16 @@ public class PagamentoPlano {
 
     public Date getDataPagamento() { return dataPagamento; }
     public void setDataPagamento(Date dataPagamento) { this.dataPagamento = dataPagamento; }
+
+    @Override
+    public String toString() {
+        return "PagamentoPlano{" +
+                "pagamentoPlanoId=" + pagamentoPlanoId +
+                ", plano=" + plano +
+                ", usuario='" + usuario + '\'' +
+                ", valor=" + valor +
+                ", tipoPagamento='" + tipoPagamento + '\'' +
+                ", dataPagamento=" + dataPagamento +
+                '}';
+    }
 }

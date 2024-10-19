@@ -1,66 +1,93 @@
 package org.example.construconectaapisql.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
 public class Pedido {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pedido_id")
+    @Schema(description = "Identificador Único do pedido", example = "1")
     private Long pedidoId;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @Column(name = "usuario_id", nullable = false)
+    @Schema(description = "UID do usuário que fez o pedido", example = "TwbSHSFVasyefyw42SFJAIoQDjJA")
+    private String usuario;
 
-    @NotNull
+    @Column(name = "carrinho_id", nullable = false)
+    @Schema(description = "Identificador Único do carrinho relacionado ao pedido", example = "6")
+    private Integer carrinho;
+
+    @Column(name = "data_pedido", nullable = false)
+    @Schema(description = "Data em que o pedido foi realizado")
     @Temporal(TemporalType.DATE)
     private Date dataPedido;
 
-    @NotNull
-    @Column(precision = 10, scale = 2, nullable = false)
+    @Column(name = "data_entrega", nullable = false)
+    @Schema(description = "Data estimada para entrega do pedido")
+    @Temporal(TemporalType.DATE)
+    private Date dataEntrega;
+
+    @Column(precision = 10, scale = 2, name = "valor_total", nullable = false)
+    @Schema(description = "Valor total do pedido", example = "159.99")
     private BigDecimal valorTotal;
 
-    @NotNull
-    private Boolean pagamentoConcluido;
+    @Column(precision = 10, scale = 2, name = "valor_frete")
+    @Schema(description = "Valor total do frete", example = "22.99")
+    private BigDecimal valorFrete;
 
-    @ManyToOne
-    @JoinColumn(name = "carrinho_id", nullable = false)
-    private Carrinho carrinho;
+    public Pedido(){}
 
-    // Constructors, Getters and Setters
-    public Pedido() {}
-
-    public Pedido(Long pedidoId, Usuario usuario, Date dataPedido, BigDecimal valorTotal, Boolean pagamentoConcluido, Carrinho carrinho) {
+    public Pedido(
+            Long pedidoId,
+            String usuario,
+            Integer carrinho,
+            Date dataPedido,
+            Date dataEntrega,
+            BigDecimal valorTotal,
+            BigDecimal valorFrete) {
         this.pedidoId = pedidoId;
         this.usuario = usuario;
-        this.dataPedido = dataPedido;
-        this.valorTotal = valorTotal;
-        this.pagamentoConcluido = pagamentoConcluido;
         this.carrinho = carrinho;
+        this.dataPedido = dataPedido;
+        this.dataEntrega = dataEntrega;
+        this.valorTotal = valorTotal;
+        this.valorFrete = valorFrete;
     }
 
-    // Getters and Setters
     public Long getPedidoId() { return pedidoId; }
     public void setPedidoId(Long pedidoId) { this.pedidoId = pedidoId; }
 
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
+
+    public Integer getCarrinho() { return carrinho; }
+    public void setCarrinho(Integer carrinho) { this.carrinho = carrinho; }
 
     public Date getDataPedido() { return dataPedido; }
     public void setDataPedido(Date dataPedido) { this.dataPedido = dataPedido; }
 
+    public Date getDataEntrega() { return dataEntrega; }
+    public void setDataEntrega(Date dataEntrega) { this.dataEntrega = dataEntrega; }
+
     public BigDecimal getValorTotal() { return valorTotal; }
     public void setValorTotal(BigDecimal valorTotal) { this.valorTotal = valorTotal; }
 
-    public Boolean getPagamentoConcluido() { return pagamentoConcluido; }
-    public void setPagamentoConcluido(Boolean pagamentoConcluido) { this.pagamentoConcluido = pagamentoConcluido; }
+    public BigDecimal getValorFrete() { return valorFrete; }
+    public void setValorFrete(BigDecimal valorFrete) { this.valorFrete = valorFrete; }
 
-    public Carrinho getCarrinho() { return carrinho; }
-    public void setCarrinho(Carrinho carrinho) { this.carrinho = carrinho; }
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "pedidoId=" + pedidoId +
+                ", usuario='" + usuario + '\'' +
+                ", carrinho=" + carrinho +
+                ", dataPedido=" + dataPedido +
+                ", dataEntrega=" + dataEntrega +
+                ", valorTotal=" + valorTotal +
+                ", valorFrete=" + valorFrete +
+                '}';
+    }
 }

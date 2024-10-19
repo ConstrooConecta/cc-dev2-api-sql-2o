@@ -1,3 +1,4 @@
+/*
 package org.example.construconectaapisql.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -7,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.example.construconectaapisql.model.EnderecoUsuario;
-import org.example.construconectaapisql.model.Produto;
 import org.example.construconectaapisql.service.EnderecoUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -54,7 +54,7 @@ public class EnderecoUsuarioController {
     }
 
     @PostMapping("/add")
-    @Operation(summary = "Add a new address", description = "Creates a new adress and saves it to the database")
+    @Operation(summary = "Add a new address", description = "Create a new adress and saves it to the database")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -95,7 +95,7 @@ public class EnderecoUsuarioController {
         }
     }
 
-    @DeleteMapping("/drop/{enderecoUsuarioId}")
+    @DeleteMapping("/delete/{enderecoUsuarioId}")
     @Operation(summary = "Delete a address", description = "Deletes the address with the specified enderecoUsuarioId")
     @ApiResponses(value = {
             @ApiResponse(
@@ -109,7 +109,7 @@ public class EnderecoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> dropAddressByEnderecoUsuarioId ( @PathVariable Long enderecoUsuarioId ) {
+    public ResponseEntity<?> deleteAddressByEnderecoUsuarioId ( @PathVariable Long enderecoUsuarioId ) {
         enderecoUsuarioService.deleteAddress(enderecoUsuarioId);
         return ResponseEntity.ok("Endereco excluído com sucesso");
     }
@@ -295,3 +295,4 @@ public class EnderecoUsuarioController {
     }
 
 }
+*/

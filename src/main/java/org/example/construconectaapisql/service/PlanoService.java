@@ -1,9 +1,9 @@
 package org.example.construconectaapisql.service;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.example.construconectaapisql.model.Plano;
 import org.example.construconectaapisql.repository.PlanoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.example.construconectaapisql.model.PagamentoPlano;
-import org.example.construconectaapisql.model.PlanoUsuario;
 import org.example.construconectaapisql.service.PagamentoPlanoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -28,7 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/payment-plan")
 public class PagamentoPlanoController {
-    private PagamentoPlanoService pagamentoPlanoService;
+    private final PagamentoPlanoService pagamentoPlanoService;
     private final Validator validator;
 
     @Autowired
@@ -52,7 +51,7 @@ public class PagamentoPlanoController {
     public List<PagamentoPlano> findAllPaymentsPlan() { return pagamentoPlanoService.findAllPaymentsPlan(); }
 
     @PostMapping("/add")
-    @Operation(summary = "Add a new payment plan", description = "Creates a new payment plan and saves it to the database")
+    @Operation(summary = "Add a new payment plan", description = "Create a new payment plan and saves it to the database")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -93,7 +92,7 @@ public class PagamentoPlanoController {
         }
     }
 
-    @DeleteMapping("/drop/{pagamentoPlanoId}")
+    @DeleteMapping("/delete/{pagamentoPlanoId}")
     @Operation(summary = "Delete a payment plan", description = "Deletes the payment plan with the specified pagamentoPlanoId")
     @ApiResponses(value = {
             @ApiResponse(
@@ -107,7 +106,7 @@ public class PagamentoPlanoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> dropPaymentPlanByPagamentoPlanoId ( @PathVariable Long pagamentoPlanoId ) {
+    public ResponseEntity<?> deletePaymentPlanByPagamentoPlanoId ( @PathVariable Long pagamentoPlanoId ) {
         pagamentoPlanoService.deletePaymentPlan(pagamentoPlanoId);
         return ResponseEntity.ok("Pagamente do Plano excluído com sucesso");
     }

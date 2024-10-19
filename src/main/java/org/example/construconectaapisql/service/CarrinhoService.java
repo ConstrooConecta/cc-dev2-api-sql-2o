@@ -24,16 +24,24 @@ public class CarrinhoService {
         return carrinhoRepository.save(carrinho);
     }
 
-    public Carrinho findShoppingCartById(Long carrinhoId) {
+    public Carrinho findShoppingCartById(Integer carrinhoId) {
         return carrinhoRepository.findById(carrinhoId)
                 .orElseThrow(() -> new RuntimeException("Carrinho não encontrado."));
     }
 
     @Transactional
-    public Carrinho deleteShoppingCart(Long carrinhoId) {
+    public Carrinho deleteShoppingCart(Integer carrinhoId) {
         Carrinho carrinho = findShoppingCartById(carrinhoId);
         carrinhoRepository.delete(carrinho);
         return carrinho;
+    }
+
+    @Transactional
+    public void deleteShoppingCartByUsuarioId(String usuario) {
+        if (carrinhoRepository.findByUsuario(usuario).isEmpty()) {
+            throw new RuntimeException("Nenhuma categoria encontrada para o usuario: " + usuario);
+        }
+        carrinhoRepository.deleteByUsuario(usuario);
     }
 
     public List<Carrinho> findByUserId(String usuarioId) {
@@ -43,5 +51,4 @@ public class CarrinhoService {
     public List<Carrinho> findByProductId(Integer produtoId) {
         return carrinhoRepository.findByProduto(produtoId);
     }
-
 }

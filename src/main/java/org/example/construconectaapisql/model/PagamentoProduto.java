@@ -1,70 +1,91 @@
 package org.example.construconectaapisql.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
+@Table(name = "Pagamento_Produto")
 public class PagamentoProduto {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pagamento_produto_id")
+    @Schema(description = "Identificador Único do pagamento de produto", example = "1")
     private Long pagamentoProdutoId;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "produto_id", nullable = false)
-    private Produto produto;
+    @Column(name = "pedido_id", nullable = false)
+    @Schema(description = "Identificador Único do pedido relacionado ao pagamento", example = "101")
+    private Integer pedido;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @Column(name = "usuario_id", nullable = false)
+    @Schema(description = "UID do usuário que realizou o pagamento", example = "TwbSHSFVasyefyw42SFJAIoQDjJA")
+    private String usuario;
 
-    @NotNull
-    @Column(precision = 10, scale = 2, nullable = false)
-    private BigDecimal valor;
-
-    @NotNull
-    @Size(max = 20, message = "O tipo de pagamento deve ter no máximo 20 caracteres")
-    private String tipoPagamento;
-
-    @NotNull
+    @Column(name = "data_pagamento", nullable = false)
     @Temporal(TemporalType.DATE)
+    @Schema(description = "Data em que o pagamento foi realizado")
     private Date dataPagamento;
 
-    // Constructors, Getters and Setters
+    @Column(name = "tipo_pagamento", nullable = false)
+    @Size(max = 20, message = "O tipo de pagamento deve ter no máximo 20 caracteres")
+    @Schema(description = "Tipo de pagamento utilizado (e.g. Cartão, PIX)", example = "PIX")
+    private String tipoPagamento;
+
+    @Column(precision = 10, scale = 2, name = "valor_total", nullable = false)
+    @Schema(description = "Valor total do pagamento", example = "199.99")
+    private BigDecimal valorTotal;
+
+    @Column(precision = 10, scale = 2, name = "valor_frete", nullable = false)
+    @Schema(description = "Valor do frete associado ao pagamento", example = "19.99")
+    private BigDecimal valorFrete;
+
+    // Construtores
     public PagamentoProduto() {}
 
-    public PagamentoProduto(Long pagamentoProdutoId, Produto produto, Usuario usuario, BigDecimal valor, String tipoPagamento, Date dataPagamento) {
+    public PagamentoProduto(Long pagamentoProdutoId, Integer pedido, String usuario, Date dataPagamento, String tipoPagamento, BigDecimal valorTotal, BigDecimal valorFrete) {
         this.pagamentoProdutoId = pagamentoProdutoId;
-        this.produto = produto;
+        this.pedido = pedido;
         this.usuario = usuario;
-        this.valor = valor;
-        this.tipoPagamento = tipoPagamento;
         this.dataPagamento = dataPagamento;
+        this.tipoPagamento = tipoPagamento;
+        this.valorTotal = valorTotal;
+        this.valorFrete = valorFrete;
     }
 
-    // Getters and Setters
+    // Getters e Setters
     public Long getPagamentoProdutoId() { return pagamentoProdutoId; }
     public void setPagamentoProdutoId(Long pagamentoProdutoId) { this.pagamentoProdutoId = pagamentoProdutoId; }
 
-    public Produto getProduto() { return produto; }
-    public void setProduto(Produto produto) { this.produto = produto; }
+    public Integer getPedido() { return pedido; }
+    public void setPedido(Integer pedido) { this.pedido = pedido; }
 
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
 
-    public BigDecimal getValor() { return valor; }
-    public void setValor(BigDecimal valor) { this.valor = valor; }
+    public Date getDataPagamento() { return dataPagamento; }
+    public void setDataPagamento(Date dataPagamento) { this.dataPagamento = dataPagamento; }
 
     public String getTipoPagamento() { return tipoPagamento; }
     public void setTipoPagamento(String tipoPagamento) { this.tipoPagamento = tipoPagamento; }
 
-    public Date getDataPagamento() { return dataPagamento; }
-    public void setDataPagamento(Date dataPagamento) { this.dataPagamento = dataPagamento; }
+    public BigDecimal getValorTotal() { return valorTotal; }
+    public void setValorTotal(BigDecimal valorTotal) { this.valorTotal = valorTotal; }
+
+    public BigDecimal getValorFrete() { return valorFrete; }
+    public void setValorFrete(BigDecimal valorFrete) { this.valorFrete = valorFrete; }
+
+    @Override
+    public String toString() {
+        return "PagamentoProduto{" +
+                "pagamentoProdutoId=" + pagamentoProdutoId +
+                ", pedido=" + pedido +
+                ", usuario='" + usuario + '\'' +
+                ", dataPagamento=" + dataPagamento +
+                ", tipoPagamento='" + tipoPagamento + '\'' +
+                ", valorTotal=" + valorTotal +
+                ", valorFrete=" + valorFrete +
+                '}';
+    }
 }
