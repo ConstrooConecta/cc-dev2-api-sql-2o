@@ -6,7 +6,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.example.construconectaapisql.model.Categoria;
 import org.example.construconectaapisql.model.Produto;
+import org.example.construconectaapisql.repository.CategoriaRepository;
+import org.example.construconectaapisql.repository.ProdutoRepository;
 import org.example.construconectaapisql.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -20,22 +23,23 @@ import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @RestController
 @RequestMapping("/product")
 public class ProdutoController {
+    private final ProdutoRepository produtoRepository;
+    private final CategoriaRepository categoriaRepository;
 
     private final ProdutoService produtoService;
     private final Validator validator;
 
     @Autowired
-    public ProdutoController(Validator validator, ProdutoService produtoService) {
+    public ProdutoController(Validator validator, ProdutoService produtoService, ProdutoRepository produtoRepository, CategoriaRepository categoriaRepository) {
         this.produtoService = produtoService;
         this.validator = validator;
+        this.produtoRepository = produtoRepository;
+        this.categoriaRepository = categoriaRepository;
     }
 
     @GetMapping("/products")
@@ -266,6 +270,32 @@ public class ProdutoController {
             return ResponseEntity.ok(lProduto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado.");
+        }
+    }
+    @GetMapping("/categoria/nome/{nome}")
+    public ResponseEntity<List<Produto>> searchByCategoryName(@PathVariable String nome) {
+        // Buscar produtos pelo nome da categoria
+        List<Produto> produtos = produtoRepository.findByNomeCategoria(nome);
+
+        if (!produtos.isEmpty()) {
+            return ResponseEntity.ok(produtos);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/categoria/{categoriaId}")
+    public ResponseEntity<List<Produto>> searchByCategoryId(@PathVariable Long categoriaId) {
+        // Buscar a categoria pelo ID
+        Optional<Categoria> categoria = categoriaRepository.findById(categoriaId);
+
+        if (categoria.isPresent()) {
+            // Buscar produtos associados à categoria encontrada
+            List<Produto> produtos = produtoRepository.findByCategorias(Set.of(categoria.get()));
+            return ResponseEntity.ok(produtos);
+        } else {
+            // Se a categoria não for encontrada, retornar 404
+            return ResponseEntity.notFound().build();
         }
     }
 
