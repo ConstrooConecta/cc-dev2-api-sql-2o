@@ -1,4 +1,4 @@
-package org.example.construconectaapisql.controllers;
+package org.example.construconectaapisql.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -253,7 +253,6 @@ public class ProdutoController {
         }
     }
 
-
     @GetMapping("/findByTopic/{topico}")
     @Operation(summary = "Search products by topico", description = "Returns a list of products with the specified topico")
     @ApiResponses(value = {
@@ -272,19 +271,32 @@ public class ProdutoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado.");
         }
     }
-    @GetMapping("/categoria/nome/{nome}")
-    public ResponseEntity<List<Produto>> searchByCategoryName(@PathVariable String nome) {
-        // Buscar produtos pelo nome da categoria
-        List<Produto> produtos = produtoRepository.findByNomeCategoria(nome);
 
-        if (!produtos.isEmpty()) {
-            return ResponseEntity.ok(produtos);
+    @GetMapping("/findByCategoryName/{nomeCategoria}")
+    @Operation(summary = "Search products by category name", description = "Returns a list of products within the specified category name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Products found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Produto.class))),
+            @ApiResponse(responseCode = "404", description = "Category not found", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "text/plain"))
+    })
+    public ResponseEntity<List<Produto>> searchByNomeCategoria(@PathVariable String nomeCategoria) {
+        List<Categoria> categorias = produtoService.findCategoriasByNome(nomeCategoria);
+
+        if (!categorias.isEmpty()) {
+            List<Produto> produtos = produtoService.findByCategorias(categorias);
+            return ResponseEntity.ok(produtos); // Retorna lista de produtos encontrados
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Retorna 404 se a categoria não for encontrada ou estiver vazia
         }
     }
 
     @GetMapping("/categoria/{categoriaId}")
+    @Operation(summary = "Search products by category id", description = "Returns a list of products within the specified category id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Products found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Produto.class))),
+            @ApiResponse(responseCode = "404", description = "Category not found", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "text/plain"))
+    })
     public ResponseEntity<List<Produto>> searchByCategoryId(@PathVariable Long categoriaId) {
         // Buscar a categoria pelo ID
         Optional<Categoria> categoria = categoriaRepository.findById(categoriaId);
