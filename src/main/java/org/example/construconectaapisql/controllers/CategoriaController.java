@@ -1,4 +1,4 @@
-package org.example.construconectaapisql.controller;
+package org.example.construconectaapisql.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
