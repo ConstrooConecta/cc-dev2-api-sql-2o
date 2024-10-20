@@ -1,4 +1,4 @@
-package org.example.construconectaapisql.controllers;
+package org.example.construconectaapisql.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -195,7 +195,6 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: " + e.getMessage());
         }
     }
-
 
     @GetMapping("/findByNomeCompleto/{nomeCompleto}")
     @Operation(summary = "Search users by full name", description = "Returns a list of users with the specified full name")

@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 public class Carrinho {
     @Id
     @Column(name = "carrinho_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "Identificador Único único do carrinho", example = "1")
     private Integer carrinhoId;
 
