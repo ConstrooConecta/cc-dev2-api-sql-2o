@@ -61,7 +61,6 @@ public class ProdutoService {
                 .collect(Collectors.toList());
     }
 
-
     private String normalizeString(String input) {
         // Remove os acentos
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
