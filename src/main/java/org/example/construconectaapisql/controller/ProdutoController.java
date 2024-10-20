@@ -19,10 +19,7 @@ import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @RestController
 @RequestMapping("/product")
@@ -126,7 +123,6 @@ public class ProdutoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Retorna 404 se a categoria não for encontrada ou estiver vazia
         }
     }
-
 
 
     private Map<String, String> validate(BindingResult result) {
