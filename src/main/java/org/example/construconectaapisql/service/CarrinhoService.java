@@ -35,17 +35,14 @@ public class CarrinhoService {
         List<Carrinho> carrinhosExistentes = carrinhoRepository.findByUsuario(carrinho.getUsuario());
 
         if (!carrinhosExistentes.isEmpty()) {
-            // Se o usuário já tem um carrinho, reaproveitar o identificador
             Integer identificadorExistente = carrinhosExistentes.get(0).getIdentificador();
             if (carrinho.getIdentificador() != null && !carrinho.getIdentificador().equals(identificadorExistente)) {
-                // Lógica que impede o usuário de definir um identificador diferente se já existe um
-                throw new IllegalArgumentException("Usuário já possui um identificador de carrinho ativo.");
+                Integer novoIdentificador = generateNewIdentifierForUser(carrinho.getUsuario());
+                carrinho.setIdentificador(novoIdentificador);
             } else {
-                // Se o identificador é o mesmo ou nulo, use o existente
                 carrinho.setIdentificador(identificadorExistente);
             }
         } else {
-            // Se não houver carrinho, gerar um novo identificador
             Integer novoIdentificador = generateNewIdentifierForUser(carrinho.getUsuario());
             carrinho.setIdentificador(novoIdentificador);
         }
@@ -62,13 +59,14 @@ public class CarrinhoService {
         // Calcular o valor total (preço * desconto * quantidade)
         BigDecimal precoComDesconto = produto.getPreco().multiply(BigDecimal.ONE.subtract(produto.getDesconto()));
         BigDecimal valorTotal = precoComDesconto.multiply(new BigDecimal(carrinho.getQuantidade()));
-        carrinho.setValorTotal(valorTotal);
 
-        // Definir a imagem do produto no carrinho
+        // Definir o valor total e a imagem, ignorando se o usuário enviou algo no body
+        carrinho.setValorTotal(valorTotal);
         carrinho.setProdutoImg(produto.getImagem());
 
         return carrinhoRepository.save(carrinho);
     }
+
 
     // Método auxiliar para gerar um novo identificador (baseado na lógica do usuário)
     public Integer generateNewIdentifierForUser(String usuarioId) {
