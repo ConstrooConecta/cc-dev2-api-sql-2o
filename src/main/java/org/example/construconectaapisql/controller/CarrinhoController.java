@@ -71,20 +71,23 @@ public class CarrinhoController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro de validação.");
         }
 
+        // Remover qualquer ID fornecido pelo cliente
+        carrinho.setCarrinhoId(null); // Se ainda estiver no modelo
+
         try {
-            // Salva o carrinho
             Carrinho savedCarrinho = carrinhoService.saveShoppingCart(carrinho);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedCarrinho);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: " + e.getMessage());
-        } catch (DataAccessException e) {
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro: " + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro ao adicionar carrinho: " + e.getMessage());
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: " + e.getMessage());
         }
     }
 
-
-    @DeleteMapping("/delete/{carrinhoId}")
-    @Operation(summary = "Delete a shopping cart", description = "Deletes the shopping cart with the specified carrinhoId")
+    @DeleteMapping("/delete/{shoppingCartId}")
+    @Operation(summary = "Delete a shopping cart", description = "Deletes the shopping cart with the specified shoppingCartId")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -97,12 +100,12 @@ public class CarrinhoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> deleteShoppingCartById ( @PathVariable Integer carrinhoId ) {
-        carrinhoService.deleteShoppingCart(carrinhoId);
+    public ResponseEntity<?> deleteShoppingCartById ( @PathVariable Long shoppingCartId ) {
+        carrinhoService.deleteShoppingCart(shoppingCartId);
         return ResponseEntity.ok("Carrinho de compras excluído com sucesso");
     }
 
-    @DeleteMapping("/deleteByUsuarioId/{usuario}")
+    @DeleteMapping("/deleteByUsuarioId/{userId}")
     @Operation(summary = "Delete a shopping cart by userId", description = "Deletes the shopping cart with the specified userId")
     @ApiResponses(value = {
             @ApiResponse(
@@ -116,10 +119,10 @@ public class CarrinhoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<String> deleteCategoryByUsuarioId(@PathVariable String usuario) {
+    public ResponseEntity<String> deleteShoppingCartByUsuarioId(@PathVariable String userId) {
         try {
-            carrinhoService.deleteShoppingCartByUsuarioId(usuario);
-            return ResponseEntity.ok("Carrinho deletado com sucesso para o usuario: " + usuario);
+            carrinhoService.deleteShoppingCartByUserId(userId);
+            return ResponseEntity.ok("Carrinho deletado com sucesso para o usuário: " + userId);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -127,9 +130,33 @@ public class CarrinhoController {
         }
     }
 
+    @DeleteMapping("/deleteByIdentifier/{identifier}")
+    @Operation(summary = "Delete a shopping cart by identifier", description = "Deletes the shopping cart with the specified identifier")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Shopping Cart deleted successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Carrinho.class))),
+            @ApiResponse(responseCode = "404", description = "Shopping Cart not found",
+                    content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "text/plain"))
+    })
+    public ResponseEntity<String> deleteShoppingCartByIdentifier(@PathVariable Integer identifier) {
+        try {
+            carrinhoService.deleteShoppingCartByIdentifier(identifier);
+            return ResponseEntity.ok("Carrinho deletado com sucesso para o identifier: " + identifier);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar carrinho: " + e.getMessage());
+        }
+    }
 
-    @PatchMapping("/update/{carrinhoId}")
-    @Operation(summary = "Update a shopping cart", description = "Updates the shopping cart data with the specified UID")
+    @PatchMapping("/update/{shoppingCartId}")
+    @Operation(summary = "Update a shopping cart", description = "Updates the shopping cart data with the specified shoppingCartId")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -144,10 +171,10 @@ public class CarrinhoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updateShoppingCart ( @Valid @PathVariable Integer carrinhoId,
+    public ResponseEntity<?> updateShoppingCart ( @Valid @PathVariable Long shoppingCartId,
                                                   @RequestBody Map<String, Object> updates ) {
         try {
-            Carrinho carrinho = carrinhoService.findShoppingCartById(carrinhoId);
+            Carrinho carrinho = carrinhoService.findShoppingCartById(shoppingCartId);
             if (updates.containsKey("produto") ) { carrinho.setProduto((Integer) updates.get("produto")); }
             if (updates.containsKey("quantidade") ) { carrinho.setQuantidade((Integer) updates.get("quantidade")); }
             if (updates.containsKey("valorTotal") ) { carrinho.setValorTotal((BigDecimal) updates.get("valorTotal")); }
@@ -162,14 +189,14 @@ public class CarrinhoController {
             }
 
             carrinhoService.saveShoppingCart(carrinho);
-            return ResponseEntity.ok("O carrinho de compras com id " + carrinhoId + " foi atualizado com sucesso.");
+            return ResponseEntity.ok("O carrinho de compras com id " + shoppingCartId + " foi atualizado com sucesso.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    @GetMapping("/findById/{carrinhoId}")
-    @Operation(summary = "Find shopping cart by carrinhoId", description = "Returns the shopping cart with the specified carrinhoId")
+    @GetMapping("/findById/{shoppingCartId}")
+    @Operation(summary = "Find shopping cart by shoppingCartId", description = "Returns the shopping cart with the specified shoppingCartId")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Shopping Cart found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Carrinho.class))),
@@ -178,12 +205,12 @@ public class CarrinhoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findShoppingCartById ( @PathVariable Integer carrinhoId ) {
-        return ResponseEntity.ok(carrinhoService.findShoppingCartById(carrinhoId));
+    public ResponseEntity<?> findShoppingCartById ( @PathVariable Long shoppingCartId ) {
+        return ResponseEntity.ok(carrinhoService.findShoppingCartById(shoppingCartId));
     }
 
-    @GetMapping("/findByUserId/{usuario}")
-    @Operation(summary = "Find shopping cart by usuarioId", description = "Returns the shopping cart with the specified usuarioId")
+    @GetMapping("/findByUserId/{userId}")
+    @Operation(summary = "Find shopping cart by userId", description = "Returns the shopping cart with the specified userId")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Shopping Cart found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Carrinho.class))),
@@ -192,8 +219,8 @@ public class CarrinhoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByUserId ( @PathVariable String usuario ) {
-        List<Carrinho> lCarrinho = carrinhoService.findByUserId(usuario);
+    public ResponseEntity<?> searchByUserId ( @PathVariable String userId ) {
+        List<Carrinho> lCarrinho = carrinhoService.findByUserId(userId);
         if(!lCarrinho.isEmpty()) {
             return ResponseEntity.ok(lCarrinho);
         } else {
@@ -201,8 +228,8 @@ public class CarrinhoController {
         }
     }
 
-    @GetMapping("/findByProductId/{produto}")
-    @Operation(summary = "Find shopping cart by produtoId", description = "Returns the shopping cart with the specified produtoId")
+    @GetMapping("/findByIdentifier/{identifier}")
+    @Operation(summary = "Find shopping cart by identifier", description = "Returns the shopping cart with the specified identifier")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Shopping Cart found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Carrinho.class))),
@@ -211,8 +238,27 @@ public class CarrinhoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByProductId ( @PathVariable Integer produto ) {
-        List<Carrinho> lCarrinho = carrinhoService.findByProductId(produto);
+    public ResponseEntity<?> searchByIdentifier ( @PathVariable Integer identifier ) {
+        List<Carrinho> lCarrinho = carrinhoService.findByIdentifier(identifier);
+        if(!lCarrinho.isEmpty()) {
+            return ResponseEntity.ok(lCarrinho);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Carrinho de compras não encontrado.");
+        }
+    }
+
+    @GetMapping("/findByProductId/{productId}")
+    @Operation(summary = "Find shopping cart by productId", description = "Returns the shopping cart with the specified productId")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Shopping Cart found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Carrinho.class))),
+            @ApiResponse(responseCode = "404", description = "Shopping Cart not found",
+                    content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "text/plain"))
+    })
+    public ResponseEntity<?> searchByProductId ( @PathVariable Integer productId ) {
+        List<Carrinho> lCarrinho = carrinhoService.findByProductId(productId);
         if(!lCarrinho.isEmpty()) {
             return ResponseEntity.ok(lCarrinho);
         } else {

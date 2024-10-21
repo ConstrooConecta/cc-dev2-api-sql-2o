@@ -11,8 +11,13 @@ import java.math.BigDecimal;
 public class Carrinho {
     @Id
     @Column(name = "carrinho_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "Identificador Único único do carrinho", example = "1")
-    private Integer carrinhoId;
+    private Long carrinhoId;
+
+    @NotNull(message = "A identificação direta do carrinho para o Usuário é obrigatória.")
+    @Schema(description = "Identificação direta do carrinho para o Usuário", example = "3")
+    private Integer identificador;
 
     @Column(name = "usuario_id", nullable = false)
     @Size(min = 28, max = 28, message = "O UID do usuário deve ter 28 caracteres")
@@ -32,16 +37,16 @@ public class Carrinho {
     @Schema(description = "Quantidade de unidades do produto no carrinho", example = "2")
     private Integer quantidade;
 
-    @Column(precision = 10, scale = 2, name = "valor_total", nullable = false)
+    @Column(precision = 10, scale = 2, name = "valor_total")
     @Schema(description = "Valor total do carrinho", example = "499.99")
     private BigDecimal valorTotal;
 
     // Construtores
-    public Carrinho() {
-    }
+    public Carrinho() {}
 
     public Carrinho(
-            Integer carrinhoId,
+            Long carrinhoId,
+            Integer identificador,
             String usuario,
             Integer produto,
             String produtoImg,
@@ -49,6 +54,7 @@ public class Carrinho {
             BigDecimal valorTotal
     ) {
         this.carrinhoId = carrinhoId;
+        this.identificador = identificador;
         this.usuario = usuario;
         this.produto = produto;
         this.produtoImg = produtoImg;
@@ -57,18 +63,19 @@ public class Carrinho {
     }
 
     // Getters e Setters
-    public Integer getCarrinhoId() {
+    public Long getCarrinhoId() {
         return carrinhoId;
     }
-
-    public void setCarrinhoId(Integer carrinhoId) {
+    public void setCarrinhoId(Long carrinhoId) {
         this.carrinhoId = carrinhoId;
     }
+
+    public Integer getIdentificador() { return identificador; }
+    public void setIdentificador(Integer identificador) { this.identificador = identificador; }
 
     public String getUsuario() {
         return usuario;
     }
-
     public void setUsuario(String usuario) {
         this.usuario = usuario;
     }
@@ -76,7 +83,6 @@ public class Carrinho {
     public Integer getProduto() {
         return produto;
     }
-
     public void setProduto(Integer produto) {
         this.produto = produto;
     }
@@ -84,7 +90,6 @@ public class Carrinho {
     public Integer getQuantidade() {
         return quantidade;
     }
-
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
@@ -92,7 +97,6 @@ public class Carrinho {
     public String getProdutoImg() {
         return produtoImg;
     }
-
     public void setProdutoImg(String produtoImg) {
         this.produtoImg = produtoImg;
     }
@@ -100,7 +104,6 @@ public class Carrinho {
     public BigDecimal getValorTotal() {
         return valorTotal;
     }
-
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
@@ -109,6 +112,7 @@ public class Carrinho {
     public String toString() {
         return "Carrinho{" +
                 "carrinhoId=" + carrinhoId +
+                ", identificador=" + identificador +
                 ", usuario='" + usuario + '\'' +
                 ", produto=" + produto +
                 ", produtoImg='" + produtoImg + '\'' +
