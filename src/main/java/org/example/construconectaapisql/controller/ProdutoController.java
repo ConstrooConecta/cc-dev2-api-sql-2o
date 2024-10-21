@@ -196,7 +196,7 @@ public class ProdutoController {
         }
     }
 
-    @GetMapping("/findByNomeProduto/{nomeProduto}")
+    @GetMapping("/findByProduct/productName/{productName}")
     @Operation(summary = "Search products by name", description = "Returns a list of products with the specified name")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product found",
@@ -206,8 +206,8 @@ public class ProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByNomeProduto( @PathVariable String nomeProduto ) {
-        List<Produto> lProduto = produtoService.findByNomeProduto(nomeProduto);
+    public ResponseEntity<?> searchByNomeProduto( @PathVariable String productName ) {
+        List<Produto> lProduto = produtoService.findByNomeProduto(productName);
         if(!lProduto.isEmpty()) {
             return ResponseEntity.ok(lProduto);
         } else {
@@ -215,7 +215,7 @@ public class ProdutoController {
         }
     }
 
-    @GetMapping("/findByCondicao/{condicao}")
+    @GetMapping("/findByCondition/{condicao}")
     @Operation(summary = "Search products by condicao", description = "Returns a list of products with the specified condicao")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product found",
@@ -234,7 +234,7 @@ public class ProdutoController {
         }
     }
 
-    @GetMapping("/findByUserId/{usuario}")
+    @GetMapping("/findByUser/userId/{userId}")
     @Operation(summary = "Search products by usuarioId", description = "Returns a list of products with the specified usuarioId")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product found",
@@ -244,8 +244,8 @@ public class ProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByUsuarioId( @PathVariable String usuario ) {
-        List<Produto> lProduto = produtoService.findByUserId(usuario);
+    public ResponseEntity<?> searchByUsuarioId( @PathVariable String userId ) {
+        List<Produto> lProduto = produtoService.findByUserId(userId);
         if(!lProduto.isEmpty()) {
             return ResponseEntity.ok(lProduto);
         } else {
@@ -272,7 +272,7 @@ public class ProdutoController {
         }
     }
 
-    @GetMapping("/findByCategoryName/{nomeCategoria}")
+    @GetMapping("/findByCategory/categoryName/{nomeCategoria}")
     @Operation(summary = "Search products by category name", description = "Returns a list of products within the specified category name")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Products found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Produto.class))),
@@ -290,7 +290,7 @@ public class ProdutoController {
         }
     }
 
-    @GetMapping("/categoria/{categoriaId}")
+    @GetMapping("/findByCategory/categoryId/{categoriaId}")
     @Operation(summary = "Search products by category id", description = "Returns a list of products within the specified category id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Products found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Produto.class))),
