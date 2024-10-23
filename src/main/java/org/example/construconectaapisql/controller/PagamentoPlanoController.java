@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.example.construconectaapisql.model.PagamentoPlano;
+import org.example.construconectaapisql.model.Usuario;
 import org.example.construconectaapisql.service.PagamentoPlanoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -19,10 +20,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 @RestController
 @RequestMapping("/payment-plan")
@@ -68,9 +67,9 @@ public class PagamentoPlanoController {
     })
     public ResponseEntity<?> addPaymentPlan( @RequestBody PagamentoPlano pagamentoPlano, BindingResult result ) {
         if (result.hasErrors()) {
-            StringBuilder sb = new StringBuilder("Erros de validação: ");
+            StringBuilder sb = new StringBuilder("Erros de validação:\n ");
             result.getAllErrors().forEach(error -> {
-                sb.append(" | ");
+                sb.append(" |\n|");
                 sb.append(error.getDefaultMessage());
             });
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sb.toString());
@@ -81,19 +80,19 @@ public class PagamentoPlanoController {
             if (savedPaymentPlan != null) {
                 return ResponseEntity.status(HttpStatus.CREATED).body(savedPaymentPlan);
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pagamento de Plano já existe.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Dados de Pagamento de Plano já existe.");
             }
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: \n" + e.getMessage());
         } catch (DataAccessException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao adicionar pagamento do plano: \n" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao adicionar dados de pagamento do plano: \n" + e.getMessage());
         }
     }
 
-    @DeleteMapping("/delete/{pagamentoPlanoId}")
-    @Operation(summary = "Delete a payment plan", description = "Deletes the payment plan with the specified pagamentoPlanoId")
+    @DeleteMapping("/delete/{planPaymentId}")
+    @Operation(summary = "Delete a payment plan", description = "Deletes the payment plan with the specified planPaymentId")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -101,18 +100,30 @@ public class PagamentoPlanoController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = PagamentoPlano.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error",
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Payment Plan not found",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> deletePaymentPlanByPagamentoPlanoId ( @PathVariable Long pagamentoPlanoId ) {
-        pagamentoPlanoService.deletePaymentPlan(pagamentoPlanoId);
-        return ResponseEntity.ok("Pagamente do Plano excluído com sucesso");
+    public ResponseEntity<?> deletePaymentPlanByPagamentoPlanoId ( @PathVariable Long planPaymentId ) {
+        try {
+            pagamentoPlanoService.deletePaymentPlan(planPaymentId);
+            return ResponseEntity.ok("Pagamento do Plano excluído com sucesso");
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: \n" + e.getMessage());
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar dados de pagamento do plano: \n" + e.getMessage());
+        }
     }
 
-    @PatchMapping("/update/{pagamentoPlanoId}")
-    @Operation(summary = "Update a payment plan", description = "Updates the payment plan with the specified pagamentoPlanoId")
+    @PatchMapping("/update/{planPaymentId}")
+    @Operation(summary = "Update a payment plan", description = "Updates the payment plan with the specified planPaymentId")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -125,30 +136,58 @@ public class PagamentoPlanoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updatePaymentPlan( @Valid @PathVariable Long pagamentoPlanoId,
+    public ResponseEntity<?> updatePaymentPlan( @Valid @PathVariable Long planPaymentId,
                                                 @RequestBody Map<String, Object> updates ) {
         try {
-            PagamentoPlano pagamentoPlano = pagamentoPlanoService.findPaymentPlanById(pagamentoPlanoId);
-            if (updates.containsKey("plano") ) { pagamentoPlano.setPlano((Integer) updates.get("plano")); }
-            if (updates.containsKey("tipoPagamento") ) { pagamentoPlano.setTipoPagamento((String) updates.get("tipoPagamento")); }
+            PagamentoPlano pagamentoPlano = pagamentoPlanoService.findPaymentPlanById(planPaymentId);
+
+            List<String> validFields = Arrays.asList("plano", "valor", "tipoPagamento", "dataPagamento");
+
+            for (Map.Entry<String, Object> entry : updates.entrySet()) {
+                String field = entry.getKey();
+                if (!validFields.contains(field)) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Campo '" + field + "' não é válido para atualização.");
+                }
+
+                switch (field) {
+                    case "plano":
+                        pagamentoPlano.setPlano((Integer) entry.getValue());
+                        break;
+                    case "valor":
+                        pagamentoPlano.setValor((BigDecimal) entry.getValue());
+                        break;
+                    case "tipoPagamento":
+                        pagamentoPlano.setTipoPagamento((String) entry.getValue());
+                        break;
+                    case "dataPagamento":
+                        pagamentoPlano.setDataPagamento((Date) entry.getValue());
+                        break;
+                    default:
+                        // Este default nunca será alcançado devido à verificação da lista `validFields`
+                        break;
+                }
+            }
+
             DataBinder binder = new DataBinder(pagamentoPlano);
             binder.setValidator(validator);
             binder.validate();
             BindingResult result = binder.getBindingResult();
             if (result.hasErrors()) {
-                Map errors = validate(result);
+                Map<String, String> errors = validate(result);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
             }
 
             pagamentoPlanoService.savePaymentPlan(pagamentoPlano);
-            return ResponseEntity.ok("O plano do usuário com pagamentoPlanoId " + pagamentoPlanoId + " foi atualizado com sucesso.");
+            return ResponseEntity.ok("O plano do usuário com planPaymentId " + planPaymentId + " foi atualizado com sucesso.");
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    @GetMapping("/findById/{pagamentoPlanoId}")
-    @Operation(summary = "Find payment plan", description = "Returns the user plan with the specified pagamentoPlanoId")
+    @GetMapping("/findById/{planPaymentId}")
+    @Operation(summary = "Find payment plan", description = "Returns the user plan with the specified planPaymentId")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -161,8 +200,16 @@ public class PagamentoPlanoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findPaymentPlanById ( @PathVariable Long pagamentoPlanoId ) {
-        return ResponseEntity.ok(pagamentoPlanoService.findPaymentPlanById(pagamentoPlanoId));
+    public ResponseEntity<?> findPaymentPlanById ( @PathVariable Long planPaymentId ) {
+        try {
+            PagamentoPlano pagamentoPlano = pagamentoPlanoService.findPaymentPlanById(planPaymentId);
+            if (pagamentoPlano == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dados de Pagamento de Plano não encontrado.");
+            }
+            return ResponseEntity.ok(pagamentoPlano);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: " + e.getMessage());
+        }
     }
 
     @GetMapping("/findByPlanId/{plano}")
@@ -184,7 +231,7 @@ public class PagamentoPlanoController {
         if(!lPagamentoPlano.isEmpty()) {
             return ResponseEntity.ok(lPagamentoPlano);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pagamento de Plano não encontrado.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dados de Pagamento de Plano não encontrado.");
         }
     }
 
@@ -207,7 +254,7 @@ public class PagamentoPlanoController {
         if(!lPagamentoPlano.isEmpty()) {
             return ResponseEntity.ok(lPagamentoPlano);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pagamento de Plano não encontrado.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dados de Pagamento de Plano não encontrado.");
         }
     }
 
@@ -230,7 +277,7 @@ public class PagamentoPlanoController {
         if(!lPagamentoPlano.isEmpty()) {
             return ResponseEntity.ok(lPagamentoPlano);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pagamento de Plano não encontrado.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dados de Pagamento de Plano não encontrado.");
         }
     }
 
@@ -253,7 +300,7 @@ public class PagamentoPlanoController {
         if(!lPagamentoPlano.isEmpty()) {
             return ResponseEntity.ok(lPagamentoPlano);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pagamento de Plano não encontrado.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dados de Pagamento de Plano não encontrado.");
         }
     }
 
@@ -264,5 +311,4 @@ public class PagamentoPlanoController {
         }
         return errors;
     }
-
 }

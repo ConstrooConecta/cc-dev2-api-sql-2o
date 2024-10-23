@@ -16,7 +16,7 @@ public class PlanoUsuario {
     private Long planoUsuarioId;
 
     @Column(name = "usuario_id", nullable = false)
-    @Size(min = 28, max = 28, message = "O nome do usuário deve ter 28 caracteres.")
+    @Size(min = 28, max = 28, message = "O nome do usuário deve ter 28 caracteres")
     @Schema(description = "UID do Usuário que possui um Plano", example = "TwbSHSFVasyefyw42SFJAIoQDjJA")
     private String usuario;
 

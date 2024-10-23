@@ -12,16 +12,14 @@ import java.util.List;
 public class PlanoUsuarioService {
     private final PlanoUsuarioRepository planoUsuarioRepository;
 
-    public PlanoUsuarioService(PlanoUsuarioRepository planoUsuarioRepository) { this.planoUsuarioRepository = planoUsuarioRepository; }
+    public PlanoUsuarioService(
+            PlanoUsuarioRepository planoUsuarioRepository
+    ) { this.planoUsuarioRepository = planoUsuarioRepository; }
 
+    // crud methods
     public List<PlanoUsuario> findAllUserPlans() { return planoUsuarioRepository.findAll(); }
 
     public PlanoUsuario saveUserPlan(PlanoUsuario planoUsuario) { return planoUsuarioRepository.save(planoUsuario); }
-
-    public PlanoUsuario findUserPlanById(Long planoUsuarioId) {
-        return planoUsuarioRepository.findById(planoUsuarioId)
-            .orElseThrow(() -> new RuntimeException("Plano do Usuário não encontrado."));
-    }
 
     @Transactional
     public PlanoUsuario deleteUserPlan(Long planoUsuarioId) {
@@ -30,20 +28,16 @@ public class PlanoUsuarioService {
         return planoUsuario;
     }
 
+    public PlanoUsuario findUserPlanById(Long planoUsuarioId) {
+        return planoUsuarioRepository.findById(planoUsuarioId)
+                .orElseThrow(() -> new RuntimeException("Plano do Usuário não encontrado."));
+    }
+
+    // others methods
     public List<PlanoUsuario> findUserPlansByUserId(String usuario) {
-        return planoUsuarioRepository.findByUsuario(usuario);
-    }
-
-    public List<PlanoUsuario> findUserPlanByPlanoId(Integer plano) {
-        return planoUsuarioRepository.findByPlano(plano);
-    }
-
-    public List<PlanoUsuario> findUserPlanByDataAssinatura(Date dataAssinatura) {
-        return planoUsuarioRepository.findByDataAssinatura(dataAssinatura);
-    }
-
-    public List<PlanoUsuario> findUserPlanByDataFinal(Date dataFinal) {
-        return planoUsuarioRepository.findByDataFinal(dataFinal);
-    }
+        return planoUsuarioRepository.findByUsuario(usuario); }
+    public List<PlanoUsuario> findUserPlanByPlanoId(Integer plano) { return planoUsuarioRepository.findByPlano(plano); }
+    public List<PlanoUsuario> findUserPlanByDataAssinatura(Date dataAssinatura) { return planoUsuarioRepository.findByDataAssinatura(dataAssinatura); }
+    public List<PlanoUsuario> findUserPlanByDataFinal(Date dataFinal) { return planoUsuarioRepository.findByDataFinal(dataFinal); }
 
 }

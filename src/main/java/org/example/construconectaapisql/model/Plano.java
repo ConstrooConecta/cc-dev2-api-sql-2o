@@ -12,25 +12,25 @@ public class Plano {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "plano_id")
-    @Schema(description = "Identificador único do Plano.", example = "1")
+    @Schema(description = "Identificador único do Plano", example = "1")
     private Long planoId;
 
     @Column(nullable = false, unique = true)
-    @Size(max = 100, message = "O nome do plano deve ter no máximo 100 caracteres.")
-    @Schema(description = "Nome do Plano.", example = "Premium")
+    @Size(max = 100, message = "O nome do plano deve ter no máximo 100 caracteres")
+    @Schema(description = "Nome do Plano", example = "Premium")
     private String nome;
 
-    @NotBlank(message = "A descrição do plano é obrigatória.")
-    @Size(min = 3, max = 255, message = "A descrição deve ter no mínimo 3 e no máximo 255 caracteres.")
-    @Schema(description = "Descrição (vantagens) do Plano.",
+    @NotBlank(message = "A descrição do plano é obrigatória")
+    @Size(min = 3, max = 255, message = "A descrição deve ter no mínimo 3 e no máximo 255 caracteres")
+    @Schema(description = "Descrição (vantagens) do Plano",
             example = "- Sem Anúncios" +
                       "\n- Sem Serviço" +
                       "\n- Cupons exclusivos")
     private String descricao;
 
-    @NotNull(message = "O valor do plano é obrigatório.")
+    @NotNull(message = "O valor do plano é obrigatório")
     @Column(precision = 10, scale = 2)
-    @Schema(description = "Valor do Plano.", example = "32.90")
+    @Schema(description = "Valor do Plano", example = "32.90")
     private BigDecimal valor;
 
     // Constructors, Getters and Setters
