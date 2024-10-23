@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.example.construconectaapisql.model.PlanoUsuario;
+import org.example.construconectaapisql.model.Usuario;
 import org.example.construconectaapisql.service.PlanoUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -19,10 +20,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user-plan")
@@ -31,7 +29,9 @@ public class PlanoUsuarioController {
     private final Validator validator;
 
     @Autowired
-    public PlanoUsuarioController(Validator validator, PlanoUsuarioService planoUsuarioService) {
+    public PlanoUsuarioController(
+            Validator validator, PlanoUsuarioService planoUsuarioService
+    ) {
         this.validator = validator;
         this.planoUsuarioService = planoUsuarioService;
     }
@@ -68,9 +68,9 @@ public class PlanoUsuarioController {
     })
     public ResponseEntity<?> addUserPlan(@RequestBody PlanoUsuario planoUsuario, BindingResult result) {
         if (result.hasErrors()) {
-            StringBuilder sb = new StringBuilder("Erros de validação: ");
+            StringBuilder sb = new StringBuilder("Erros de validação:\n ");
             result.getAllErrors().forEach(error -> {
-                sb.append(" | ");
+                sb.append(" |\n|");
                 sb.append(error.getDefaultMessage());
             });
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sb.toString());
@@ -92,31 +92,12 @@ public class PlanoUsuarioController {
         }
     }
 
-    @DeleteMapping("/delete/{planoUsuarioId}")
-    @Operation(summary = "Delete a user plan", description = "Deletes the user plan with the specified planoUsuarioId")
+    @DeleteMapping("/delete/{userPlanId}")
+    @Operation(summary = "Delete a user plan", description = "Deletes the user plan with the specified userPlanId")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "User Plan deleted successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = PlanoUsuario.class))),
-            @ApiResponse(responseCode = "404", description = "User Plan not found",
-                    content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content(mediaType = "text/plain"))
-    })
-    public ResponseEntity<?> deleteUserPlanByPlanoUsuarioId ( @PathVariable Long planoUsuarioId ) {
-        planoUsuarioService.deleteUserPlan(planoUsuarioId);
-        return ResponseEntity.ok("Plano do usuário excluído com sucesso");
-    }
-
-    @PatchMapping("/update/{planoUsuarioId}")
-    @Operation(summary = "Update a user plan", description = "Updates the user plan data with the specified planoUsuarioId")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "User Plan updated successfully",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = PlanoUsuario.class))),
@@ -127,29 +108,74 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updateUserPlan( @Valid @PathVariable Long planoUsuarioId,
-                                          @RequestBody Map<String, Object> updates ) {
+    public ResponseEntity<?> deleteUserPlanByPlanoUsuarioId ( @PathVariable Long userPlanId ) {
         try {
-            PlanoUsuario planoUsuario = planoUsuarioService.findUserPlanById(planoUsuarioId);
-            if (updates.containsKey("cpf") ) { planoUsuario.setPlano((Integer) updates.get("plano")); }
+            planoUsuarioService.deleteUserPlan(userPlanId);
+            return ResponseEntity.ok("Plano do usuário excluído com sucesso");
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: \n" + e.getMessage());
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar dados do plano do usuário: \n" + e.getMessage());
+        }
+    }
+
+    @PatchMapping("/update/{userPlanId}")
+    @Operation(summary = "Update a user plan", description = "Updates the user plan data with the specified userPlanId")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User Plan updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PlanoUsuario.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "User Plan not found", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "text/plain"))
+    })
+    public ResponseEntity<?> updateUserPlan(@Valid @PathVariable Long userPlanId, @RequestBody Map<String, Object> updates) {
+        try {
+            PlanoUsuario planoUsuario = planoUsuarioService.findUserPlanById(userPlanId);
+
+            // Lista de campos válidos que podem ser atualizados
+            List<String> validFields = Arrays.asList("plano");
+
+            // Itera sobre as atualizações e só aplica as que são válidas
+            for (Map.Entry<String, Object> entry : updates.entrySet()) {
+                String field = entry.getKey();
+                if (!validFields.contains(field)) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Campo '" + field + "' não é válido para atualização.");
+                }
+
+                switch (field) {
+                    case "plano":
+                        planoUsuario.setPlano((Integer) entry.getValue());
+                        break;
+                    default:
+                        // Este default nunca será alcançado devido à verificação da lista `validFields`
+                        break;
+                }
+            }
+
+            // Validação do plano do usuário atualizado
             DataBinder binder = new DataBinder(planoUsuario);
             binder.setValidator(validator);
             binder.validate();
             BindingResult result = binder.getBindingResult();
             if (result.hasErrors()) {
-                Map errors = validate(result);
+                Map<String, String> errors = validate(result);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
             }
 
             planoUsuarioService.saveUserPlan(planoUsuario);
-            return ResponseEntity.ok("O plano do usuário com planoUsuarioId " + planoUsuarioId + " foi atualizado com sucesso.");
+            return ResponseEntity.ok("O plano do usuário com userPlanId " + userPlanId + " foi atualizado com sucesso.");
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    @GetMapping("/findById/{planoUsuarioId}")
-    @Operation(summary = "Find user plan by planoUsuarioId", description = "Returns the user plan with the specified planoUsuarioId")
+    @GetMapping("/findById/{userPlanId}")
+    @Operation(summary = "Find user plan by userPlanId", description = "Returns the user plan with the specified userPlanId")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User plan found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = PlanoUsuario.class))),
@@ -158,8 +184,16 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findUserPlanById ( @PathVariable Long planoUsuarioId ) {
-        return ResponseEntity.ok(planoUsuarioService.findUserPlanById(planoUsuarioId));
+    public ResponseEntity<?> findUserPlanById ( @PathVariable Long userPlanId ) {
+        try {
+            PlanoUsuario userPlan = planoUsuarioService.findUserPlanById(userPlanId);
+            if (userPlan == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Plano do usuário não encontrado.");
+            }
+            return ResponseEntity.ok(userPlan);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: " + e.getMessage());
+        }
     }
 
     @GetMapping("/findByUserId/{usuario}")

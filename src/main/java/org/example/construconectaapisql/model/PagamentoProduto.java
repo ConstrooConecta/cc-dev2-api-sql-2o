@@ -20,6 +20,7 @@ public class PagamentoProduto {
     private Integer pedido;
 
     @Column(name = "usuario_id", nullable = false)
+    @Size(min = 28, max = 28, message = "O UID deve ter 28 caracteres")
     @Schema(description = "UID do usuário que realizou o pagamento", example = "TwbSHSFVasyefyw42SFJAIoQDjJA")
     private String usuario;
 

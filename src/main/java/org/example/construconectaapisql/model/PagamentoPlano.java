@@ -3,7 +3,6 @@ package org.example.construconectaapisql.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-
 import java.math.BigDecimal;
 import java.util.Date;
 

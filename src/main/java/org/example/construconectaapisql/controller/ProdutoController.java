@@ -35,7 +35,12 @@ public class ProdutoController {
     private final Validator validator;
 
     @Autowired
-    public ProdutoController(Validator validator, ProdutoService produtoService, ProdutoRepository produtoRepository, CategoriaRepository categoriaRepository) {
+    public ProdutoController(
+            Validator validator,
+            ProdutoService produtoService,
+            ProdutoRepository produtoRepository,
+            CategoriaRepository categoriaRepository
+    ) {
         this.produtoService = produtoService;
         this.validator = validator;
         this.produtoRepository = produtoRepository;
@@ -60,7 +65,7 @@ public class ProdutoController {
     @Operation(summary = "Add a new product", description = "Create a new product and saves it to the database")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
+                       responseCode = "200",
                     description = "Product created successfully",
                     content = @Content(
                             mediaType = "application/json",
@@ -118,25 +123,6 @@ public class ProdutoController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = Produto.class))),
-            @ApiResponse(responseCode = "404", description = "Product not found",
-                    content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content(mediaType = "text/plain"))
-    })
-    public ResponseEntity<?> deleteProductByProdutoId ( @PathVariable Long produtoId ) {
-        produtoService.deleteProduct(produtoId);
-        return ResponseEntity.ok("Produto excluído com sucesso");
-    }
-
-    @PatchMapping("/update/{produtoId}")
-    @Operation(summary = "Update a product", description = "Updates the product data with the specified produtoId")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Product updated successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = Produto.class))),
             @ApiResponse(responseCode = "400", description = "Validation error",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Product not found",
@@ -144,24 +130,81 @@ public class ProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updateProduct ( @Valid @PathVariable Long produtoId,
-                                             @RequestBody Map<String, Object> updates ) {
+    public ResponseEntity<?> deleteProductByProdutoId ( @PathVariable Long produtoId ) {
+        try {
+            produtoService.deleteProduct(produtoId);
+            return ResponseEntity.ok("Produto excluído com sucesso");
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: \n" + e.getMessage());
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar produto: \n" + e.getMessage());
+        }
+    }
+
+    @PatchMapping("/update/{produtoId}")
+    @Operation(summary = "Update a product", description = "Updates the product data with the specified produtoId")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Product updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Produto.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Product not found", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "text/plain"))
+    })
+    public ResponseEntity<?> updateProduct(@Valid @PathVariable Long produtoId, @RequestBody Map<String, Object> updates) {
         try {
             Produto produto = produtoService.findProductsById(produtoId);
-            if (updates.containsKey("nomeProduto")) { produto.setNomeProduto((String) updates.get("nomeProduto")); }
-            if (updates.containsKey("estoque")) { produto.setEstoque((Integer) updates.get("estoque")); }
-            if (updates.containsKey("descricao")) { produto.setDescricao((String) updates.get("descricao")); }
-            if (updates.containsKey("preco")) { produto.setPreco((BigDecimal) updates.get("preco")); }
-            if (updates.containsKey("condicao")) { produto.setCondicao((Boolean) updates.get("condicao")); }
-            if (updates.containsKey("desconto")) { produto.setDesconto((BigDecimal) updates.get("desconto")); }
-            if (updates.containsKey("imagem")) { produto.setImagem((String) updates.get("imagem")); }
-            if (updates.containsKey("topico")) { produto.setTopico((Integer) updates.get("topico")); }
+
+            // Lista de campos válidos que podem ser atualizados
+            List<String> validFields = Arrays.asList("nomeProduto", "estoque", "descricao", "preco", "condicao", "desconto", "imagem", "topico");
+
+            // Itera sobre as atualizações e só aplica as que são válidas
+            for (Map.Entry<String, Object> entry : updates.entrySet()) {
+                String field = entry.getKey();
+                if (!validFields.contains(field)) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Campo '" + field + "' não é válido para atualização.");
+                }
+
+                switch (field) {
+                    case "nomeProduto":
+                        produto.setNomeProduto((String) entry.getValue());
+                        break;
+                    case "estoque":
+                        produto.setEstoque((Integer) entry.getValue());
+                        break;
+                    case "descricao":
+                        produto.setDescricao((String) entry.getValue());
+                        break;
+                    case "preco":
+                        produto.setPreco((BigDecimal) entry.getValue());
+                        break;
+                    case "condicao":
+                        produto.setCondicao((Boolean) entry.getValue());
+                        break;
+                    case "desconto":
+                        produto.setDesconto((BigDecimal) entry.getValue());
+                        break;
+                    case "imagem":
+                        produto.setImagem((String) entry.getValue());
+                        break;
+                    case "topico":
+                        produto.setTopico((Integer) entry.getValue());
+                        break;
+                    default:
+                        // Este default nunca será alcançado devido à verificação da lista `validFields`
+                        break;
+                }
+            }
+
+            // Validação do produto atualizado
             DataBinder binder = new DataBinder(produto);
             binder.setValidator(validator);
             binder.validate();
             BindingResult result = binder.getBindingResult();
             if (result.hasErrors()) {
-                Map errors = validate(result);
+                Map<String, String> errors = validate(result);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
             }
 
@@ -192,7 +235,7 @@ public class ProdutoController {
             }
             return ResponseEntity.ok(produto);
         } catch (Exception e) {
-            return ResponseEntity.ok(produtoService.findByProdutoId(produtoId));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: " + e.getMessage());
         }
     }
 
@@ -235,7 +278,7 @@ public class ProdutoController {
     }
 
     @GetMapping("/findByUser/userId/{userId}")
-    @Operation(summary = "Search products by usuarioId", description = "Returns a list of products with the specified usuarioId")
+    @Operation(summary = "Search products by userId", description = "Returns a list of products with the specified userId")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Produto.class))),
@@ -280,7 +323,7 @@ public class ProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "text/plain"))
     })
     public ResponseEntity<List<Produto>> searchByNomeCategoria(@PathVariable String nomeCategoria) {
-        List<Categoria> categorias = produtoService.findCategoriasByNome(nomeCategoria);
+        List<Categoria> categorias = produtoService.findByCategoryName(nomeCategoria);
 
         if (!categorias.isEmpty()) {
             List<Produto> produtos = produtoService.findByCategorias(categorias);

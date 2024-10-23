@@ -38,7 +38,7 @@ public class Produto {
     private Boolean condicao;
 
     @Column(precision = 10, scale = 2)
-    @Max(value = 1, message = "A porcentagem de desconto deve ser entre 0 e 1")
+    @Max(value = 1, message = "A porcentagem de desconto deve ser entre 0.0 e 1.0")
     @Schema(description = "Porcentagem de desconto aplicado no produto", example = "0.3")
     private BigDecimal desconto;
 
@@ -58,7 +58,7 @@ public class Produto {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "categoria_produto",
+            name = "Categoria_Produto",
             joinColumns = @JoinColumn(name = "produto_id"),
             inverseJoinColumns = @JoinColumn(name = "categoria_id")
     )

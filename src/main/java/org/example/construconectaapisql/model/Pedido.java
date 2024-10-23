@@ -2,6 +2,7 @@ package org.example.construconectaapisql.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -16,9 +17,23 @@ public class Pedido {
     @Schema(description = "UID do usuário que fez o pedido", example = "TwbSHSFVasyefyw42SFJAIoQDjJA")
     private String usuario;
 
-    @Column(name = "carrinho_id", nullable = false)
-    @Schema(description = "Identificador Único do carrinho relacionado ao pedido", example = "6")
-    private Integer carrinho;
+    @Column(precision = 10, scale = 2, name = "valor_total", nullable = false)
+    @Schema(description = "Valor total do pedido", example = "159.99")
+    private BigDecimal valorTotal;
+
+    @Column(precision = 10, scale = 2, name = "valor_frete", nullable = false)
+    @Schema(description = "Valor total do frete", example = "7.99")
+    private BigDecimal valorFrete;
+
+    @Column(name = "cupom")
+    @Schema(description = "Cupom de desconto aplicado ao pedido", example = "CONSTROO20")
+    @Max(value = 20, message = "O cupom deve ter no máximo 20 caracteres")
+    private String cupom;
+
+    @Column(precision = 10, scale = 2, name = "valor_desconto")
+    @Max(value = 1, message = "A porcentagem de desconto deve ser entre 0.0 e 1.0")
+    @Schema(description = "Valor do desconto (em porcentagem) oferecido pelo cupom", example = "0.20")
+    private BigDecimal valorDesconto;
 
     @Column(name = "data_pedido", nullable = false)
     @Schema(description = "Data em que o pedido foi realizado")
@@ -30,64 +45,63 @@ public class Pedido {
     @Temporal(TemporalType.DATE)
     private Date dataEntrega;
 
-    @Column(precision = 10, scale = 2, name = "valor_total", nullable = false)
-    @Schema(description = "Valor total do pedido", example = "159.99")
-    private BigDecimal valorTotal;
-
-    @Column(precision = 10, scale = 2, name = "valor_frete")
-    @Schema(description = "Valor total do frete", example = "22.99")
-    private BigDecimal valorFrete;
-
     public Pedido(){}
 
     public Pedido(
             Long pedidoId,
             String usuario,
-            Integer carrinho,
-            Date dataPedido,
-            Date dataEntrega,
             BigDecimal valorTotal,
-            BigDecimal valorFrete) {
+            BigDecimal valorFrete,
+            String cupom,
+            BigDecimal valorDesconto,
+            Date dataPedido,
+            Date dataEntrega
+    ) {
         this.pedidoId = pedidoId;
         this.usuario = usuario;
-        this.carrinho = carrinho;
-        this.dataPedido = dataPedido;
-        this.dataEntrega = dataEntrega;
         this.valorTotal = valorTotal;
         this.valorFrete = valorFrete;
+        this.cupom = cupom;
+        this.valorDesconto = valorDesconto;
+        this.dataPedido = dataPedido;
+        this.dataEntrega = dataEntrega;
     }
 
     public Long getPedidoId() { return pedidoId; }
     public void setPedidoId(Long pedidoId) { this.pedidoId = pedidoId; }
 
-    public String getUsuario() { return usuario; }
-    public void setUsuario(String usuario) { this.usuario = usuario; }
+    public String getUsuario() {return usuario;}
+    public void setUsuario(String usuario) {this.usuario = usuario;}
 
-    public Integer getCarrinho() { return carrinho; }
-    public void setCarrinho(Integer carrinho) { this.carrinho = carrinho; }
+    public BigDecimal getValorTotal() {return valorTotal;}
+    public void setValorTotal(BigDecimal valorTotal) {this.valorTotal = valorTotal;}
 
-    public Date getDataPedido() { return dataPedido; }
-    public void setDataPedido(Date dataPedido) { this.dataPedido = dataPedido; }
+    public BigDecimal getValorFrete() {return valorFrete;}
+    public void setValorFrete(BigDecimal valorFrete) {this.valorFrete = valorFrete;}
 
-    public Date getDataEntrega() { return dataEntrega; }
-    public void setDataEntrega(Date dataEntrega) { this.dataEntrega = dataEntrega; }
+    public String getCupom() {return cupom;}
+    public void setCupom(String cupom) {this.cupom = cupom;}
 
-    public BigDecimal getValorTotal() { return valorTotal; }
-    public void setValorTotal(BigDecimal valorTotal) { this.valorTotal = valorTotal; }
+    public BigDecimal getValorDesconto() {return valorDesconto;}
+    public void setValorDesconto(BigDecimal valorDesconto) {this.valorDesconto = valorDesconto;}
 
-    public BigDecimal getValorFrete() { return valorFrete; }
-    public void setValorFrete(BigDecimal valorFrete) { this.valorFrete = valorFrete; }
+    public Date getDataPedido() {return dataPedido;}
+    public void setDataPedido(Date dataPedido) {this.dataPedido = dataPedido;}
+
+    public Date getDataEntrega() {return dataEntrega;}
+    public void setDataEntrega(Date dataEntrega) {this.dataEntrega = dataEntrega;}
 
     @Override
     public String toString() {
         return "Pedido{" +
                 "pedidoId=" + pedidoId +
                 ", usuario='" + usuario + '\'' +
-                ", carrinho=" + carrinho +
-                ", dataPedido=" + dataPedido +
-                ", dataEntrega=" + dataEntrega +
                 ", valorTotal=" + valorTotal +
                 ", valorFrete=" + valorFrete +
+                ", cupom='" + cupom + '\'' +
+                ", valorDesconto=" + valorDesconto +
+                ", dataPedido=" + dataPedido +
+                ", dataEntrega=" + dataEntrega +
                 '}';
     }
 }

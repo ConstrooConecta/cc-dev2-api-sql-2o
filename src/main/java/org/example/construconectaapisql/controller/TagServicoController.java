@@ -6,8 +6,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import org.example.construconectaapisql.model.Categoria;
-import org.example.construconectaapisql.service.CategoriaService;
+import org.example.construconectaapisql.model.TagServico;
+import org.example.construconectaapisql.repository.TagServicoRepository;
+import org.example.construconectaapisql.service.ServicoService;
+import org.example.construconectaapisql.service.TagServicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,52 +26,56 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/category")
-public class CategoriaController {
-    private final CategoriaService categoriaService;
+@RequestMapping("/serviceTag")
+public class TagServicoController {
+    private final TagServicoRepository tagServicoRepository;
     private final Validator validator;
+    private final ServicoService servicoService;
+    private final TagServicoService tagServicoService;
 
     @Autowired
-    public CategoriaController(
+    public TagServicoController(
+            TagServicoRepository tagServicoRepository,
             Validator validator,
-            CategoriaService categoriaService
-    ) {
-        this.categoriaService = categoriaService;
+            ServicoService servicoService, TagServicoService tagServicoService) {
+        this.tagServicoRepository = tagServicoRepository;
         this.validator = validator;
+        this.servicoService = servicoService;
+        this.tagServicoService = tagServicoService;
     }
 
-    @GetMapping("/categories")
-    @Operation(summary = "Show all categories", description = "Returns a list of all available categories")
+    @GetMapping("/servicesTag")
+    @Operation(summary = "Show all services tag", description = "Returns a list of all available service tags")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "Successful operation",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = Categoria.class))),
+                            schema = @Schema(implementation = TagServico.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public List<Categoria> findAllCategories() { return categoriaService.findAllCategories(); }
+    public List<TagServico> findAllServicesTag() { return tagServicoService.findAllTags(); }
 
     @PostMapping("/add")
-    @Operation(summary = "Add a new category", description = "Create a new category and saves it to the database")
+    @Operation(summary = "Add a new services tag", description = "Create a new service tags and saves it to the database")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Category created successfully",
+                    description = "ServiceTag created successfully",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = Categoria.class))),
-            @ApiResponse(responseCode = "201", description = "Categories created successfully"),
-            @ApiResponse(responseCode = "400", description = "Validation error or category already exists",
+                            schema = @Schema(implementation = TagServico.class))),
+            @ApiResponse(responseCode = "201", description = "Services Tag created successfully"),
+            @ApiResponse(responseCode = "400", description = "Validation error or services tag already exists",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "409", description = "Data integrity violation",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> addCategory(@Valid @RequestBody Categoria categoria, BindingResult result) {
+    public ResponseEntity<?> addServiceTag(@Valid @RequestBody TagServico tagServico, BindingResult result) {
         if (result.hasErrors()) {
             StringBuilder sb = new StringBuilder("Erros de validação:\n ");
             result.getAllErrors().forEach(error -> {
@@ -80,44 +86,43 @@ public class CategoriaController {
         }
 
         try {
-            // Verificar se o nome da categoria já existe (ignorando maiúsculas/minúsculas)
-            if (categoriaService.existsByNameIgnoreCase(categoria.getNome())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Categoria já existe.");
+            if (tagServicoService.existsByNameIgnoreCase(tagServico.getNome())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tag de Servico já existe.");
             }
 
-            // Salvar a nova categoria
-            Categoria savedCategoria = categoriaService.saveCategories(categoria);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedCategoria);
+            // Salvar a nova tagServico
+            TagServico savedTagServico = tagServicoService.saveTags(tagServico);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedTagServico);
 
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: \n" + e.getMessage());
         } catch (DataAccessException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao adicionar categoria: \n" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao adicionar Tag de Servico: \n" + e.getMessage());
         }
     }
 
-    @DeleteMapping("/delete/{categoryId}")
-    @Operation(summary = "Delete a category", description = "Deletes the categories with the specified categoryId")
+    @DeleteMapping("/delete/{serviceTagId}")
+    @Operation(summary = "Delete a service tag", description = "Deletes the services tag with the specified serviceTagId")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Category deleted successfully",
+                    description = "Service Tag deleted successfully",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = Categoria.class))),
+                            schema = @Schema(implementation = TagServico.class))),
             @ApiResponse(responseCode = "400", description = "Validation error",
                     content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "404", description = "Category not found",
+            @ApiResponse(responseCode = "404", description = "Service Tag not found",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> deleteCategoryByCategoriaId ( @PathVariable Long categoryId ) {
+    public ResponseEntity<?> deleteServiceTagByServiceTagId ( @PathVariable Long serviceTagId ) {
         try {
-            categoriaService.deleteCategory(categoryId);
-            return ResponseEntity.ok("Categoria excluída com sucesso");
+            tagServicoService.deleteTag(serviceTagId);
+            return ResponseEntity.ok("Tag de Serviço excluída com sucesso");
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: \n" + e.getMessage());
         } catch (DataAccessException e) {
@@ -125,41 +130,41 @@ public class CategoriaController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar categoria: \n" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar Tag de Serviço: \n" + e.getMessage());
         }
     }
 
-    @PatchMapping("/update/{categoryId}")
-    @Operation(summary = "Update a category", description = "Updates the category data with the specified categoryId")
+    @PatchMapping("/update/{serviceTagId}")
+    @Operation(summary = "Update a service tag", description = "Updates the service tag data with the specified serviceTagId")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Category updated successfully.",
+                    description = "Service tag updated successfully.",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = Categoria.class))),
+                            schema = @Schema(implementation = TagServico.class))),
             @ApiResponse(responseCode = "400", description = "Validation error",
                     content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "404", description = "Category not found",
+            @ApiResponse(responseCode = "404", description = "Service tag not found",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updateCategory(@Valid @PathVariable Long categoryId,
-                                            @RequestBody Map<String, Object> updates) {
+    public ResponseEntity<?> updateServiceTag(@Valid @PathVariable Long serviceTagId,
+                                              @RequestBody Map<String, Object> updates) {
         try {
-            Categoria categoria = categoriaService.findCategoriesById(categoryId);
-            if (categoria == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoria não encontrada.");
+            TagServico tagServico = tagServicoService.findTagsById(serviceTagId);
+            if (tagServico == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tag de serviço não encontrada.");
             }
 
-            // Atualizando os campos da categoria se presentes no body
+            // Atualizando os campos do TagServico se presentes no body
             if (updates.containsKey("nome")) {
-                categoria.setNome((String) updates.get("nome"));
+                tagServico.setNome((String) updates.get("nome"));
             }
 
             // Validação dos dados atualizados
-            DataBinder binder = new DataBinder(categoria);
+            DataBinder binder = new DataBinder(tagServico);
             binder.setValidator(validator);
             binder.validate();
             BindingResult result = binder.getBindingResult();
@@ -168,14 +173,14 @@ public class CategoriaController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
             }
 
-            // Salvando a categoria atualizada
-            categoriaService.saveCategories(categoria);
-            return ResponseEntity.ok("A categoria com ID " + categoryId + " foi atualizada com sucesso.");
+            // Salvando a tag de serviço atualizada
+            tagServicoService.saveTags(tagServico);
+            return ResponseEntity.ok("A Tag de Serviço com ID " + serviceTagId + " foi atualizada com sucesso.");
 
         } catch (DataIntegrityViolationException e) {
             String message = e.getRootCause().getMessage();
             if (message.contains("nome")) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Categoria com este nome já existe.");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Já existe uma Tag de Serviço com este nome.");
             } else {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: " + e.getMessage());
             }
@@ -184,48 +189,48 @@ public class CategoriaController {
                     .body("Erro ao acessar o banco de dados: \n" + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao atualizar a categoria: \n" + e.getMessage());
+                    .body("Erro ao atualizar a Tag de Serviço: \n" + e.getMessage());
         }
     }
 
-    @GetMapping("/findById/{categoryId}")
-    @Operation(summary = "Find category by categoryId", description = "Returns the category with the specified categoryId")
+    @GetMapping("/findById/{serviceTagId}")
+    @Operation(summary = "Find service tag by serviceTagId", description = "Returns the service tag with the specified serviceTagId")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Category found",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class))),
-            @ApiResponse(responseCode = "404", description = "Category not found",
+            @ApiResponse(responseCode = "200", description = "ServiceTag found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TagServico.class))),
+            @ApiResponse(responseCode = "404", description = "ServiceTag not found",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findCategoriesById (@PathVariable Long categoryId) {
+    public ResponseEntity<?> findServicesTagById (@PathVariable Long serviceTagId) {
         try {
-            Categoria categoria = categoriaService.findCategoriesById(categoryId);
-            if (categoria == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoria não encontrada.");
+            TagServico tagServico = tagServicoService.findTagsById(serviceTagId);
+            if (tagServico == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("TagServico não encontrada.");
             }
-            return ResponseEntity.ok(categoria);
+            return ResponseEntity.ok(tagServico);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: " + e.getMessage());
         }
     }
 
     @GetMapping("/findByNome/{nome}")
-    @Operation(summary = "Search categories by name", description = "Returns a list of categories with the specified name")
+    @Operation(summary = "Search services tag by name", description = "Returns a list of service tags with the specified name")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Category found",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class))),
-            @ApiResponse(responseCode = "404", description = "Category not found",
+            @ApiResponse(responseCode = "200", description = "ServiceTag found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TagServico.class))),
+            @ApiResponse(responseCode = "404", description = "ServiceTag not found",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
     public ResponseEntity<?> searchByNomeCompleto ( @PathVariable String nome ) {
-        List<Categoria> lCategoria = categoriaService.findByNome(nome);
-        if(!lCategoria.isEmpty()) {
-            return ResponseEntity.ok(lCategoria);
+        List<TagServico> lTagServico = tagServicoService.findByNome(nome);
+        if(!lTagServico.isEmpty()) {
+            return ResponseEntity.ok(lTagServico);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoria não encontrada.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("TagServico não encontrada.");
         }
     }
 
@@ -236,4 +241,5 @@ public class CategoriaController {
         }
         return errors;
     }
+
 }

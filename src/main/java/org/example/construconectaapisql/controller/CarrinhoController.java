@@ -95,14 +95,26 @@ public class CarrinhoController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = Carrinho.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error",
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Shopping Cart not found",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
     public ResponseEntity<?> deleteShoppingCartById ( @PathVariable Long shoppingCartId ) {
-        carrinhoService.deleteShoppingCart(shoppingCartId);
-        return ResponseEntity.ok("Carrinho de compras excluído com sucesso");
+        try {
+            carrinhoService.deleteShoppingCart(shoppingCartId);
+            return ResponseEntity.ok("Carrinho de compras excluído com sucesso");
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: \n" + e.getMessage());
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar carrinho: \n" + e.getMessage());
+        }
     }
 
     @DeleteMapping("/deleteByUsuarioId/{userId}")
@@ -114,6 +126,8 @@ public class CarrinhoController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = Carrinho.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error",
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Shopping Cart not found",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error",
@@ -123,10 +137,14 @@ public class CarrinhoController {
         try {
             carrinhoService.deleteShoppingCartByUserId(userId);
             return ResponseEntity.ok("Carrinho deletado com sucesso para o usuário: " + userId);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: \n" + e.getMessage());
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar carrinho: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar carrinho: \n" + e.getMessage());
         }
     }
 
@@ -139,6 +157,8 @@ public class CarrinhoController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = Carrinho.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error",
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Shopping Cart not found",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error",
@@ -148,10 +168,14 @@ public class CarrinhoController {
         try {
             carrinhoService.deleteShoppingCartByIdentifier(identifier);
             return ResponseEntity.ok("Carrinho deletado com sucesso para o identifier: " + identifier);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: \n" + e.getMessage());
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar carrinho: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar carrinho: \n" + e.getMessage());
         }
     }
 

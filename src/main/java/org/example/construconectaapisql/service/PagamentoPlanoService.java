@@ -12,18 +12,15 @@ import java.util.List;
 public class PagamentoPlanoService {
     private final PagamentoPlanoRepository pagamentoPlanoRepository;
 
-    public PagamentoPlanoService(PagamentoPlanoRepository pagamentoPlanoRepository) {
+    public PagamentoPlanoService(
+            PagamentoPlanoRepository pagamentoPlanoRepository
+    ) {
         this.pagamentoPlanoRepository = pagamentoPlanoRepository;
     }
 
     public List<PagamentoPlano> findAllPaymentsPlan() { return pagamentoPlanoRepository.findAll(); }
 
     public PagamentoPlano savePaymentPlan(PagamentoPlano pagamentoPlano) { return pagamentoPlanoRepository.save(pagamentoPlano); }
-
-    public PagamentoPlano findPaymentPlanById(Long id) {
-        return pagamentoPlanoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pagamento do Plano não encontrado."));
-    }
 
     @Transactional
     public PagamentoPlano deletePaymentPlan(Long pagamentoPlanoId) {
@@ -32,12 +29,14 @@ public class PagamentoPlanoService {
         return pagamentoPlano;
     }
 
+    public PagamentoPlano findPaymentPlanById(Long id) {
+        return pagamentoPlanoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Dados de Pagamento do Plano não encontrado."));
+    }
+
     public List<PagamentoPlano> findByPlanoId(Integer plano) { return pagamentoPlanoRepository.findByPlano(plano); }
-
     public List<PagamentoPlano> findByUserId(String usuario) { return pagamentoPlanoRepository.findByUsuario(usuario); }
-
     public List<PagamentoPlano> findByDataPagamento(Date dataPagamento) { return pagamentoPlanoRepository.findByDataPagamento(dataPagamento); }
-
     public List<PagamentoPlano> findByTipoPagamento(String tipoPagamento) { return pagamentoPlanoRepository.findByTipoPagamento(tipoPagamento); }
 
 }

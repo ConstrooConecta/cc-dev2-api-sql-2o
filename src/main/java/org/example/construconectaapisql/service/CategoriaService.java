@@ -4,7 +4,6 @@ import org.example.construconectaapisql.model.Categoria;
 import org.example.construconectaapisql.repository.CategoriaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
@@ -16,7 +15,11 @@ public class CategoriaService {
     public List<Categoria> findAllCategories() { return categoriaRepository.findAll(); }
 
     @Transactional
-    public Categoria saveCategories(Categoria categoria) { return categoriaRepository.save(categoria); }
+    public Categoria saveCategories(Categoria categoria) {
+        boolean  isUpdate = categoria.getCategoriaId() != null && categoriaRepository.existsById(categoria.getCategoriaId());
+        validateUniqueFields(categoria, isUpdate);
+        return categoriaRepository.save(categoria);
+    }
 
     public Categoria findCategoriesById(Long categoriaId) {
         return categoriaRepository.findById(categoriaId)
@@ -36,4 +39,12 @@ public class CategoriaService {
         return categoriaRepository.existsByNomeIgnoreCase(nome);
     }
 
+    private void validateUniqueFields(Categoria categoria, boolean isUpdate) {
+        // Se não for uma atualização ou o CPF for diferente do CPF existente, validar
+        if (!isUpdate || !categoriaRepository.findById(categoria.getCategoriaId()).get().getNome().equals(categoria.getNome())) {
+            if (!categoriaRepository.findByNomeLikeIgnoreCase(categoria.getNome()).isEmpty()) {
+                throw new RuntimeException("Categoria com este nome já existe.");
+            }
+        }
+    }
 }

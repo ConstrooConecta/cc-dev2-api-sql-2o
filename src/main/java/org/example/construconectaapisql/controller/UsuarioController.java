@@ -19,10 +19,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -70,7 +67,9 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> addUser(@Valid @RequestBody Usuario usuario, BindingResult result) {
+    public ResponseEntity<?> addUser(@Valid @RequestBody Usuario usuario,
+                                     BindingResult result
+    ) {
         if (result.hasErrors()) {
             StringBuilder sb = new StringBuilder("Erros de validação:\n ");
             result.getAllErrors().forEach(error -> {
@@ -105,25 +104,6 @@ public class UsuarioController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = Usuario.class))),
-            @ApiResponse(responseCode = "404", description = "User not found",
-                    content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content(mediaType = "text/plain"))
-    })
-    public ResponseEntity<?> deleteUserByUsuarioId ( @PathVariable String uid ) {
-        usuarioService.deleteUser(uid);
-        return ResponseEntity.ok("Usuário excluído com sucesso");
-    }
-
-    @PatchMapping("/update/{uid}")
-    @Operation(summary = "Update a user", description = "Updates the user data with the specified UID")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "User updated successfully.",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = Usuario.class))),
             @ApiResponse(responseCode = "400", description = "Validation error",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "User not found",
@@ -131,26 +111,85 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updateUser ( @Valid @PathVariable String uid,
-                                          @RequestBody Map<String, Object> updates ) {
+    public ResponseEntity<?> deleteUserByUsuarioId ( @PathVariable String uid ) {
+        try {
+            usuarioService.deleteUser(uid);
+            return ResponseEntity.ok("Usuário excluído com sucesso");
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: \n" + e.getMessage());
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar usuário: \n" + e.getMessage());
+        }
+    }
+
+    @PatchMapping("/update/{uid}")
+    @Operation(summary = "Update a user", description = "Updates the user data with the specified UID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User updated successfully.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Usuario.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "text/plain"))
+    })
+    public ResponseEntity<?> updateUser( @Valid @PathVariable String uid,
+                                         @RequestBody Map<String, Object> updates ) {
         try {
             Usuario usuario = usuarioService.findUsersByUid(uid);
-            if (updates.containsKey("cpf") ) { usuario.setCpf((String) updates.get("cpf")); }
-            if (updates.containsKey("nomeCompleto") ) { usuario.setNomeCompleto((String) updates.get("nomeCompleto")); }
-            if (updates.containsKey("nomeUsuario") ) { usuario.setNomeUsuario((String) updates.get("nomeUsuario")); }
-            if (updates.containsKey("email") ) { usuario.setEmail((String) updates.get("email")); }
-            if (updates.containsKey("senha") ) { usuario.setSenha((String) updates.get("senha")); }
-            if (updates.containsKey("telefone")) { usuario.setTelefone((String) updates.get("telefone")); }
-            if (updates.containsKey("dataNascimento") ) { usuario.setDataNascimento((Date) updates.get("dataNascimento")); }
-            if (updates.containsKey("genero") ) { usuario.setGenero((Integer) updates.get("genero")); }
+
+            // Lista de campos válidos que podem ser atualizados
+            List<String> validFields = Arrays.asList("cpf", "nomeCompleto", "nomeUsuario", "email", "senha", "telefone", "dataNascimento", "genero");
+
+            // Itera sobre as atualizações e só aplica as que são válidas
+            for (Map.Entry<String, Object> entry : updates.entrySet()) {
+                String field = entry.getKey();
+                if (!validFields.contains(field)) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Campo '" + field + "' não é válido para atualização.");
+                }
+
+                switch (field) {
+                    case "cpf":
+                        usuario.setCpf((String) entry.getValue());
+                        break;
+                    case "nomeCompleto":
+                        usuario.setNomeCompleto((String) entry.getValue());
+                        break;
+                    case "nomeUsuario":
+                        usuario.setNomeUsuario((String) entry.getValue());
+                        break;
+                    case "email":
+                        usuario.setEmail((String) entry.getValue());
+                        break;
+                    case "senha":
+                        usuario.setSenha((String) entry.getValue());
+                        break;
+                    case "telefone":
+                        usuario.setTelefone((String) entry.getValue());
+                        break;
+                    case "dataNascimento":
+                        usuario.setDataNascimento((Date) entry.getValue());
+                        break;
+                    case "genero":
+                        usuario.setGenero((Integer) entry.getValue());
+                        break;
+                    default:
+                        // Este default nunca será alcançado devido à verificação da lista `validFields`
+                        break;
+                }
+            }
+
+            // Validação do usuário atualizado
             DataBinder binder = new DataBinder(usuario);
             binder.setValidator(validator);
             binder.validate();
             BindingResult result = binder.getBindingResult();
             if (result.hasErrors()) {
-                Map errors = validate(result);
+                Map<String, String> errors = validate(result);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
             }
+
             usuarioService.saveUsers(usuario);
             return ResponseEntity.ok("O usuário com uid " + uid + " foi atualizado com sucesso.");
         } catch (DataIntegrityViolationException e) {
@@ -162,8 +201,8 @@ public class UsuarioController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Email já está em uso.");
             } else if (message.contains("nomeUsuario")) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Nome de usuário já está em uso.");
-            }  else if (message.contains("cpf")) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Nome de usuário já está em uso.");
+            } else if (message.contains("cpf")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: CPF já está em uso.");
             } else {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: " + e.getMessage());
             }
@@ -195,7 +234,6 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: " + e.getMessage());
         }
     }
-
 
     @GetMapping("/findByNomeCompleto/{nomeCompleto}")
     @Operation(summary = "Search users by full name", description = "Returns a list of users with the specified full name")
@@ -283,7 +321,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByDataNascimento ( @PathVariable String telefone ) {
+    public ResponseEntity<?> searchByTelefone ( @PathVariable String telefone ) {
         List<Usuario> lUsuario = usuarioService.findByTelefone(telefone);
         if (!lUsuario.isEmpty()) {
             return ResponseEntity.ok(lUsuario);

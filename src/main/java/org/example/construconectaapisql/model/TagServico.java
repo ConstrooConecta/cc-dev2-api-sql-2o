@@ -13,7 +13,7 @@ public class TagServico {
     @Schema(description = "Identificador Único da Tag do Serviço", example = "1")
     private Long tagServicoId;
 
-    @NotBlank(message = "O nome da Tag é obrigatório.")
+    @NotBlank(message = "O nome da Tag é obrigatório")
     @Size(max = 100, message = "O nome da Tag deve ter no máximo 100 caracteres")
     @Schema(description = "Nome da Tag de Serviço", example = "Encanador")
     private String nome;
@@ -33,4 +33,12 @@ public class TagServico {
 
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
+
+    @Override
+    public String toString() {
+        return "TagServico{" +
+                "tagServicoId=" + tagServicoId +
+                ", nome='" + nome + '\'' +
+                '}';
+    }
 }

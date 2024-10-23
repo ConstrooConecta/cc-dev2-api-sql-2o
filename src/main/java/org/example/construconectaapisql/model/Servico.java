@@ -36,7 +36,7 @@ public class Servico {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "tagservico_servico",
+            name = "TagServico_Servico",
             joinColumns = @JoinColumn(name = "servico_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_servico_id")
     )

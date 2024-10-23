@@ -18,8 +18,8 @@ import org.springframework.validation.DataBinder;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,9 +71,9 @@ public class PlanoController {
     })
     public ResponseEntity<?> addPlan(@RequestBody Plano plano, BindingResult result) {
         if (result.hasErrors()) {
-            StringBuilder sb = new StringBuilder("Validation errors: ");
+            StringBuilder sb = new StringBuilder("Validation errors:\n ");
             result.getAllErrors().forEach(error -> {
-                sb.append(" | ");
+                sb.append(" |\n| ");
                 sb.append(error.getDefaultMessage());
             });
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sb.toString());
@@ -95,31 +95,12 @@ public class PlanoController {
         }
     }
 
-    @DeleteMapping("/delete/{planoId}")
+    @DeleteMapping("/delete/{planId}")
     @Operation(summary = "Delete a plan", description = "Deletes the plan with the specified ID")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "Plan deleted successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = Plano.class))),
-            @ApiResponse(responseCode = "404", description = "Plan not found",
-                    content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content(mediaType = "text/plain"))
-    })
-    public ResponseEntity<?> deletePlanById(@PathVariable Long planoId) {
-        planoService.deletePlan(planoId);
-        return ResponseEntity.ok("Plano excluído com sucesso");
-    }
-
-    @PatchMapping("/update/{planoId}")
-    @Operation(summary = "Update a plan", description = "Updates the plan data with the specified ID")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Plan updated successfully",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = Plano.class))),
@@ -130,36 +111,87 @@ public class PlanoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updatePlan(@Valid @PathVariable Long planoId, @RequestBody Map<String, Object> updates) {
+    public ResponseEntity<?> deletePlanById(@PathVariable Long planId) {
         try {
-            Plano plano = planoService.findPlanById(planoId);
-            if (updates.containsKey("nome")) {
-                plano.setNome((String) updates.get("nome"));
-            }
-            if (updates.containsKey("descricao")) {
-                plano.setDescricao((String) updates.get("descricao"));
-            }
-            if (updates.containsKey("valor")) {
-                plano.setValor((BigDecimal) updates.get("valor"));
+            planoService.deletePlan(planId);
+            return ResponseEntity.ok("Plano excluído com sucesso");
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: \n" + e.getMessage());
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar plano: \n" + e.getMessage());
+        }
+    }
+
+    @PatchMapping("/update/{planId}")
+    @Operation(summary = "Update a plan", description = "Updates the plan data with the specified ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Plan updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Plano.class))),
+            @ApiResponse(responseCode = "400", description = "Validation error", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Plan not found", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "text/plain"))
+    })
+    public ResponseEntity<?> updatePlan(@Valid @PathVariable Long planId, @RequestBody Map<String, Object> updates) {
+        try {
+            Plano plano = planoService.findPlanById(planId);
+
+            // Lista de campos válidos que podem ser atualizados
+            List<String> validFields = Arrays.asList("nome", "descricao", "valor");
+
+            // Itera sobre as atualizações e só aplica as que são válidas
+            for (Map.Entry<String, Object> entry : updates.entrySet()) {
+                String field = entry.getKey();
+                if (!validFields.contains(field)) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Campo '" + field + "' não é válido para atualização.");
+                }
+
+                switch (field) {
+                    case "nome":
+                        plano.setNome((String) entry.getValue());
+                        break;
+                    case "descricao":
+                        plano.setDescricao((String) entry.getValue());
+                        break;
+                    case "valor":
+                        plano.setValor((BigDecimal) entry.getValue());
+                        break;
+                    default:
+                        // Este default nunca será alcançado devido à verificação da lista `validFields`
+                        break;
+                }
             }
 
+            // Validação do plano atualizado
             DataBinder binder = new DataBinder(plano);
             binder.setValidator(validator);
             binder.validate();
             BindingResult result = binder.getBindingResult();
             if (result.hasErrors()) {
-                Map errors = validate(result);
+                Map<String, String> errors = validate(result);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
             }
 
             planoService.savePlan(plano);
-            return ResponseEntity.ok("O plano com ID " + planoId + " foi atualizado com sucesso.");
+            return ResponseEntity.ok("O plano com ID " + planId + " foi atualizado com sucesso.");
+        } catch (DataIntegrityViolationException e) {
+            String message = e.getRootCause().getMessage();
+            if (message.contains("nome")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro: Este nome de plano já está em uso.");
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: " + e.getMessage());
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao acessar o banco de dados: \n" + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    @GetMapping("/findById/{planoId}")
+
+    @GetMapping("/findById/{planId}")
     @Operation(summary = "Find plan by ID", description = "Returns the plan with the specified ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Plan found",
@@ -169,8 +201,22 @@ public class PlanoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findPlanById(@PathVariable Long id) {
-        return ResponseEntity.ok(planoService.findPlanById(id));
+    public ResponseEntity<?> findPlanById(@PathVariable Long planId) {
+        return ResponseEntity.ok(planoService.findPlanById(planId));
+    }
+
+    @GetMapping("/findByName/{nane}")
+    @Operation(summary = "Find plan by name", description = "Returns the plan with the specified name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Plan found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Plano.class))),
+            @ApiResponse(responseCode = "404", description = "Plan not found",
+                    content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "text/plain"))
+    })
+    public ResponseEntity<?> findPlanByName(@PathVariable String name) {
+        return ResponseEntity.ok(planoService.findByNomeCompletoLikeIgnoreCase(name));
     }
 
     public Map<String, String> validate(BindingResult resultado) {
