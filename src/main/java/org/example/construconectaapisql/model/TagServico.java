@@ -3,7 +3,10 @@ package org.example.construconectaapisql.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.math.BigDecimal;
 
 @Entity
 public class TagServico {
@@ -18,14 +21,21 @@ public class TagServico {
     @Schema(description = "Nome da Tag de Serviço", example = "Encanador")
     private String nome;
 
+    @NotNull(message = "O preço médio é obrigatório")
+    @Column(name = "preco_medio", precision = 10, scale = 2)
+    @Schema(description = "Preço Médio do Serviço", example = "359.99")
+    private BigDecimal precoMedio;
+
     public TagServico() {}
 
     public TagServico(
             Long tagServicoId,
-            String nome
+            String nome,
+            BigDecimal precoMedio
     ) {
         this.tagServicoId = tagServicoId;
         this.nome = nome;
+        this.precoMedio = precoMedio;
     }
 
     public Long getTagServicoId() { return tagServicoId; }
@@ -34,11 +44,15 @@ public class TagServico {
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
 
+    public BigDecimal getPrecoMedio() { return precoMedio; }
+    public void setPrecoMedio(BigDecimal precoMedio) { this.precoMedio = precoMedio; }
+
     @Override
     public String toString() {
         return "TagServico{" +
                 "tagServicoId=" + tagServicoId +
                 ", nome='" + nome + '\'' +
+                ", precoMedio=" + precoMedio +
                 '}';
     }
 }
