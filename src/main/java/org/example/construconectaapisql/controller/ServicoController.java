@@ -72,14 +72,14 @@ public class ServicoController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = Servico.class))),
-            @ApiResponse(responseCode = "400", description = "Validation error or service already exists",
+            @ApiResponse(responseCode = "400", description = "Validation error or service name does not exist in TagServico",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "409", description = "Data integrity violation",
                     content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> addService( @RequestBody Servico servico, BindingResult result ) {
+    public ResponseEntity<?> addService(@RequestBody Servico servico, BindingResult result) {
         if (result.hasErrors()) {
             StringBuilder sb = new StringBuilder("Erros de validação:\n ");
             result.getAllErrors().forEach(error -> {
@@ -89,12 +89,18 @@ public class ServicoController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sb.toString());
         }
 
+        // Verifica se o nome do serviço existe na tabela TagServico
+        if (!tagServicoRepository.existsByNomeIgnoreCase(servico.getNomeServico())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("TagServico com esse nome não existe.");
+        }
+
         try {
+            // Se a TagServico existir, salva o serviço
             Servico savedService = servicoService.saveServices(servico);
             if (savedService != null) {
                 return ResponseEntity.status(HttpStatus.CREATED).body(savedService);
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Serviço já existe.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar o serviço.");
             }
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de integridade de dados: \n" + e.getMessage());
@@ -296,5 +302,4 @@ public class ServicoController {
         }
         return errors;
     }
-
 }

@@ -12,7 +12,6 @@ import java.util.List;
 public class ItemPedidoService {
     private final ItemPedidoRepository itemPedidoRepository;
 
-
     public ItemPedidoService(
             ItemPedidoRepository itemPedidoRepository
     ) { this.itemPedidoRepository = itemPedidoRepository; }
@@ -36,5 +35,4 @@ public class ItemPedidoService {
 
     public List<ItemPedido> findByProduct(Integer productId) { return itemPedidoRepository.findByProduto(productId); }
     public List<ItemPedido> findByOrder(Integer orderId) { return itemPedidoRepository.findByPedido(orderId); }
-
 }

@@ -21,9 +21,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 @RestController
 @RequestMapping("/serviceTag")
@@ -154,13 +153,26 @@ public class TagServicoController {
                                               @RequestBody Map<String, Object> updates) {
         try {
             TagServico tagServico = tagServicoService.findTagsById(serviceTagId);
-            if (tagServico == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tag de serviço não encontrada.");
-            }
 
-            // Atualizando os campos do TagServico se presentes no body
-            if (updates.containsKey("nome")) {
-                tagServico.setNome((String) updates.get("nome"));
+            List<String> validFields = Arrays.asList("nome", "precoMedio");
+
+            for (Map.Entry<String, Object> entry : updates.entrySet()) {
+                String field = entry.getKey();
+                if (!validFields.contains(field)) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Campo '" + field + "' não é válido para atualização.");
+                }
+
+                switch (field) {
+                    case "nome":
+                        tagServico.setNome((String) entry.getValue());
+                        break;
+                    case "precoMedio":
+                        tagServico.setPrecoMedio((BigDecimal) entry.getValue());
+                        break;
+                    default:
+                        // Este default nunca será alcançado devido à verificação da lista `validFields`
+                        break;
+                }
             }
 
             // Validação dos dados atualizados
