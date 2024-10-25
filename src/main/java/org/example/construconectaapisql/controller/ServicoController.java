@@ -259,7 +259,7 @@ public class ServicoController {
         }
     }
 
-    @GetMapping("/findByServiceTag/service tagName/{serviceTagName}")
+    @GetMapping("/findByServiceTag/serviceTagName/{serviceTagName}")
     @Operation(summary = "Search services tag by service tag name", description = "Returns a list of services tag within the specified service tag name")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Services tag found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Servico.class))),
