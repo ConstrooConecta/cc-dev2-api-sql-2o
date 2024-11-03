@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public interface TagServicoRepository extends JpaRepository<TagServico, Long> {
     Optional<TagServico> findById(Long tagServicoId);
+
     List<TagServico> findByNomeLikeIgnoreCase(String nome);
+
     boolean existsByNomeIgnoreCase(String nome);
 }

@@ -3,6 +3,7 @@ package org.example.construconectaapisql.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -43,39 +44,49 @@ public class PagamentoProduto {
     private BigDecimal valorFrete;
 
     // Construtores
-    public PagamentoProduto() {}
-
-    public PagamentoProduto(Long pagamentoProdutoId, Integer pedido, String usuario, Date dataPagamento, String tipoPagamento, BigDecimal valorTotal, BigDecimal valorFrete) {
-        this.pagamentoProdutoId = pagamentoProdutoId;
-        this.pedido = pedido;
-        this.usuario = usuario;
-        this.dataPagamento = dataPagamento;
-        this.tipoPagamento = tipoPagamento;
-        this.valorTotal = valorTotal;
-        this.valorFrete = valorFrete;
+    public PagamentoProduto() {
     }
 
     // Getters e Setters
-    public Long getPagamentoProdutoId() { return pagamentoProdutoId; }
-    public void setPagamentoProdutoId(Long pagamentoProdutoId) { this.pagamentoProdutoId = pagamentoProdutoId; }
+    public Integer getPedido() {
+        return pedido;
+    }
 
-    public Integer getPedido() { return pedido; }
-    public void setPedido(Integer pedido) { this.pedido = pedido; }
+    public void setPedido(Integer pedido) {
+        this.pedido = pedido;
+    }
 
-    public String getUsuario() { return usuario; }
-    public void setUsuario(String usuario) { this.usuario = usuario; }
+    public String getUsuario() {
+        return usuario;
+    }
 
-    public Date getDataPagamento() { return dataPagamento; }
-    public void setDataPagamento(Date dataPagamento) { this.dataPagamento = dataPagamento; }
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
 
-    public String getTipoPagamento() { return tipoPagamento; }
-    public void setTipoPagamento(String tipoPagamento) { this.tipoPagamento = tipoPagamento; }
+    public Date getDataPagamento() {
+        return dataPagamento;
+    }
 
-    public BigDecimal getValorTotal() { return valorTotal; }
-    public void setValorTotal(BigDecimal valorTotal) { this.valorTotal = valorTotal; }
+    public void setDataPagamento(Date dataPagamento) {
+        this.dataPagamento = dataPagamento;
+    }
 
-    public BigDecimal getValorFrete() { return valorFrete; }
-    public void setValorFrete(BigDecimal valorFrete) { this.valorFrete = valorFrete; }
+    public String getTipoPagamento() {
+        return tipoPagamento;
+    }
+
+    public void setTipoPagamento(String tipoPagamento) {
+        this.tipoPagamento = tipoPagamento;
+    }
+
+    public void setValorTotal(BigDecimal valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+
+    public void setValorFrete(BigDecimal valorFrete) {
+        this.valorFrete = valorFrete;
+    }
 
     @Override
     public String toString() {

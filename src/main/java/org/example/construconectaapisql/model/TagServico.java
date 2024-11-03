@@ -26,26 +26,24 @@ public class TagServico {
     @Schema(description = "Preço Médio do Serviço", example = "359.99")
     private BigDecimal precoMedio;
 
-    public TagServico() {}
-
-    public TagServico(
-            Long tagServicoId,
-            String nome,
-            BigDecimal precoMedio
-    ) {
-        this.tagServicoId = tagServicoId;
-        this.nome = nome;
-        this.precoMedio = precoMedio;
+    public TagServico() {
     }
 
-    public Long getTagServicoId() { return tagServicoId; }
-    public void setTagServicoId(Long tagServicoId) { this.tagServicoId = tagServicoId; }
+    public Long getTagServicoId() {
+        return tagServicoId;
+    }
 
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public String getNome() {
+        return nome;
+    }
 
-    public BigDecimal getPrecoMedio() { return precoMedio; }
-    public void setPrecoMedio(BigDecimal precoMedio) { this.precoMedio = precoMedio; }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setPrecoMedio(BigDecimal precoMedio) {
+        this.precoMedio = precoMedio;
+    }
 
     @Override
     public String toString() {
