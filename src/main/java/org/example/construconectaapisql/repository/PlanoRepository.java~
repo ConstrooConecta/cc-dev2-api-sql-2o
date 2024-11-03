@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface PlanoRepository extends JpaRepository<Plano, Long> {
     Optional<Plano> findById(Long planoId);
-
     List<Plano> findByNomeLikeIgnoreCase(String nome);
 }
 

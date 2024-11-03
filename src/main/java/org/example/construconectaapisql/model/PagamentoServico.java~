@@ -3,7 +3,6 @@ package org.example.construconectaapisql.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -39,37 +38,35 @@ public class PagamentoServico {
     private Date dataPagamento;
 
     // Construtores
-    public PagamentoServico() {
+    public PagamentoServico() {}
+
+    public PagamentoServico(Long pagamentoServicoId, Integer servico, String usuario, BigDecimal valorServico, String tipoPagamento, Date dataPagamento) {
+        this.pagamentoServicoId = pagamentoServicoId;
+        this.servico = servico;
+        this.usuario = usuario;
+        this.valorServico = valorServico;
+        this.tipoPagamento = tipoPagamento;
+        this.dataPagamento = dataPagamento;
     }
 
     // Getters e Setters
-    public String getUsuario() {
-        return usuario;
-    }
+    public Long getPagamentoServicoId() { return pagamentoServicoId; }
+    public void setPagamentoServicoId(Long pagamentoServicoId) { this.pagamentoServicoId = pagamentoServicoId; }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
+    public Integer getServico() { return servico; }
+    public void setServico(Integer servico) { this.servico = servico; }
 
-    public void setValorServico(BigDecimal valorServico) {
-        this.valorServico = valorServico;
-    }
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
 
-    public String getTipoPagamento() {
-        return tipoPagamento;
-    }
+    public BigDecimal getValorServico() { return valorServico; }
+    public void setValorServico(BigDecimal valorServico) { this.valorServico = valorServico; }
 
-    public void setTipoPagamento(String tipoPagamento) {
-        this.tipoPagamento = tipoPagamento;
-    }
+    public String getTipoPagamento() { return tipoPagamento; }
+    public void setTipoPagamento(String tipoPagamento) { this.tipoPagamento = tipoPagamento; }
 
-    public Date getDataPagamento() {
-        return dataPagamento;
-    }
-
-    public void setDataPagamento(Date dataPagamento) {
-        this.dataPagamento = dataPagamento;
-    }
+    public Date getDataPagamento() { return dataPagamento; }
+    public void setDataPagamento(Date dataPagamento) { this.dataPagamento = dataPagamento; }
 
     @Override
     public String toString() {

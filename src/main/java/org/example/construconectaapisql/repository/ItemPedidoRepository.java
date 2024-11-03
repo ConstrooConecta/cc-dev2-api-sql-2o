@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public interface ItemPedidoRepository extends JpaRepository<ItemPedido, Long> {
     Optional<ItemPedido> findById(Long itemPedidoId);
+
     List<ItemPedido> findByProduto(Integer produto);
+
     List<ItemPedido> findByPedido(Integer pedido);
 }

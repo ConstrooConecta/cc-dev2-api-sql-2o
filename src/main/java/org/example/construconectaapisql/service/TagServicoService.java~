@@ -11,13 +11,9 @@ import java.util.List;
 public class TagServicoService {
     private final TagServicoRepository tagServicoRepository;
 
-    public TagServicoService(TagServicoRepository tagServicoRepository) {
-        this.tagServicoRepository = tagServicoRepository;
-    }
+    public TagServicoService(TagServicoRepository tagServicoRepository) { this.tagServicoRepository = tagServicoRepository; }
 
-    public List<TagServico> findAllTags() {
-        return tagServicoRepository.findAll();
-    }
+    public List<TagServico> findAllTags() { return tagServicoRepository.findAll(); }
 
     @Transactional
     public TagServico saveTags(TagServico tagServico) {
@@ -38,9 +34,7 @@ public class TagServicoService {
         return tagServico;
     }
 
-    public List<TagServico> findByNome(String nome) {
-        return tagServicoRepository.findByNomeLikeIgnoreCase(nome);
-    }
+    public List<TagServico> findByNome(String nome) { return tagServicoRepository.findByNomeLikeIgnoreCase(nome); }
 
     public boolean existsByNameIgnoreCase(String nome) {
         return tagServicoRepository.existsByNomeIgnoreCase(nome);

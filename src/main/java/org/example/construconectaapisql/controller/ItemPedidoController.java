@@ -49,7 +49,9 @@ public class ItemPedidoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public List<ItemPedido> findAllOrderItems() { return itemPedidoService.findAllOrderItems(); }
+    public List<ItemPedido> findAllOrderItems() {
+        return itemPedidoService.findAllOrderItems();
+    }
 
     @PostMapping("/add")
     @Operation(summary = "Add a new order item", description = "Create a new order item and saves it to the database")
@@ -69,7 +71,7 @@ public class ItemPedidoController {
                     content = @Content(mediaType = "text/plain"))
     })
     public ResponseEntity<?> addOrderItem(@Valid @RequestBody ItemPedido orderItem,
-                                     BindingResult result
+                                          BindingResult result
     ) {
         if (result.hasErrors()) {
             StringBuilder sb = new StringBuilder("Erros de validação:\n ");
@@ -106,7 +108,7 @@ public class ItemPedidoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findOrderItemById (@PathVariable Long orderId) {
+    public ResponseEntity<?> findOrderItemById(@PathVariable Long orderId) {
         try {
             ItemPedido orderItem = itemPedidoService.findOrderItemsById(orderId);
             if (orderItem == null) {
@@ -134,7 +136,7 @@ public class ItemPedidoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> deleteOrderItemById ( @PathVariable Long orderItemId ) {
+    public ResponseEntity<?> deleteOrderItemById(@PathVariable Long orderItemId) {
         try {
             itemPedidoService.deleteOrderItems(orderItemId);
             return ResponseEntity.ok("Item Pedido excluído com sucesso");
@@ -159,7 +161,7 @@ public class ItemPedidoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByProduct ( @PathVariable Integer productId ) {
+    public ResponseEntity<?> searchByProduct(@PathVariable Integer productId) {
         List<ItemPedido> lOrderItem = itemPedidoService.findByProduct(productId);
         if (!lOrderItem.isEmpty()) {
             return ResponseEntity.ok(lOrderItem);
@@ -178,7 +180,7 @@ public class ItemPedidoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByOrder ( @PathVariable Integer orderId ) {
+    public ResponseEntity<?> searchByOrder(@PathVariable Integer orderId) {
         List<ItemPedido> lOrderItem = itemPedidoService.findByOrder(orderId);
         if (!lOrderItem.isEmpty()) {
             return ResponseEntity.ok(lOrderItem);
@@ -187,7 +189,7 @@ public class ItemPedidoController {
         }
     }
 
-    public Map<String, String> validate(BindingResult resultado ) {
+    public Map<String, String> validate(BindingResult resultado) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : resultado.getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());

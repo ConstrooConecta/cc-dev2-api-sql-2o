@@ -44,10 +44,22 @@ public class PagamentoPlanoService {
 
     public PagamentoPlano findPaymentPlanById(Long id) {
         return pagamentoPlanoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Dados de Pagamento do Plano não encontrado.")); }
+                .orElseThrow(() -> new RuntimeException("Dados de Pagamento do Plano não encontrado."));
+    }
 
-    public List<PagamentoPlano> findByPlanoId(Integer plano) { return pagamentoPlanoRepository.findByPlano(plano); }
-    public List<PagamentoPlano> findByUserId(String usuario) { return pagamentoPlanoRepository.findByUsuario(usuario); }
-    public List<PagamentoPlano> findByDataPagamento(Date dataPagamento) { return pagamentoPlanoRepository.findByDataPagamento(dataPagamento); }
-    public List<PagamentoPlano> findByTipoPagamento(String tipoPagamento) { return pagamentoPlanoRepository.findByTipoPagamento(tipoPagamento); }
+    public List<PagamentoPlano> findByPlanoId(Integer plano) {
+        return pagamentoPlanoRepository.findByPlano(plano);
+    }
+
+    public List<PagamentoPlano> findByUserId(String usuario) {
+        return pagamentoPlanoRepository.findByUsuario(usuario);
+    }
+
+    public List<PagamentoPlano> findByDataPagamento(Date dataPagamento) {
+        return pagamentoPlanoRepository.findByDataPagamento(dataPagamento);
+    }
+
+    public List<PagamentoPlano> findByTipoPagamento(String tipoPagamento) {
+        return pagamentoPlanoRepository.findByTipoPagamento(tipoPagamento);
+    }
 }

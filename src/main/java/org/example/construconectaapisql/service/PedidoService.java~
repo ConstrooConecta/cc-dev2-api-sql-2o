@@ -23,9 +23,7 @@ public class PedidoService {
         this.carrinhoRepository = carrinhoRepository;
     }
 
-    public List<Pedido> findAllOrders() {
-        return pedidoRepository.findAll();
-    }
+    public List<Pedido> findAllOrders() { return pedidoRepository.findAll(); }
 
     @Transactional
     public Pedido saveOrders(Pedido pedido) {
@@ -62,22 +60,11 @@ public class PedidoService {
 
     public Pedido findOrdersBydId(Long pedidoId) {
         return pedidoRepository.findById(pedidoId)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado."));
+            .orElseThrow(() -> new RuntimeException("Pedido não encontrado."));
     }
 
-    public List<Pedido> findByUsuario(String usuario) {
-        return pedidoRepository.findByUsuario(usuario);
-    }
-
-    public List<Pedido> findByCupom(String cupom) {
-        return pedidoRepository.findByCupom(cupom);
-    }
-
-    public List<Pedido> findByDataPedido(Date dataPedido) {
-        return pedidoRepository.findByDataPedido(dataPedido);
-    }
-
-    public List<Pedido> findByDataEntrega(Date dataEntrega) {
-        return pedidoRepository.findByDataEntrega(dataEntrega);
-    }
+    public List<Pedido> findByUsuario(String usuario) { return pedidoRepository.findByUsuario(usuario); }
+    public List<Pedido> findByCupom(String cupom) { return pedidoRepository.findByCupom(cupom); }
+    public List<Pedido> findByDataPedido(Date dataPedido) { return pedidoRepository.findByDataPedido(dataPedido); }
+    public List<Pedido> findByDataEntrega(Date dataEntrega) { return pedidoRepository.findByDataEntrega(dataEntrega); }
 }

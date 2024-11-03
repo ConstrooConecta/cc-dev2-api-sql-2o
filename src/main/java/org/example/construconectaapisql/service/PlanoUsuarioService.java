@@ -14,12 +14,18 @@ public class PlanoUsuarioService {
 
     public PlanoUsuarioService(
             PlanoUsuarioRepository planoUsuarioRepository
-    ) { this.planoUsuarioRepository = planoUsuarioRepository; }
+    ) {
+        this.planoUsuarioRepository = planoUsuarioRepository;
+    }
 
     // crud methods
-    public List<PlanoUsuario> findAllUserPlans() { return planoUsuarioRepository.findAll(); }
+    public List<PlanoUsuario> findAllUserPlans() {
+        return planoUsuarioRepository.findAll();
+    }
 
-    public PlanoUsuario saveUserPlan(PlanoUsuario planoUsuario) { return planoUsuarioRepository.save(planoUsuario); }
+    public PlanoUsuario saveUserPlan(PlanoUsuario planoUsuario) {
+        return planoUsuarioRepository.save(planoUsuario);
+    }
 
     @Transactional
     public PlanoUsuario deleteUserPlan(Long planoUsuarioId) {
@@ -35,9 +41,19 @@ public class PlanoUsuarioService {
 
     // others methods
     public List<PlanoUsuario> findUserPlansByUserId(String usuario) {
-        return planoUsuarioRepository.findByUsuario(usuario); }
-    public List<PlanoUsuario> findUserPlanByPlanoId(Integer plano) { return planoUsuarioRepository.findByPlano(plano); }
-    public List<PlanoUsuario> findUserPlanByDataAssinatura(Date dataAssinatura) { return planoUsuarioRepository.findByDataAssinatura(dataAssinatura); }
-    public List<PlanoUsuario> findUserPlanByDataFinal(Date dataFinal) { return planoUsuarioRepository.findByDataFinal(dataFinal); }
+        return planoUsuarioRepository.findByUsuario(usuario);
+    }
+
+    public List<PlanoUsuario> findUserPlanByPlanoId(Integer plano) {
+        return planoUsuarioRepository.findByPlano(plano);
+    }
+
+    public List<PlanoUsuario> findUserPlanByDataAssinatura(Date dataAssinatura) {
+        return planoUsuarioRepository.findByDataAssinatura(dataAssinatura);
+    }
+
+    public List<PlanoUsuario> findUserPlanByDataFinal(Date dataFinal) {
+        return planoUsuarioRepository.findByDataFinal(dataFinal);
+    }
 
 }

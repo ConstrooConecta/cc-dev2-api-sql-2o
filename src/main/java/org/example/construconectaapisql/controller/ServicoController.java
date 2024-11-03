@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import org.example.construconectaapisql.model.Categoria;
 import org.example.construconectaapisql.model.Produto;
 import org.example.construconectaapisql.model.Servico;
 import org.example.construconectaapisql.model.TagServico;
@@ -61,7 +60,9 @@ public class ServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public List<Servico> findAllServices() { return servicoService.findAllServices(); }
+    public List<Servico> findAllServices() {
+        return servicoService.findAllServices();
+    }
 
     @PostMapping("/add")
     @Operation(summary = "Add a new service", description = "Create a new service and saves it to the database")
@@ -91,7 +92,7 @@ public class ServicoController {
 
         // Verifica se o nome do serviço existe na tabela TagServico
         if (!tagServicoRepository.existsByNomeIgnoreCase(servico.getNomeServico())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("TagServico com esse nome não existe.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("O nome do seviço deve existir em TagServico.");
         }
 
         try {
@@ -127,7 +128,7 @@ public class ServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> deleteServiceByServiceId ( @PathVariable Long serviceId ) {
+    public ResponseEntity<?> deleteServiceByServiceId(@PathVariable Long serviceId) {
         try {
             servicoService.deleteService(serviceId);
             return ResponseEntity.ok("Serviço excluído com sucesso");
@@ -209,7 +210,7 @@ public class ServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findServiceById ( @PathVariable Long serviceId ) {
+    public ResponseEntity<?> findServiceById(@PathVariable Long serviceId) {
         try {
             Servico servico = servicoService.findServicoById(serviceId);
             if (servico == null) {
@@ -231,9 +232,9 @@ public class ServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByServiceName( @PathVariable String serviceName ) {
+    public ResponseEntity<?> searchByServiceName(@PathVariable String serviceName) {
         List<Servico> lServico = servicoService.findByServiceName(serviceName);
-        if(!lServico.isEmpty()) {
+        if (!lServico.isEmpty()) {
             return ResponseEntity.ok(lServico);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Servico não encontrado.");
@@ -250,9 +251,9 @@ public class ServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByUsuarioId( @PathVariable String userId ) {
+    public ResponseEntity<?> searchByUsuarioId(@PathVariable String userId) {
         List<Servico> lServico = servicoService.findByUserId(userId);
-        if(!lServico.isEmpty()) {
+        if (!lServico.isEmpty()) {
             return ResponseEntity.ok(lServico);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Servico não encontrado.");
@@ -295,7 +296,7 @@ public class ServicoController {
         }
     }
 
-    public Map<String, String> validate(BindingResult resultado ) {
+    public Map<String, String> validate(BindingResult resultado) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : resultado.getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());

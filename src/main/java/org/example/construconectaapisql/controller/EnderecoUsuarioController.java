@@ -28,8 +28,8 @@ import java.util.Map;
 @RequestMapping("/address")
 public class EnderecoUsuarioController {
 
-    private EnderecoUsuarioService enderecoUsuarioService;
     private final Validator validator;
+    private EnderecoUsuarioService enderecoUsuarioService;
 
     @Autowired
     public EnderecoUsuarioController(
@@ -114,7 +114,7 @@ public class EnderecoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> deleteAddressByAddressId ( @PathVariable Long addresId ) {
+    public ResponseEntity<?> deleteAddressByAddressId(@PathVariable Long addresId) {
         try {
             enderecoUsuarioService.deleteAddress(addresId);
             return ResponseEntity.ok("Endereco excluído com sucesso");
@@ -145,8 +145,8 @@ public class EnderecoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updateAddress ( @Valid @PathVariable Long addressId,
-                                             @RequestBody Map<String, Object> updates ) {
+    public ResponseEntity<?> updateAddress(@Valid @PathVariable Long addressId,
+                                           @RequestBody Map<String, Object> updates) {
         try {
             EnderecoUsuario enderecoUsuario = enderecoUsuarioService.findAddressById(addressId);
 
@@ -213,7 +213,7 @@ public class EnderecoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findAddressById ( @PathVariable Long addressId ) {
+    public ResponseEntity<?> findAddressById(@PathVariable Long addressId) {
         return ResponseEntity.ok(enderecoUsuarioService.findAddressById(addressId));
     }
 
@@ -227,9 +227,9 @@ public class EnderecoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByCep( @PathVariable String cep ) {
+    public ResponseEntity<?> searchByCep(@PathVariable String cep) {
         List<EnderecoUsuario> lAddress = enderecoUsuarioService.findByCep(cep);
-        if(!lAddress.isEmpty()) {
+        if (!lAddress.isEmpty()) {
             return ResponseEntity.ok(lAddress);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereco não encontrado.");
@@ -246,9 +246,9 @@ public class EnderecoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByCidade( @PathVariable String cidade ) {
+    public ResponseEntity<?> searchByCidade(@PathVariable String cidade) {
         List<EnderecoUsuario> lAddress = enderecoUsuarioService.findByCidade(cidade);
-        if(!lAddress.isEmpty()) {
+        if (!lAddress.isEmpty()) {
             return ResponseEntity.ok(lAddress);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereco não encontrado.");
@@ -265,9 +265,9 @@ public class EnderecoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByUf( @PathVariable String uf ) {
+    public ResponseEntity<?> searchByUf(@PathVariable String uf) {
         List<EnderecoUsuario> lAddress = enderecoUsuarioService.findByUf(uf);
-        if(!lAddress.isEmpty()) {
+        if (!lAddress.isEmpty()) {
             return ResponseEntity.ok(lAddress);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereco não encontrado.");
@@ -284,9 +284,9 @@ public class EnderecoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByBairro( @PathVariable String bairro ) {
+    public ResponseEntity<?> searchByBairro(@PathVariable String bairro) {
         List<EnderecoUsuario> lAddress = enderecoUsuarioService.findByBairro(bairro);
-        if(!lAddress.isEmpty()) {
+        if (!lAddress.isEmpty()) {
             return ResponseEntity.ok(lAddress);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereco não encontrado.");
@@ -303,9 +303,9 @@ public class EnderecoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByRua( @PathVariable String rua ) {
+    public ResponseEntity<?> searchByRua(@PathVariable String rua) {
         List<EnderecoUsuario> lAddress = enderecoUsuarioService.findByRua(rua);
-        if(!lAddress.isEmpty()) {
+        if (!lAddress.isEmpty()) {
             return ResponseEntity.ok(lAddress);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereco não encontrado.");
@@ -322,16 +322,16 @@ public class EnderecoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByUsuario( @PathVariable String usuario ) {
+    public ResponseEntity<?> searchByUsuario(@PathVariable String usuario) {
         List<EnderecoUsuario> lAddress = enderecoUsuarioService.findByUserId(usuario);
-        if(!lAddress.isEmpty()) {
+        if (!lAddress.isEmpty()) {
             return ResponseEntity.ok(lAddress);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereco não encontrado.");
         }
     }
 
-    public Map<String, String> validate( BindingResult resultado ) {
+    public Map<String, String> validate(BindingResult resultado) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : resultado.getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
