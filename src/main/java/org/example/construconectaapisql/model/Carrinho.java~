@@ -41,8 +41,9 @@ public class Carrinho {
     @Schema(description = "Valor total do carrinho", example = "499.99")
     private BigDecimal valorTotal;
 
-    // Constructor
-    public Carrinho() {}
+    // Construtores
+    public Carrinho() {
+    }
 
     // Getters e Setters
     public Long getCarrinhoId() { return carrinhoId; }

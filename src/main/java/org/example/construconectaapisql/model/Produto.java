@@ -67,70 +67,42 @@ public class Produto {
     )
     private Set<Categoria> categorias;
 
-    // Constructors, Getters and Setters
-    public Produto() {
-    }
+    // Constructor
+    public Produto() {}
 
     // Getters and Setters
-    public String getNomeProduto() {
-        return nomeProduto;
-    }
+    public Long getProdutoId() { return produtoId; }
+    public void setProdutoId(Long produtoId) { this.produtoId = produtoId; }
 
-    public void setNomeProduto(String nomeProduto) {
-        this.nomeProduto = nomeProduto;
-    }
+    public String getNomeProduto() { return nomeProduto; }
+    public void setNomeProduto(String nomeProduto) { this.nomeProduto = nomeProduto; }
 
-    public void setEstoque(Integer estoque) {
-        this.estoque = estoque;
-    }
+    public Integer getEstoque() { return estoque; }
+    public void setEstoque(Integer estoque) { this.estoque = estoque; }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public BigDecimal getPreco() {
-        return preco;
-    }
+    public BigDecimal getPreco() { return preco; }
+    public void setPreco(BigDecimal preco) { this.preco = preco; }
 
-    public void setPreco(BigDecimal preco) {
-        this.preco = preco;
-    }
+    public Boolean getCondicao() { return condicao; }
+    public void setCondicao(Boolean condicao) { this.condicao = condicao; }
 
-    public void setCondicao(Boolean condicao) {
-        this.condicao = condicao;
-    }
+    public BigDecimal getDesconto() { return desconto; }
+    public void setDesconto(BigDecimal desconto) { this.desconto = desconto; }
 
-    public BigDecimal getDesconto() {
-        return desconto;
-    }
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
 
-    public void setDesconto(BigDecimal desconto) {
-        this.desconto = desconto;
-    }
+    public String getImagem() { return imagem; }
+    public void setImagem(String imagem) { this.imagem = imagem; }
 
-    public String getUsuario() {
-        return usuario;
-    }
+    public Integer getTopico() { return topico; }
+    public void setTopico(Integer topico) { this.topico = topico; }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getImagem() {
-        return imagem;
-    }
-
-    public void setImagem(String imagem) {
-        this.imagem = imagem;
-    }
-
-    public Integer getTopico() {
-        return topico;
-    }
-
-    public void setTopico(Integer topico) {
-        this.topico = topico;
-    }
+    public Set<Categoria> getCategorias() { return categorias; }
+    public void setCategorias(Set<Categoria> categorias) { this.categorias = categorias; }
 
     @Override
     public String toString() {

@@ -53,46 +53,37 @@ public class EnderecoUsuario {
     @Schema(description = "UID do Usuário que possui o endereço", example = "TwbSHSFVasyefyw42SFJAIoQDjJA")
     private String usuario;
 
-    // Constructors, Getters and Setters
+    // Constructor
     public EnderecoUsuario() {
     }
 
     // Getters and Setters
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
+    public Long getEnderecoUsuarioId() { return enderecoUsuarioId; }
+    public void setEnderecoUsuarioId(Long enderecoUsuarioId) { this.enderecoUsuarioId = enderecoUsuarioId; }
 
-    public void setUf(String uf) {
-        this.uf = uf;
-    }
+    public String getCep() { return cep; }
+    public void setCep(String cep) { this.cep = cep; }
 
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
+    public String getUf() { return uf; }
+    public void setUf(String uf) { this.uf = uf; }
 
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
+    public String getCidade() { return cidade; }
+    public void setCidade(String cidade) { this.cidade = cidade; }
 
-    public void setRua(String rua) {
-        this.rua = rua;
-    }
+    public String getBairro() { return bairro; }
+    public void setBairro(String bairro) { this.bairro = bairro; }
 
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
+    public String getRua() { return rua; }
+    public void setRua(String rua) { this.rua = rua; }
 
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
-    }
+    public String getNumero() { return numero; }
+    public void setNumero(String numero) { this.numero = numero; }
 
-    public String getUsuario() {
-        return usuario;
-    }
+    public String getComplemento() { return complemento; }
+    public void setComplemento(String complemento) { this.complemento = complemento; }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
 
     @Override
     public String toString() {

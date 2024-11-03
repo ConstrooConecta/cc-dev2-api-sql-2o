@@ -67,124 +67,42 @@ public class Produto {
     )
     private Set<Categoria> categorias;
 
-    // Constructors, Getters and Setters
-    public Produto() {
-    }
-
-    public Produto(
-            Long produtoId,
-            String nomeProduto,
-            Integer estoque,
-            String descricao,
-            BigDecimal preco,
-            Boolean condicao,
-            BigDecimal desconto,
-            String imagem,
-            String usuario,
-            Integer topico,
-            Set<Categoria> categorias
-    ) {
-        this.produtoId = produtoId;
-        this.nomeProduto = nomeProduto;
-        this.estoque = estoque;
-        this.descricao = descricao;
-        this.preco = preco;
-        this.condicao = condicao;
-        this.desconto = desconto;
-        this.imagem = imagem;
-        this.usuario = usuario;
-        this.topico = topico;
-        this.categorias = categorias;
-    }
+    // Constructors
+    public Produto() {}
 
     // Getters and Setters
-    public Long getProdutoId() {
-        return produtoId;
-    }
+    public Long getProdutoId() { return produtoId; }
+    public void setProdutoId(Long produtoId) { this.produtoId = produtoId; }
 
-    public void setProdutoId(Long produtoId) {
-        this.produtoId = produtoId;
-    }
+    public String getNomeProduto() { return nomeProduto; }
+    public void setNomeProduto(String nomeProduto) { this.nomeProduto = nomeProduto; }
 
-    public String getNomeProduto() {
-        return nomeProduto;
-    }
+    public Integer getEstoque() { return estoque; }
+    public void setEstoque(Integer estoque) { this.estoque = estoque; }
 
-    public void setNomeProduto(String nomeProduto) {
-        this.nomeProduto = nomeProduto;
-    }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public Integer getEstoque() {
-        return estoque;
-    }
+    public BigDecimal getPreco() { return preco; }
+    public void setPreco(BigDecimal preco) { this.preco = preco; }
 
-    public void setEstoque(Integer estoque) {
-        this.estoque = estoque;
-    }
+    public Boolean getCondicao() { return condicao; }
+    public void setCondicao(Boolean condicao) { this.condicao = condicao; }
 
-    public String getDescricao() {
-        return descricao;
-    }
+    public BigDecimal getDesconto() { return desconto; }
+    public void setDesconto(BigDecimal desconto) { this.desconto = desconto; }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
 
-    public BigDecimal getPreco() {
-        return preco;
-    }
+    public String getImagem() { return imagem; }
+    public void setImagem(String imagem) { this.imagem = imagem; }
 
-    public void setPreco(BigDecimal preco) {
-        this.preco = preco;
-    }
+    public Integer getTopico() { return topico; }
+    public void setTopico(Integer topico) { this.topico = topico; }
 
-    public Boolean getCondicao() {
-        return condicao;
-    }
-
-    public void setCondicao(Boolean condicao) {
-        this.condicao = condicao;
-    }
-
-    public BigDecimal getDesconto() {
-        return desconto;
-    }
-
-    public void setDesconto(BigDecimal desconto) {
-        this.desconto = desconto;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getImagem() {
-        return imagem;
-    }
-
-    public void setImagem(String imagem) {
-        this.imagem = imagem;
-    }
-
-    public Integer getTopico() {
-        return topico;
-    }
-
-    public void setTopico(Integer topico) {
-        this.topico = topico;
-    }
-
-    public Set<Categoria> getCategorias() {
-        return categorias;
-    }
-
-    public void setCategorias(Set<Categoria> categorias) {
-        this.categorias = categorias;
-    }
+    public Set<Categoria> getCategorias() { return categorias; }
+    public void setCategorias(Set<Categoria> categorias) { this.categorias = categorias; }
 
     @Override
     public String toString() {

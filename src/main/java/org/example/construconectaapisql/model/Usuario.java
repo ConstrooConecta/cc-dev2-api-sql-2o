@@ -61,18 +61,21 @@ public class Usuario {
     @Schema(description = "Gênero do Usuário - 1 (masculino), 2 (feminino), 3 (outro) ou 4 (prefiro não dizer).", example = "3")
     private Integer genero;
 
-    // Constructors, Getters and Setters
+    // Constructor
     public Usuario() {
     }
 
+    // Getters and Setters
     public String getUid() {
         return uid;
     }
-
     public void setUid(String uid) {
         this.uid = uid;
     }
 
+    public String getNomeCompleto() {
+        return nomeCompleto;
+    }
     public void setNomeCompleto(String nomeCompleto) {
         this.nomeCompleto = nomeCompleto;
     }
@@ -80,43 +83,38 @@ public class Usuario {
     public String getNomeUsuario() {
         return nomeUsuario;
     }
-
     public void setNomeUsuario(String nomeUsuario) {
         this.nomeUsuario = nomeUsuario;
     }
 
-    public String getCpf() {
-        return cpf;
-    }
-
+    public String getCpf() { return cpf; }
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
 
     public String getTelefone() {
         return telefone;
     }
-
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
 
+    public Date getDataNascimento() {
+        return dataNascimento;
+    }
     public void setDataNascimento(Date dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
+    public Integer getGenero() {
+        return genero;
+    }
     public void setGenero(Integer genero) {
         this.genero = genero;
     }
