@@ -29,24 +29,24 @@ public class ItemPedido {
     @Schema(description = "Preço unitário do produto no pedido", example = "324.97")
     private BigDecimal precoUnitario;
 
-    public ItemPedido() {
-    }
+    // Constructor
+    public ItemPedido() {}
 
-    public Integer getProduto() {
-        return produto;
-    }
+    // Getters and Setters
+    public Long getItemPedidoId() { return itemPedidoId; }
+    public void setItemPedidoId(Long itemPedidoId) { this.itemPedidoId = itemPedidoId; }
 
-    public void setProduto(Integer produto) {
-        this.produto = produto;
-    }
+    public Integer getProduto() { return produto; }
+    public void setProduto(Integer produto) { this.produto = produto; }
 
-    public Integer getPedido() {
-        return pedido;
-    }
+    public Integer getPedido() { return pedido; }
+    public void setPedido(Integer pedido) { this.pedido = pedido; }
 
-    public void setPedido(Integer pedido) {
-        this.pedido = pedido;
-    }
+    public Integer getQuantidade() { return quantidade; }
+    public void setQuantidade(Integer quantidade) { this.quantidade = quantidade; }
+
+    public BigDecimal getPrecoUnitario() { return precoUnitario; }
+    public void setPrecoUnitario(BigDecimal precoUnitario) { this.precoUnitario = precoUnitario; }
 
     @Override
     public String toString() {

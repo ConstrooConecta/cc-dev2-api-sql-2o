@@ -216,31 +216,6 @@ public class UsuarioController {
         }
     }
 
-    @PutMapping("/updateAll/{uid}")
-    @Transactional
-    public ResponseEntity<?> updateAllUser(@Valid @PathVariable String uid, @RequestBody Usuario userUpdated) {
-        try {
-            Usuario usuario = usuarioService.findUsersByUid(uid);
-
-            DataBinder binder = new DataBinder(usuario);
-            binder.setValidator(validator);
-            binder.validate();
-            BindingResult result = binder.getBindingResult();
-
-            if (result.hasErrors()) {
-                Map<String, String> errors = validate(result);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-            }
-
-            userUpdated.setUid(uid);
-            usuarioService.saveUsers(userUpdated);
-            return ResponseEntity.ok("Usuário atualizado com sucesso");
-
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário com UID " + uid + " não encontrado.");
-        }
-    }
-
     @GetMapping("/findByUid/{uid}")
     @Operation(summary = "Find user by UID", description = "Returns the user with the specified UID")
     @ApiResponses(value = {

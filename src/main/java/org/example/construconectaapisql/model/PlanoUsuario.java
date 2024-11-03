@@ -34,25 +34,24 @@ public class PlanoUsuario {
     @Temporal(TemporalType.DATE)
     private Date dataFinal;
 
-    // Constructors, Getters and Setters
-    public PlanoUsuario() {
-    }
+    // Constructor
+    public PlanoUsuario() {}
 
-    public String getUsuario() {
-        return usuario;
-    }
+    // Getters and Setters
+    public Long getPlanoUsuarioId() { return planoUsuarioId; }
+    public void setPlanoUsuarioId(Long planoUsuarioId) { this.planoUsuarioId = planoUsuarioId; }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
 
-    public Integer getPlano() {
-        return plano;
-    }
+    public Integer getPlano() { return plano; }
+    public void setPlano(Integer plano) { this.plano = plano; }
 
-    public void setPlano(Integer plano) {
-        this.plano = plano;
-    }
+    public Date getDataAssinatura() { return dataAssinatura; }
+    public void setDataAssinatura(Date dataAssinatura) { this.dataAssinatura = dataAssinatura; }
+
+    public Date getDataFinal() { return dataFinal; }
+    public void setDataFinal(Date dataFinal) { this.dataFinal = dataFinal; }
 
     @Override
     public String toString() {

@@ -38,38 +38,27 @@ public class PagamentoServico {
     @Temporal(TemporalType.DATE)
     private Date dataPagamento;
 
-    // Construtores
-    public PagamentoServico() {
-    }
+    // Constructor
+    public PagamentoServico() {}
 
     // Getters e Setters
-    public String getUsuario() {
-        return usuario;
-    }
+    public Long getPagamentoServicoId() { return pagamentoServicoId; }
+    public void setPagamentoServicoId(Long pagamentoServicoId) { this.pagamentoServicoId = pagamentoServicoId; }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
+    public Integer getServico() { return servico; }
+    public void setServico(Integer servico) { this.servico = servico; }
 
-    public void setValorServico(BigDecimal valorServico) {
-        this.valorServico = valorServico;
-    }
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
 
-    public String getTipoPagamento() {
-        return tipoPagamento;
-    }
+    public BigDecimal getValorServico() { return valorServico; }
+    public void setValorServico(BigDecimal valorServico) { this.valorServico = valorServico; }
 
-    public void setTipoPagamento(String tipoPagamento) {
-        this.tipoPagamento = tipoPagamento;
-    }
+    public String getTipoPagamento() { return tipoPagamento; }
+    public void setTipoPagamento(String tipoPagamento) { this.tipoPagamento = tipoPagamento; }
 
-    public Date getDataPagamento() {
-        return dataPagamento;
-    }
-
-    public void setDataPagamento(Date dataPagamento) {
-        this.dataPagamento = dataPagamento;
-    }
+    public Date getDataPagamento() { return dataPagamento; }
+    public void setDataPagamento(Date dataPagamento) { this.dataPagamento = dataPagamento; }
 
     @Override
     public String toString() {

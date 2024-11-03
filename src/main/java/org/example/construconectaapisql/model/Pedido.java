@@ -46,32 +46,33 @@ public class Pedido {
     @Temporal(TemporalType.DATE)
     private Date dataEntrega;
 
-    public Pedido() {
-    }
+    // Constructor
+    public Pedido() {}
 
-    public String getUsuario() {
-        return usuario;
-    }
+    // Getters and Setters
+    public Long getPedidoId() { return pedidoId; }
+    public void setPedidoId(Long pedidoId) { this.pedidoId = pedidoId; }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
+    public String getUsuario() {return usuario;}
+    public void setUsuario(String usuario) {this.usuario = usuario;}
 
-    public void setValorTotal(BigDecimal valorTotal) {
-        this.valorTotal = valorTotal;
-    }
+    public BigDecimal getValorTotal() {return valorTotal;}
+    public void setValorTotal(BigDecimal valorTotal) {this.valorTotal = valorTotal;}
 
-    public void setValorFrete(BigDecimal valorFrete) {
-        this.valorFrete = valorFrete;
-    }
+    public BigDecimal getValorFrete() {return valorFrete;}
+    public void setValorFrete(BigDecimal valorFrete) {this.valorFrete = valorFrete;}
 
-    public void setDataPedido(Date dataPedido) {
-        this.dataPedido = dataPedido;
-    }
+    public String getCupom() {return cupom;}
+    public void setCupom(String cupom) {this.cupom = cupom;}
 
-    public void setDataEntrega(Date dataEntrega) {
-        this.dataEntrega = dataEntrega;
-    }
+    public BigDecimal getValorDesconto() {return valorDesconto;}
+    public void setValorDesconto(BigDecimal valorDesconto) {this.valorDesconto = valorDesconto;}
+
+    public Date getDataPedido() {return dataPedido;}
+    public void setDataPedido(Date dataPedido) {this.dataPedido = dataPedido;}
+
+    public Date getDataEntrega() {return dataEntrega;}
+    public void setDataEntrega(Date dataEntrega) {this.dataEntrega = dataEntrega;}
 
     @Override
     public String toString() {

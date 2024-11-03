@@ -34,34 +34,21 @@ public class Plano {
     @Schema(description = "Valor do Plano", example = "32.90")
     private BigDecimal valor;
 
-    // Constructors, Getters and Setters
-    public Plano() {
-    }
+    // Constructor
+    public Plano() {}
 
     // Getters and Setters
-    public Long getPlanoId() {
-        return planoId;
-    }
+    public Long getPlanoId() { return planoId; }
+    public void setPlanoId(Long planoId) { this.planoId = planoId; }
 
-    public String getNome() {
-        return nome;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public BigDecimal getValor() {
-        return valor;
-    }
-
-    public void setValor(BigDecimal valor) {
-        this.valor = valor;
-    }
+    public BigDecimal getValor() { return valor; }
+    public void setValor(BigDecimal valor) { this.valor = valor; }
 
     @Override
     public String toString() {

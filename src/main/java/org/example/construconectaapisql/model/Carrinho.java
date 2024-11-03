@@ -41,11 +41,11 @@ public class Carrinho {
     @Schema(description = "Valor total do carrinho", example = "499.99")
     private BigDecimal valorTotal;
 
-    // Construtores
-    public Carrinho() {
-    }
+    // Constructor
+    public Carrinho() {}
 
     // Getters e Setters
+    public Long getCarrinhoId() { return carrinhoId; }
     public void setCarrinhoId(Long carrinhoId) {
         this.carrinhoId = carrinhoId;
     }
@@ -53,7 +53,6 @@ public class Carrinho {
     public Integer getIdentificador() {
         return identificador;
     }
-
     public void setIdentificador(Integer identificador) {
         this.identificador = identificador;
     }
@@ -61,15 +60,11 @@ public class Carrinho {
     public String getUsuario() {
         return usuario;
     }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
 
     public Integer getProduto() {
         return produto;
     }
-
     public void setProduto(Integer produto) {
         this.produto = produto;
     }
@@ -77,11 +72,11 @@ public class Carrinho {
     public Integer getQuantidade() {
         return quantidade;
     }
-
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
 
+    public String getProdutoImg() { return produtoImg; }
     public void setProdutoImg(String produtoImg) {
         this.produtoImg = produtoImg;
     }
@@ -89,7 +84,6 @@ public class Carrinho {
     public BigDecimal getValorTotal() {
         return valorTotal;
     }
-
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
