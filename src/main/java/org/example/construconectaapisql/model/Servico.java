@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -43,41 +44,32 @@ public class Servico {
     private Set<TagServico> tagServicos;
 
     // Construtores, Getters e Setters
-    public Servico() {}
-
-    public Servico(
-            Long servicoId,
-            String nomeServico,
-            String descricao,
-            BigDecimal preco,
-            String usuario,
-            Set<TagServico> tagServicos
-    ) {
-        this.servicoId = servicoId;
-        this.nomeServico = nomeServico;
-        this.descricao = descricao;
-        this.preco = preco;
-        this.usuario = usuario;
-        this.tagServicos = tagServicos;
+    public Servico() {
     }
 
-    public Long getServicoId() { return servicoId; }
-    public void setServicoId(Long servicoId) { this.servicoId = servicoId; }
+    public String getNomeServico() {
+        return nomeServico;
+    }
 
-    public String getNomeServico() { return nomeServico; }
-    public void setNomeServico(String nomeServico) { this.nomeServico = nomeServico; }
+    public void setNomeServico(String nomeServico) {
+        this.nomeServico = nomeServico;
+    }
 
-    public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-    public BigDecimal getPreco() { return preco; }
-    public void setPreco(BigDecimal preco) { this.preco = preco; }
+    public void setPreco(BigDecimal preco) {
+        this.preco = preco;
+    }
 
-    public String getUsuario() { return usuario; }
-    public void setUsuario(String usuario) { this.usuario = usuario; }
+    public String getUsuario() {
+        return usuario;
+    }
 
-    public Set<TagServico> getTagServicos() { return tagServicos; }
-    public void setTagServicos(Set<TagServico> tagServicos) { this.tagServicos = tagServicos; }
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
 
     @Override
     public String toString() {

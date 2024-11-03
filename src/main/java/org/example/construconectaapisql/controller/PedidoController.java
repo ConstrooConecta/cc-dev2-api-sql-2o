@@ -48,7 +48,9 @@ public class PedidoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public List<Pedido> findAllOrders() { return pedidoService.findAllOrders(); }
+    public List<Pedido> findAllOrders() {
+        return pedidoService.findAllOrders();
+    }
 
     @PostMapping("/add")
     @Operation(summary = "Add a new order", description = "Create a new order and saves it to the database")
@@ -124,8 +126,8 @@ public class PedidoController {
             @ApiResponse(responseCode = "404", description = "Order not found", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updateOrder( @Valid @PathVariable Long orderId,
-                                         @RequestBody Map<String, Object> updates ) {
+    public ResponseEntity<?> updateOrder(@Valid @PathVariable Long orderId,
+                                         @RequestBody Map<String, Object> updates) {
         try {
             Pedido order = pedidoService.findOrdersBydId(orderId);
 
@@ -181,7 +183,7 @@ public class PedidoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findOrdersByOrderId (@PathVariable Long orderId) {
+    public ResponseEntity<?> findOrdersByOrderId(@PathVariable Long orderId) {
         try {
             Pedido order = pedidoService.findOrdersBydId(orderId);
             if (order == null) {
@@ -203,9 +205,9 @@ public class PedidoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByVoucher ( @PathVariable String voucher ) {
+    public ResponseEntity<?> searchByVoucher(@PathVariable String voucher) {
         List<Pedido> lOrder = pedidoService.findByCupom(voucher);
-        if(!lOrder.isEmpty()) {
+        if (!lOrder.isEmpty()) {
             return ResponseEntity.ok(lOrder);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não encontrado.");
@@ -222,9 +224,9 @@ public class PedidoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByOrderDate ( @PathVariable Date orderDate ) {
+    public ResponseEntity<?> searchByOrderDate(@PathVariable Date orderDate) {
         List<Pedido> lOrder = pedidoService.findByDataPedido(orderDate);
-        if(!lOrder.isEmpty()) {
+        if (!lOrder.isEmpty()) {
             return ResponseEntity.ok(lOrder);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não encontrado.");
@@ -241,16 +243,16 @@ public class PedidoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByDeliveryDate ( @PathVariable Date deliveryDate ) {
+    public ResponseEntity<?> searchByDeliveryDate(@PathVariable Date deliveryDate) {
         List<Pedido> lOrder = pedidoService.findByDataEntrega(deliveryDate);
-        if(!lOrder.isEmpty()) {
+        if (!lOrder.isEmpty()) {
             return ResponseEntity.ok(lOrder);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não encontrado.");
         }
     }
 
-    public Map<String, String> validate( BindingResult resultado ) {
+    public Map<String, String> validate(BindingResult resultado) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : resultado.getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());

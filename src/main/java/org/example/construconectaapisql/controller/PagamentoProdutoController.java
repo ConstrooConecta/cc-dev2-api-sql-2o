@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.example.construconectaapisql.model.PagamentoProduto;
-import org.example.construconectaapisql.model.Usuario;
 import org.example.construconectaapisql.service.PagamentoProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -50,7 +49,9 @@ public class PagamentoProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public List<PagamentoProduto> findAllProductPayments() { return pagamentoProdutoService.findAllProductPayment(); }
+    public List<PagamentoProduto> findAllProductPayments() {
+        return pagamentoProdutoService.findAllProductPayment();
+    }
 
     @PostMapping("/add")
     @Operation(summary = "Add a new product payment", description = "Create a new product payment and saves it to the database")
@@ -111,7 +112,7 @@ public class PagamentoProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> deleteProductPaymentByProductPaymentId ( @PathVariable Long productPaymentId ) {
+    public ResponseEntity<?> deleteProductPaymentByProductPaymentId(@PathVariable Long productPaymentId) {
         try {
             pagamentoProdutoService.deleteProductPayment(productPaymentId);
             return ResponseEntity.ok("Dados de Pagamento de produto excluído com sucesso");
@@ -134,8 +135,8 @@ public class PagamentoProdutoController {
             @ApiResponse(responseCode = "404", description = "Product Payment not found", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updateProductPayment( @Valid @PathVariable Long productPaymentId,
-                                         @RequestBody Map<String, Object> updates ) {
+    public ResponseEntity<?> updateProductPayment(@Valid @PathVariable Long productPaymentId,
+                                                  @RequestBody Map<String, Object> updates) {
         try {
             PagamentoProduto pagamentoProduto = pagamentoProdutoService.findProductPaymentById(productPaymentId);
 
@@ -211,7 +212,7 @@ public class PagamentoProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findProductsPaymentsById (@PathVariable Long productPaymentId) {
+    public ResponseEntity<?> findProductsPaymentsById(@PathVariable Long productPaymentId) {
         try {
             PagamentoProduto pagamentoProduto = pagamentoProdutoService.findProductPaymentById(productPaymentId);
             if (pagamentoProduto == null) {
@@ -233,7 +234,7 @@ public class PagamentoProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByOrderId ( @PathVariable Integer orderId ) {
+    public ResponseEntity<?> searchByOrderId(@PathVariable Integer orderId) {
         List<PagamentoProduto> lPagamentoProduto = pagamentoProdutoService.findProductPaymentByPedido(orderId);
         if (!lPagamentoProduto.isEmpty()) {
             return ResponseEntity.ok(lPagamentoProduto);
@@ -252,7 +253,7 @@ public class PagamentoProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByUserId ( @PathVariable String userId ) {
+    public ResponseEntity<?> searchByUserId(@PathVariable String userId) {
         List<PagamentoProduto> lPagamentoProduto = pagamentoProdutoService.findProductPaymentByUsuario(userId);
         if (!lPagamentoProduto.isEmpty()) {
             return ResponseEntity.ok(lPagamentoProduto);
@@ -271,7 +272,7 @@ public class PagamentoProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByPaymentDate ( @PathVariable Date paymentDate ) {
+    public ResponseEntity<?> searchByPaymentDate(@PathVariable Date paymentDate) {
         List<PagamentoProduto> lPagamentoProduto = pagamentoProdutoService.findProductPaymentByDataPagamento(paymentDate);
         if (!lPagamentoProduto.isEmpty()) {
             return ResponseEntity.ok(lPagamentoProduto);
@@ -290,7 +291,7 @@ public class PagamentoProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByPaymentMethod ( @PathVariable String paymentMethod ) {
+    public ResponseEntity<?> searchByPaymentMethod(@PathVariable String paymentMethod) {
         List<PagamentoProduto> lPagamentoProduto = pagamentoProdutoService.findProductPaymentByTipoPagamento(paymentMethod);
         if (!lPagamentoProduto.isEmpty()) {
             return ResponseEntity.ok(lPagamentoProduto);
@@ -299,7 +300,7 @@ public class PagamentoProdutoController {
         }
     }
 
-    public Map<String, String> validate( BindingResult resultado ) {
+    public Map<String, String> validate(BindingResult resultado) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : resultado.getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());

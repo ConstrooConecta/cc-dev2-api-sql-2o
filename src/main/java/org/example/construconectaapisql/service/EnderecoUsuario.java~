@@ -1,0 +1,4 @@
+package org.example.construconectaapisql.service;
+
+public class EnderecoUsuario {
+}
