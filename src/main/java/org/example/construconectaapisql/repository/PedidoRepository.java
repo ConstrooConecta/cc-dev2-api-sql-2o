@@ -9,12 +9,8 @@ import java.util.Optional;
 
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     Optional<Pedido> findById(Long pedidoId);
-
     List<Pedido> findByUsuario(String usuario);
-
     List<Pedido> findByCupom(String cupom);
-
     List<Pedido> findByDataPedido(Date dataPedido);
-
     List<Pedido> findByDataEntrega(Date dataEntrega);
 }

@@ -42,26 +42,40 @@ public class Carrinho {
     private BigDecimal valorTotal;
 
     // Construtores
-    public Carrinho() {
+    public Carrinho() {}
+
+    public Carrinho(
+            Long carrinhoId,
+            Integer identificador,
+            String usuario,
+            Integer produto,
+            String produtoImg,
+            Integer quantidade,
+            BigDecimal valorTotal
+    ) {
+        this.carrinhoId = carrinhoId;
+        this.identificador = identificador;
+        this.usuario = usuario;
+        this.produto = produto;
+        this.produtoImg = produtoImg;
+        this.quantidade = quantidade;
+        this.valorTotal = valorTotal;
     }
 
     // Getters e Setters
+    public Long getCarrinhoId() {
+        return carrinhoId;
+    }
     public void setCarrinhoId(Long carrinhoId) {
         this.carrinhoId = carrinhoId;
     }
 
-    public Integer getIdentificador() {
-        return identificador;
-    }
-
-    public void setIdentificador(Integer identificador) {
-        this.identificador = identificador;
-    }
+    public Integer getIdentificador() { return identificador; }
+    public void setIdentificador(Integer identificador) { this.identificador = identificador; }
 
     public String getUsuario() {
         return usuario;
     }
-
     public void setUsuario(String usuario) {
         this.usuario = usuario;
     }
@@ -69,7 +83,6 @@ public class Carrinho {
     public Integer getProduto() {
         return produto;
     }
-
     public void setProduto(Integer produto) {
         this.produto = produto;
     }
@@ -77,11 +90,13 @@ public class Carrinho {
     public Integer getQuantidade() {
         return quantidade;
     }
-
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
 
+    public String getProdutoImg() {
+        return produtoImg;
+    }
     public void setProdutoImg(String produtoImg) {
         this.produtoImg = produtoImg;
     }
@@ -89,7 +104,6 @@ public class Carrinho {
     public BigDecimal getValorTotal() {
         return valorTotal;
     }
-
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }

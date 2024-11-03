@@ -2,6 +2,7 @@ package org.example.construconectaapisql.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 
 import java.math.BigDecimal;
 
@@ -29,24 +30,36 @@ public class ItemPedido {
     @Schema(description = "Preço unitário do produto no pedido", example = "324.97")
     private BigDecimal precoUnitario;
 
-    public ItemPedido() {
-    }
+    public ItemPedido() {}
 
-    public Integer getProduto() {
-        return produto;
-    }
-
-    public void setProduto(Integer produto) {
+    public ItemPedido(
+            Long itemPedidoId,
+            Integer produto,
+            Integer pedido,
+            Integer quantidade,
+            BigDecimal precoUnitario
+    ) {
+        this.itemPedidoId = itemPedidoId;
         this.produto = produto;
-    }
-
-    public Integer getPedido() {
-        return pedido;
-    }
-
-    public void setPedido(Integer pedido) {
         this.pedido = pedido;
+        this.quantidade = quantidade;
+        this.precoUnitario = precoUnitario;
     }
+
+    public Long getItemPedidoId() { return itemPedidoId; }
+    public void setItemPedidoId(Long itemPedidoId) { this.itemPedidoId = itemPedidoId; }
+
+    public Integer getProduto() { return produto; }
+    public void setProduto(Integer produto) { this.produto = produto; }
+
+    public Integer getPedido() { return pedido; }
+    public void setPedido(Integer pedido) { this.pedido = pedido; }
+
+    public Integer getQuantidade() { return quantidade; }
+    public void setQuantidade(Integer quantidade) { this.quantidade = quantidade; }
+
+    public BigDecimal getPrecoUnitario() { return precoUnitario; }
+    public void setPrecoUnitario(BigDecimal precoUnitario) { this.precoUnitario = precoUnitario; }
 
     @Override
     public String toString() {

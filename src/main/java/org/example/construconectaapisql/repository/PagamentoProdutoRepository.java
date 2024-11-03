@@ -9,12 +9,8 @@ import java.util.Optional;
 
 public interface PagamentoProdutoRepository extends JpaRepository<PagamentoProduto, Long> {
     Optional<PagamentoProduto> findById(Long pagamentoPlanoId);
-
     List<PagamentoProduto> findByPedido(Integer pedido);
-
     List<PagamentoProduto> findByUsuario(String usuario);
-
     List<PagamentoProduto> findByDataPagamento(Date dataPagamento);
-
     List<PagamentoProduto> findByTipoPagamento(String tipoPagamento);
 }

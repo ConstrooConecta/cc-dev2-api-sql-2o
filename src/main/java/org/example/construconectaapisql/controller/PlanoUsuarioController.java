@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.example.construconectaapisql.model.PlanoUsuario;
+import org.example.construconectaapisql.model.Usuario;
 import org.example.construconectaapisql.service.PlanoUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -47,9 +48,7 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public List<PlanoUsuario> findAllUserPlans() {
-        return planoUsuarioService.findAllUserPlans();
-    }
+    public List<PlanoUsuario> findAllUserPlans() { return planoUsuarioService.findAllUserPlans(); }
 
     @PostMapping("/add")
     @Operation(summary = "Add a new user plan", description = "Create a new user plan and saves it to the database")
@@ -109,7 +108,7 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> deleteUserPlanByPlanoUsuarioId(@PathVariable Long userPlanId) {
+    public ResponseEntity<?> deleteUserPlanByPlanoUsuarioId ( @PathVariable Long userPlanId ) {
         try {
             planoUsuarioService.deleteUserPlan(userPlanId);
             return ResponseEntity.ok("Plano do usuário excluído com sucesso");
@@ -185,7 +184,7 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findUserPlanById(@PathVariable Long userPlanId) {
+    public ResponseEntity<?> findUserPlanById ( @PathVariable Long userPlanId ) {
         try {
             PlanoUsuario userPlan = planoUsuarioService.findUserPlanById(userPlanId);
             if (userPlan == null) {
@@ -207,9 +206,9 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByUserId(@PathVariable String usuario) {
+    public ResponseEntity<?> searchByUserId ( @PathVariable String usuario ) {
         List<PlanoUsuario> lPlanoUsuario = planoUsuarioService.findUserPlansByUserId(usuario);
-        if (!lPlanoUsuario.isEmpty()) {
+        if(!lPlanoUsuario.isEmpty()) {
             return ResponseEntity.ok(lPlanoUsuario);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Plano do Usuário não encontrado.");
@@ -226,15 +225,15 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByPlanId(@PathVariable Integer plano) {
+    public ResponseEntity<?> searchByPlanId ( @PathVariable Integer plano ) {
         List<PlanoUsuario> lPlanoUsuario = planoUsuarioService.findUserPlanByPlanoId(plano);
-        if (!lPlanoUsuario.isEmpty()) {
+        if(!lPlanoUsuario.isEmpty()) {
             return ResponseEntity.ok(lPlanoUsuario);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Plano do Usuário não encontrado.");
         }
     }
-
+    
     @GetMapping("/findByDataAssinatura/{dataAssinatura}")
     @Operation(summary = "Search user plan by dataAssinatura", description = "Returns a list of user plan with the specified dataAssinatura")
     @ApiResponses(value = {
@@ -245,9 +244,9 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByDataAssinatura(@PathVariable Date dataAssinatura) {
+    public ResponseEntity<?> searchByDataAssinatura ( @PathVariable Date dataAssinatura ) {
         List<PlanoUsuario> lPlanoUsuario = planoUsuarioService.findUserPlanByDataAssinatura(dataAssinatura);
-        if (!lPlanoUsuario.isEmpty()) {
+        if(!lPlanoUsuario.isEmpty()) {
             return ResponseEntity.ok(lPlanoUsuario);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Plano do Usuário não encontrado.");
@@ -264,16 +263,16 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByDataFinal(@PathVariable Date dataFinal) {
+    public ResponseEntity<?> searchByDataFinal ( @PathVariable Date dataFinal ) {
         List<PlanoUsuario> lPlanoUsuario = planoUsuarioService.findUserPlanByDataFinal(dataFinal);
-        if (!lPlanoUsuario.isEmpty()) {
+        if(!lPlanoUsuario.isEmpty()) {
             return ResponseEntity.ok(lPlanoUsuario);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Plano do Usuário não encontrado.");
         }
     }
-
-    public Map<String, String> validate(BindingResult resultado) {
+    
+    public Map<String, String> validate(BindingResult resultado ) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : resultado.getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());

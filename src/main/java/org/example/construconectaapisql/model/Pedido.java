@@ -3,7 +3,6 @@ package org.example.construconectaapisql.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -46,32 +45,51 @@ public class Pedido {
     @Temporal(TemporalType.DATE)
     private Date dataEntrega;
 
-    public Pedido() {
-    }
+    public Pedido(){}
 
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
+    public Pedido(
+            Long pedidoId,
+            String usuario,
+            BigDecimal valorTotal,
+            BigDecimal valorFrete,
+            String cupom,
+            BigDecimal valorDesconto,
+            Date dataPedido,
+            Date dataEntrega
+    ) {
+        this.pedidoId = pedidoId;
         this.usuario = usuario;
-    }
-
-    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
-    }
-
-    public void setValorFrete(BigDecimal valorFrete) {
         this.valorFrete = valorFrete;
-    }
-
-    public void setDataPedido(Date dataPedido) {
+        this.cupom = cupom;
+        this.valorDesconto = valorDesconto;
         this.dataPedido = dataPedido;
-    }
-
-    public void setDataEntrega(Date dataEntrega) {
         this.dataEntrega = dataEntrega;
     }
+
+    public Long getPedidoId() { return pedidoId; }
+    public void setPedidoId(Long pedidoId) { this.pedidoId = pedidoId; }
+
+    public String getUsuario() {return usuario;}
+    public void setUsuario(String usuario) {this.usuario = usuario;}
+
+    public BigDecimal getValorTotal() {return valorTotal;}
+    public void setValorTotal(BigDecimal valorTotal) {this.valorTotal = valorTotal;}
+
+    public BigDecimal getValorFrete() {return valorFrete;}
+    public void setValorFrete(BigDecimal valorFrete) {this.valorFrete = valorFrete;}
+
+    public String getCupom() {return cupom;}
+    public void setCupom(String cupom) {this.cupom = cupom;}
+
+    public BigDecimal getValorDesconto() {return valorDesconto;}
+    public void setValorDesconto(BigDecimal valorDesconto) {this.valorDesconto = valorDesconto;}
+
+    public Date getDataPedido() {return dataPedido;}
+    public void setDataPedido(Date dataPedido) {this.dataPedido = dataPedido;}
+
+    public Date getDataEntrega() {return dataEntrega;}
+    public void setDataEntrega(Date dataEntrega) {this.dataEntrega = dataEntrega;}
 
     @Override
     public String toString() {

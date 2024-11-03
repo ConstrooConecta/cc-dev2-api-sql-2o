@@ -5,7 +5,6 @@ import org.example.construconectaapisql.repository.PlanoRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
@@ -14,10 +13,8 @@ public class PlanoService {
     private final PlanoRepository planoRepository;
 
     public PlanoService(
-            PlanoRepository planoRepository
-    ) {
-        this.planoRepository = planoRepository;
-    }
+        PlanoRepository planoRepository
+    ) { this.planoRepository = planoRepository; }
 
     // Retorna todos os planos cadastrados
     public List<Plano> findAllPlans() {
@@ -38,9 +35,7 @@ public class PlanoService {
                 .orElseThrow(() -> new RuntimeException("Plano não encontrado."));
     }
 
-    public List<Plano> findByNomeCompletoLikeIgnoreCase(String nome) {
-        return planoRepository.findByNomeLikeIgnoreCase(nome);
-    }
+    public List<Plano> findByNomeCompletoLikeIgnoreCase(String nome) { return planoRepository.findByNomeLikeIgnoreCase(nome); }
 
     // Deleta um plano pelo ID
     @Transactional

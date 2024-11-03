@@ -59,15 +59,13 @@ public class ProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public List<Produto> findAllProducts() {
-        return produtoService.findAllProducts();
-    }
+    public List<Produto> findAllProducts() { return produtoService.findAllProducts(); }
 
     @PostMapping("/add")
     @Operation(summary = "Add a new product", description = "Create a new product and saves it to the database")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
+                       responseCode = "200",
                     description = "Product created successfully",
                     content = @Content(
                             mediaType = "application/json",
@@ -132,7 +130,7 @@ public class ProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> deleteProductByProdutoId(@PathVariable Long produtoId) {
+    public ResponseEntity<?> deleteProductByProdutoId ( @PathVariable Long produtoId ) {
         try {
             produtoService.deleteProduct(produtoId);
             return ResponseEntity.ok("Produto excluído com sucesso");
@@ -229,7 +227,7 @@ public class ProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findProductById(@PathVariable Long produtoId) {
+    public ResponseEntity<?> findProductById ( @PathVariable Long produtoId ) {
         try {
             Produto produto = produtoService.findProductsById(produtoId);
             if (produto == null) {
@@ -251,9 +249,9 @@ public class ProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByNomeProduto(@PathVariable String productName) {
+    public ResponseEntity<?> searchByNomeProduto( @PathVariable String productName ) {
         List<Produto> lProduto = produtoService.findByNomeProduto(productName);
-        if (!lProduto.isEmpty()) {
+        if(!lProduto.isEmpty()) {
             return ResponseEntity.ok(lProduto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado.");
@@ -270,9 +268,9 @@ public class ProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByCondicao(@PathVariable Boolean condicao) {
+    public ResponseEntity<?> searchByCondicao( @PathVariable Boolean condicao ) {
         List<Produto> lProduto = produtoService.findByCondicao(condicao);
-        if (!lProduto.isEmpty()) {
+        if(!lProduto.isEmpty()) {
             return ResponseEntity.ok(lProduto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado.");
@@ -289,9 +287,9 @@ public class ProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByUsuarioId(@PathVariable String userId) {
+    public ResponseEntity<?> searchByUsuarioId( @PathVariable String userId ) {
         List<Produto> lProduto = produtoService.findByUserId(userId);
-        if (!lProduto.isEmpty()) {
+        if(!lProduto.isEmpty()) {
             return ResponseEntity.ok(lProduto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado.");
@@ -308,9 +306,9 @@ public class ProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByTopic(@PathVariable Integer topico) {
+    public ResponseEntity<?> searchByTopic( @PathVariable Integer topico ) {
         List<Produto> lProduto = produtoService.findByTopico(topico);
-        if (!lProduto.isEmpty()) {
+        if(!lProduto.isEmpty()) {
             return ResponseEntity.ok(lProduto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado.");
@@ -356,7 +354,7 @@ public class ProdutoController {
         }
     }
 
-    public Map<String, String> validate(BindingResult resultado) {
+    public Map<String, String> validate( BindingResult resultado ) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : resultado.getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());

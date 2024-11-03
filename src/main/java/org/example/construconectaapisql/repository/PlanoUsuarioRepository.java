@@ -9,12 +9,8 @@ import java.util.Optional;
 
 public interface PlanoUsuarioRepository extends JpaRepository<PlanoUsuario, Long> {
     Optional<PlanoUsuario> findById(Long planoUsuarioId);
-
     List<PlanoUsuario> findByPlano(Integer plano);
-
     List<PlanoUsuario> findByUsuario(String usuario);
-
     List<PlanoUsuario> findByDataAssinatura(Date dataAssinatura);
-
     List<PlanoUsuario> findByDataFinal(Date dataFinal);
 }

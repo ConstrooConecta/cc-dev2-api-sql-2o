@@ -50,9 +50,7 @@ public class CategoriaController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public List<Categoria> findAllCategories() {
-        return categoriaService.findAllCategories();
-    }
+    public List<Categoria> findAllCategories() { return categoriaService.findAllCategories(); }
 
     @PostMapping("/add")
     @Operation(summary = "Add a new category", description = "Create a new category and saves it to the database")
@@ -116,7 +114,7 @@ public class CategoriaController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> deleteCategoryByCategoriaId(@PathVariable Long categoryId) {
+    public ResponseEntity<?> deleteCategoryByCategoriaId ( @PathVariable Long categoryId ) {
         try {
             categoriaService.deleteCategory(categoryId);
             return ResponseEntity.ok("Categoria excluída com sucesso");
@@ -200,7 +198,7 @@ public class CategoriaController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findCategoriesById(@PathVariable Long categoryId) {
+    public ResponseEntity<?> findCategoriesById (@PathVariable Long categoryId) {
         try {
             Categoria categoria = categoriaService.findCategoriesById(categoryId);
             if (categoria == null) {
@@ -222,16 +220,16 @@ public class CategoriaController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByNomeCompleto(@PathVariable String nome) {
+    public ResponseEntity<?> searchByNomeCompleto ( @PathVariable String nome ) {
         List<Categoria> lCategoria = categoriaService.findByNome(nome);
-        if (!lCategoria.isEmpty()) {
+        if(!lCategoria.isEmpty()) {
             return ResponseEntity.ok(lCategoria);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoria não encontrada.");
         }
     }
 
-    public Map<String, String> validate(BindingResult resultado) {
+    public Map<String, String> validate( BindingResult resultado ) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : resultado.getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());

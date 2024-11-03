@@ -3,7 +3,6 @@ package org.example.construconectaapisql.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -39,48 +38,42 @@ public class PagamentoPlano {
     private Date dataPagamento;
 
     // Constructors, Getters and Setters
-    public PagamentoPlano() {
-    }
+    public PagamentoPlano() {}
 
-    public Integer getPlano() {
-        return plano;
-    }
-
-    public void setPlano(Integer plano) {
+    public PagamentoPlano(
+            Long pagamentoPlanoId,
+            Integer plano,
+            String usuario,
+            BigDecimal valor,
+            String tipoPagamento,
+            Date dataPagamento
+    ) {
+        this.pagamentoPlanoId = pagamentoPlanoId;
         this.plano = plano;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
         this.usuario = usuario;
-    }
-
-    public BigDecimal getValor() {
-        return valor;
-    }
-
-    public void setValor(BigDecimal valor) {
         this.valor = valor;
-    }
-
-    public String getTipoPagamento() {
-        return tipoPagamento;
-    }
-
-    public void setTipoPagamento(String tipoPagamento) {
         this.tipoPagamento = tipoPagamento;
-    }
-
-    public Date getDataPagamento() {
-        return dataPagamento;
-    }
-
-    public void setDataPagamento(Date dataPagamento) {
         this.dataPagamento = dataPagamento;
     }
+
+    // Getters and Setters
+    public Long getPagamentoPlanoId() { return pagamentoPlanoId; }
+    public void setPagamentoPlanoId(Long pagamentoPlanoId) { this.pagamentoPlanoId = pagamentoPlanoId; }
+
+    public Integer getPlano() { return plano; }
+    public void setPlano(Integer plano) { this.plano = plano; }
+
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
+
+    public BigDecimal getValor() { return valor; }
+    public void setValor(BigDecimal valor) { this.valor = valor; }
+
+    public String getTipoPagamento() { return tipoPagamento; }
+    public void setTipoPagamento(String tipoPagamento) { this.tipoPagamento = tipoPagamento; }
+
+    public Date getDataPagamento() { return dataPagamento; }
+    public void setDataPagamento(Date dataPagamento) { this.dataPagamento = dataPagamento; }
 
     @Override
     public String toString() {
