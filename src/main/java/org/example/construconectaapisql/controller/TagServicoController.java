@@ -22,10 +22,7 @@ import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/serviceTag")
@@ -58,9 +55,7 @@ public class TagServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public List<TagServico> findAllServicesTag() {
-        return tagServicoService.findAllTags();
-    }
+    public List<TagServico> findAllServicesTag() { return tagServicoService.findAllTags(); }
 
     @PostMapping("/add")
     @Operation(summary = "Add a new services tag", description = "Create a new service tags and saves it to the database")
@@ -123,7 +118,7 @@ public class TagServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> deleteServiceTagByServiceTagId(@PathVariable Long serviceTagId) {
+    public ResponseEntity<?> deleteServiceTagByServiceTagId ( @PathVariable Long serviceTagId ) {
         try {
             tagServicoService.deleteTag(serviceTagId);
             return ResponseEntity.ok("Tag de Serviço excluída com sucesso");
@@ -220,7 +215,7 @@ public class TagServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findServicesTagById(@PathVariable Long serviceTagId) {
+    public ResponseEntity<?> findServicesTagById (@PathVariable Long serviceTagId) {
         try {
             TagServico tagServico = tagServicoService.findTagsById(serviceTagId);
             if (tagServico == null) {
@@ -242,16 +237,16 @@ public class TagServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByNomeCompleto(@PathVariable String nome) {
+    public ResponseEntity<?> searchByNomeCompleto ( @PathVariable String nome ) {
         List<TagServico> lTagServico = tagServicoService.findByNome(nome);
-        if (!lTagServico.isEmpty()) {
+        if(!lTagServico.isEmpty()) {
             return ResponseEntity.ok(lTagServico);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("TagServico não encontrada.");
         }
     }
 
-    public Map<String, String> validate(BindingResult resultado) {
+    public Map<String, String> validate( BindingResult resultado ) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : resultado.getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());

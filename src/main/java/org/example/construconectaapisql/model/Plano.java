@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
 import java.math.BigDecimal;
 
 @Entity
@@ -25,8 +24,8 @@ public class Plano {
     @Size(min = 3, max = 255, message = "A descrição deve ter no mínimo 3 e no máximo 255 caracteres")
     @Schema(description = "Descrição (vantagens) do Plano",
             example = "- Sem Anúncios" +
-                    "\n- Sem Serviço" +
-                    "\n- Cupons exclusivos")
+                      "\n- Sem Serviço" +
+                      "\n- Cupons exclusivos")
     private String descricao;
 
     @NotNull(message = "O valor do plano é obrigatório")
@@ -35,33 +34,32 @@ public class Plano {
     private BigDecimal valor;
 
     // Constructors, Getters and Setters
-    public Plano() {
+    public Plano() {}
+
+    public Plano(
+            Long planoId,
+            String nome,
+            String descricao,
+            BigDecimal valor
+    ) {
+        this.planoId = planoId;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.valor = valor;
     }
 
     // Getters and Setters
-    public Long getPlanoId() {
-        return planoId;
-    }
+    public Long getPlanoId() { return planoId; }
+    public void setPlanoId(Long planoId) { this.planoId = planoId; }
 
-    public String getNome() {
-        return nome;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public BigDecimal getValor() {
-        return valor;
-    }
-
-    public void setValor(BigDecimal valor) {
-        this.valor = valor;
-    }
+    public BigDecimal getValor() { return valor; }
+    public void setValor(BigDecimal valor) { this.valor = valor; }
 
     @Override
     public String toString() {

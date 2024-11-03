@@ -19,20 +19,21 @@ public class Categoria {
     @Column(unique = true, nullable = false)
     private String nome;
 
-    public Categoria() {
-    }
+    public Categoria() {}
 
-    public Long getCategoriaId() {
-        return categoriaId;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
+    public Categoria(
+        Long categoriaId,
+        String nome
+    ) {
+        this.categoriaId = categoriaId;
         this.nome = nome;
     }
+
+    public Long getCategoriaId() { return categoriaId; }
+    public void setCategoriaId(Long categoriaId) { this.categoriaId = categoriaId; }
+
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
     @Override
     public String toString() {

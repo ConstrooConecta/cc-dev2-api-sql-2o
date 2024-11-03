@@ -2,10 +2,7 @@ package org.example.construconectaapisql.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -68,69 +65,67 @@ public class Produto {
     private Set<Categoria> categorias;
 
     // Constructors, Getters and Setters
-    public Produto() {
+    public Produto() {}
+
+    public Produto(
+            Long produtoId,
+            String nomeProduto,
+            Integer estoque,
+            String descricao,
+            BigDecimal preco,
+            Boolean condicao,
+            BigDecimal desconto,
+            String imagem,
+            String usuario,
+            Integer topico,
+            Set<Categoria> categorias
+    ) {
+        this.produtoId = produtoId;
+        this.nomeProduto = nomeProduto;
+        this.estoque = estoque;
+        this.descricao = descricao;
+        this.preco = preco;
+        this.condicao = condicao;
+        this.desconto = desconto;
+        this.imagem = imagem;
+        this.usuario = usuario;
+        this.topico = topico;
+        this.categorias = categorias;
     }
 
     // Getters and Setters
-    public String getNomeProduto() {
-        return nomeProduto;
-    }
+    public Long getProdutoId() { return produtoId; }
+    public void setProdutoId(Long produtoId) { this.produtoId = produtoId; }
 
-    public void setNomeProduto(String nomeProduto) {
-        this.nomeProduto = nomeProduto;
-    }
+    public String getNomeProduto() { return nomeProduto; }
+    public void setNomeProduto(String nomeProduto) { this.nomeProduto = nomeProduto; }
 
-    public void setEstoque(Integer estoque) {
-        this.estoque = estoque;
-    }
+    public Integer getEstoque() { return estoque; }
+    public void setEstoque(Integer estoque) { this.estoque = estoque; }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public BigDecimal getPreco() {
-        return preco;
-    }
+    public BigDecimal getPreco() { return preco; }
+    public void setPreco(BigDecimal preco) { this.preco = preco; }
 
-    public void setPreco(BigDecimal preco) {
-        this.preco = preco;
-    }
+    public Boolean getCondicao() { return condicao; }
+    public void setCondicao(Boolean condicao) { this.condicao = condicao; }
 
-    public void setCondicao(Boolean condicao) {
-        this.condicao = condicao;
-    }
+    public BigDecimal getDesconto() { return desconto; }
+    public void setDesconto(BigDecimal desconto) { this.desconto = desconto; }
 
-    public BigDecimal getDesconto() {
-        return desconto;
-    }
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
 
-    public void setDesconto(BigDecimal desconto) {
-        this.desconto = desconto;
-    }
+    public String getImagem() { return imagem; }
+    public void setImagem(String imagem) { this.imagem = imagem; }
 
-    public String getUsuario() {
-        return usuario;
-    }
+    public Integer getTopico() { return topico; }
+    public void setTopico(Integer topico) { this.topico = topico; }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getImagem() {
-        return imagem;
-    }
-
-    public void setImagem(String imagem) {
-        this.imagem = imagem;
-    }
-
-    public Integer getTopico() {
-        return topico;
-    }
-
-    public void setTopico(Integer topico) {
-        this.topico = topico;
-    }
+    public Set<Categoria> getCategorias() { return categorias; }
+    public void setCategorias(Set<Categoria> categorias) { this.categorias = categorias; }
 
     @Override
     public String toString() {

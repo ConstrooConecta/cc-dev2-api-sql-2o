@@ -14,21 +14,15 @@ public class PagamentoProdutoService {
 
     public PagamentoProdutoService(
             PagamentoProdutoRepository pagamentoProdutoRepository
-    ) {
-        this.pagamentoProdutoRepository = pagamentoProdutoRepository;
-    }
+    ) { this.pagamentoProdutoRepository = pagamentoProdutoRepository; }
 
-    public List<PagamentoProduto> findAllProductPayment() {
-        return pagamentoProdutoRepository.findAll();
-    }
+    public List<PagamentoProduto> findAllProductPayment() { return pagamentoProdutoRepository.findAll(); }
 
     @Transactional
-    public PagamentoProduto saveProductPayment(PagamentoProduto pagamentoPlano) {
-        return pagamentoProdutoRepository.save(pagamentoPlano);
-    }
+    public PagamentoProduto saveProductPayment(PagamentoProduto pagamentoPlano) { return pagamentoProdutoRepository.save(pagamentoPlano); }
 
     @Transactional
-    public PagamentoProduto deleteProductPayment(Long productPaymentId) {
+    public PagamentoProduto deleteProductPayment (Long productPaymentId) {
         PagamentoProduto pagamentoProduto = findProductPaymentById(productPaymentId);
         pagamentoProdutoRepository.delete(pagamentoProduto);
         return pagamentoProduto;
@@ -39,20 +33,9 @@ public class PagamentoProdutoService {
                 .orElseThrow(() -> new RuntimeException("Dados de Pagamento de produto não encontrado."));
     }
 
-    public List<PagamentoProduto> findProductPaymentByPedido(Integer pedido) {
-        return pagamentoProdutoRepository.findByPedido(pedido);
-    }
-
-    public List<PagamentoProduto> findProductPaymentByUsuario(String usuario) {
-        return pagamentoProdutoRepository.findByUsuario(usuario);
-    }
-
-    public List<PagamentoProduto> findProductPaymentByDataPagamento(Date dataPagamento) {
-        return pagamentoProdutoRepository.findByDataPagamento(dataPagamento);
-    }
-
-    public List<PagamentoProduto> findProductPaymentByTipoPagamento(String tipoPagamento) {
-        return pagamentoProdutoRepository.findByTipoPagamento(tipoPagamento);
-    }
+    public List<PagamentoProduto> findProductPaymentByPedido(Integer pedido) { return pagamentoProdutoRepository.findByPedido(pedido); }
+    public List<PagamentoProduto> findProductPaymentByUsuario(String usuario) { return pagamentoProdutoRepository.findByUsuario(usuario); }
+    public List<PagamentoProduto> findProductPaymentByDataPagamento(Date dataPagamento) { return pagamentoProdutoRepository.findByDataPagamento(dataPagamento); }
+    public List<PagamentoProduto> findProductPaymentByTipoPagamento(String tipoPagamento) { return pagamentoProdutoRepository.findByTipoPagamento(tipoPagamento); }
 
 }

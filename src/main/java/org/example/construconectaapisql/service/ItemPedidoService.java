@@ -1,6 +1,7 @@
 package org.example.construconectaapisql.service;
 
 import org.example.construconectaapisql.model.ItemPedido;
+import org.example.construconectaapisql.model.Usuario;
 import org.example.construconectaapisql.repository.ItemPedidoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,18 +14,12 @@ public class ItemPedidoService {
 
     public ItemPedidoService(
             ItemPedidoRepository itemPedidoRepository
-    ) {
-        this.itemPedidoRepository = itemPedidoRepository;
-    }
+    ) { this.itemPedidoRepository = itemPedidoRepository; }
 
-    public List<ItemPedido> findAllOrderItems() {
-        return itemPedidoRepository.findAll();
-    }
+    public List<ItemPedido> findAllOrderItems() { return itemPedidoRepository.findAll(); }
 
     @Transactional
-    public ItemPedido saveOrderItems(ItemPedido orderItem) {
-        return itemPedidoRepository.save(orderItem);
-    }
+    public ItemPedido saveOrderItems(ItemPedido orderItem) { return itemPedidoRepository.save(orderItem); }
 
     @Transactional
     public ItemPedido deleteOrderItems(Long orderItemId) {
@@ -38,11 +33,6 @@ public class ItemPedidoService {
                 .orElseThrow(() -> new RuntimeException("Item Pedido não encontrado."));
     }
 
-    public List<ItemPedido> findByProduct(Integer productId) {
-        return itemPedidoRepository.findByProduto(productId);
-    }
-
-    public List<ItemPedido> findByOrder(Integer orderId) {
-        return itemPedidoRepository.findByPedido(orderId);
-    }
+    public List<ItemPedido> findByProduct(Integer productId) { return itemPedidoRepository.findByProduto(productId); }
+    public List<ItemPedido> findByOrder(Integer orderId) { return itemPedidoRepository.findByPedido(orderId); }
 }

@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.example.construconectaapisql.model.Usuario;
 import org.example.construconectaapisql.service.UsuarioService;
@@ -49,9 +48,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public List<Usuario> findAllUsers() {
-        return usuarioService.findAllUsers();
-    }
+    public List<Usuario> findAllUsers() { return usuarioService.findAllUsers(); }
 
     @PostMapping("/add")
     @Operation(summary = "Add a new user", description = "Create a new user and saves it to the database")
@@ -114,7 +111,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> deleteUserByUsuarioId(@PathVariable String uid) {
+    public ResponseEntity<?> deleteUserByUsuarioId ( @PathVariable String uid ) {
         try {
             usuarioService.deleteUser(uid);
             return ResponseEntity.ok("Usuário excluído com sucesso");
@@ -129,16 +126,16 @@ public class UsuarioController {
         }
     }
 
-    @PatchMapping("/partialUpdate/{uid}")
-    @Operation(summary = "Update Partially a user", description = "Updates the user data with the specified UID")
+    @PatchMapping("/update/{uid}")
+    @Operation(summary = "Update a user", description = "Updates the user data with the specified UID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User updated successfully.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Usuario.class))),
             @ApiResponse(responseCode = "400", description = "Validation error", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updatePartialUser(@Valid @PathVariable String uid,
-                                               @RequestBody Map<String, Object> updates) {
+    public ResponseEntity<?> updateUser( @Valid @PathVariable String uid,
+                                         @RequestBody Map<String, Object> updates ) {
         try {
             Usuario usuario = usuarioService.findUsersByUid(uid);
 
@@ -216,32 +213,6 @@ public class UsuarioController {
         }
     }
 
-    //Atualiza todos os campos
-    @PutMapping("/updateAll/{uid}")
-    @Transactional
-    public ResponseEntity<?> atualizarProduto(@Valid @PathVariable String uid, @RequestBody Usuario userUpdated) {
-        try {
-            Usuario usuario = usuarioService.findUsersByUid(uid);
-
-            DataBinder binder = new DataBinder(usuario);
-            binder.setValidator(validator);
-            binder.validate();
-            BindingResult result = binder.getBindingResult();
-
-            if (result.hasErrors()) {
-                Map<String, String> errors = validate(result);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-            }
-
-            userUpdated.setUid(uid);
-            usuarioService.saveUsers(userUpdated);
-            return ResponseEntity.ok("Usuário atualizado com sucesso");
-
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário com UID " + uid + " não encontrado.");
-        }
-    }
-
     @GetMapping("/findByUid/{uid}")
     @Operation(summary = "Find user by UID", description = "Returns the user with the specified UID")
     @ApiResponses(value = {
@@ -252,7 +223,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findUsersByUid(@PathVariable String uid) {
+    public ResponseEntity<?> findUsersByUid (@PathVariable String uid) {
         try {
             Usuario usuario = usuarioService.findUsersByUid(uid);
             if (usuario == null) {
@@ -274,9 +245,9 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByNomeCompleto(@PathVariable String nomeCompleto) {
+    public ResponseEntity<?> searchByNomeCompleto ( @PathVariable String nomeCompleto ) {
         List<Usuario> lUsuario = usuarioService.findByNomeCompleto(nomeCompleto);
-        if (!lUsuario.isEmpty()) {
+        if(!lUsuario.isEmpty()) {
             return ResponseEntity.ok(lUsuario);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado.");
@@ -293,9 +264,9 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByNomeUsuario(@PathVariable String nomeUsuario) {
+    public ResponseEntity<?> searchByNomeUsuario ( @PathVariable String nomeUsuario ) {
         List<Usuario> lUsuario = usuarioService.findByNomeUsuario(nomeUsuario);
-        if (!lUsuario.isEmpty()) {
+        if(!lUsuario.isEmpty()) {
             return ResponseEntity.ok(lUsuario);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado.");
@@ -312,9 +283,9 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByCpf(@PathVariable String cpf) {
+    public ResponseEntity<?> searchByCpf ( @PathVariable String cpf ) {
         List<Usuario> lUsuario = usuarioService.findByCpf(cpf);
-        if (!lUsuario.isEmpty()) {
+        if(!lUsuario.isEmpty()) {
             return ResponseEntity.ok(lUsuario);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado.");
@@ -331,9 +302,9 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByEmail(@PathVariable String email) {
+    public ResponseEntity<?> searchByEmail ( @PathVariable String email ) {
         List<Usuario> lUsuario = usuarioService.findByEmail(email);
-        if (!lUsuario.isEmpty()) {
+        if(!lUsuario.isEmpty()) {
             return ResponseEntity.ok(lUsuario);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado.");
@@ -350,7 +321,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByTelefone(@PathVariable String telefone) {
+    public ResponseEntity<?> searchByTelefone ( @PathVariable String telefone ) {
         List<Usuario> lUsuario = usuarioService.findByTelefone(telefone);
         if (!lUsuario.isEmpty()) {
             return ResponseEntity.ok(lUsuario);
@@ -369,7 +340,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByGenero(@PathVariable Integer genero) {
+    public ResponseEntity<?> searchByGenero ( @PathVariable Integer genero ) {
         List<Usuario> lUsuario = usuarioService.findByGenero(genero);
         if (!lUsuario.isEmpty()) {
             return ResponseEntity.ok(lUsuario);
@@ -378,7 +349,7 @@ public class UsuarioController {
         }
     }
 
-    public Map<String, String> validate(BindingResult resultado) {
+    public Map<String, String> validate( BindingResult resultado ) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : resultado.getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());

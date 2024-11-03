@@ -4,24 +4,19 @@ import org.example.construconectaapisql.model.Categoria;
 import org.example.construconectaapisql.repository.CategoriaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
 public class CategoriaService {
     private final CategoriaRepository categoriaRepository;
 
-    public CategoriaService(CategoriaRepository categoriaRepository) {
-        this.categoriaRepository = categoriaRepository;
-    }
+    public CategoriaService(CategoriaRepository categoriaRepository) { this.categoriaRepository = categoriaRepository; }
 
-    public List<Categoria> findAllCategories() {
-        return categoriaRepository.findAll();
-    }
+    public List<Categoria> findAllCategories() { return categoriaRepository.findAll(); }
 
     @Transactional
     public Categoria saveCategories(Categoria categoria) {
-        boolean isUpdate = categoria.getCategoriaId() != null && categoriaRepository.existsById(categoria.getCategoriaId());
+        boolean  isUpdate = categoria.getCategoriaId() != null && categoriaRepository.existsById(categoria.getCategoriaId());
         validateUniqueFields(categoria, isUpdate);
         return categoriaRepository.save(categoria);
     }
@@ -38,9 +33,7 @@ public class CategoriaService {
         return categoria;
     }
 
-    public List<Categoria> findByNome(String nome) {
-        return categoriaRepository.findByNomeLikeIgnoreCase(nome);
-    }
+    public List<Categoria> findByNome(String nome) { return categoriaRepository.findByNomeLikeIgnoreCase(nome); }
 
     public boolean existsByNameIgnoreCase(String nome) {
         return categoriaRepository.existsByNomeIgnoreCase(nome);
