@@ -29,8 +29,22 @@ public class TagServico {
     public TagServico() {
     }
 
+    public TagServico(
+            Long tagServicoId,
+            String nome,
+            BigDecimal precoMedio
+    ) {
+        this.tagServicoId = tagServicoId;
+        this.nome = nome;
+        this.precoMedio = precoMedio;
+    }
+
     public Long getTagServicoId() {
         return tagServicoId;
+    }
+
+    public void setTagServicoId(Long tagServicoId) {
+        this.tagServicoId = tagServicoId;
     }
 
     public String getNome() {
@@ -39,6 +53,10 @@ public class TagServico {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public BigDecimal getPrecoMedio() {
+        return precoMedio;
     }
 
     public void setPrecoMedio(BigDecimal precoMedio) {

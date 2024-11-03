@@ -13,9 +13,7 @@ public class UsuarioService {
 
     public UsuarioService(
             UsuarioRepository usuarioRepository
-    ) {
-        this.usuarioRepository = usuarioRepository;
-    }
+    ) { this.usuarioRepository = usuarioRepository; }
 
     // Retorna todos os usuarios cadastrados
     public List<Usuario> findAllUsers() {
@@ -41,26 +39,17 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado."));
     }
 
-    public List<Usuario> findByNomeCompleto(String nomeCompleto) {
-        return usuarioRepository.findByNomeCompletoLikeIgnoreCase(nomeCompleto);
-    }
-
-    public List<Usuario> findByNomeUsuario(String nomeUsuario) {
-        return usuarioRepository.findByNomeUsuarioLikeIgnoreCase(nomeUsuario);
-    }
-
+    public List<Usuario> findByNomeCompleto(String nomeCompleto) { return usuarioRepository.findByNomeCompletoLikeIgnoreCase(nomeCompleto); }
+    public List<Usuario> findByNomeUsuario(String nomeUsuario) { return usuarioRepository.findByNomeUsuarioLikeIgnoreCase(nomeUsuario); }
     public List<Usuario> findByCpf(String cpf) {
         return usuarioRepository.findByCpf(cpf);
     }
-
     public List<Usuario> findByEmail(String email) {
         return usuarioRepository.findByEmailLikeIgnoreCase(email);
     }
-
     public List<Usuario> findByTelefone(String telefone) {
         return usuarioRepository.findByTelefone(telefone);
     }
-
     public List<Usuario> findByGenero(Integer genero) {
         return usuarioRepository.findByGenero(genero);
     }

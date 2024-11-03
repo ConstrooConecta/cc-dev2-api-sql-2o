@@ -49,6 +49,34 @@ public class Pedido {
     public Pedido() {
     }
 
+    public Pedido(
+            Long pedidoId,
+            String usuario,
+            BigDecimal valorTotal,
+            BigDecimal valorFrete,
+            String cupom,
+            BigDecimal valorDesconto,
+            Date dataPedido,
+            Date dataEntrega
+    ) {
+        this.pedidoId = pedidoId;
+        this.usuario = usuario;
+        this.valorTotal = valorTotal;
+        this.valorFrete = valorFrete;
+        this.cupom = cupom;
+        this.valorDesconto = valorDesconto;
+        this.dataPedido = dataPedido;
+        this.dataEntrega = dataEntrega;
+    }
+
+    public Long getPedidoId() {
+        return pedidoId;
+    }
+
+    public void setPedidoId(Long pedidoId) {
+        this.pedidoId = pedidoId;
+    }
+
     public String getUsuario() {
         return usuario;
     }
@@ -57,16 +85,48 @@ public class Pedido {
         this.usuario = usuario;
     }
 
+    public BigDecimal getValorTotal() {
+        return valorTotal;
+    }
+
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public BigDecimal getValorFrete() {
+        return valorFrete;
     }
 
     public void setValorFrete(BigDecimal valorFrete) {
         this.valorFrete = valorFrete;
     }
 
+    public String getCupom() {
+        return cupom;
+    }
+
+    public void setCupom(String cupom) {
+        this.cupom = cupom;
+    }
+
+    public BigDecimal getValorDesconto() {
+        return valorDesconto;
+    }
+
+    public void setValorDesconto(BigDecimal valorDesconto) {
+        this.valorDesconto = valorDesconto;
+    }
+
+    public Date getDataPedido() {
+        return dataPedido;
+    }
+
     public void setDataPedido(Date dataPedido) {
         this.dataPedido = dataPedido;
+    }
+
+    public Date getDataEntrega() {
+        return dataEntrega;
     }
 
     public void setDataEntrega(Date dataEntrega) {

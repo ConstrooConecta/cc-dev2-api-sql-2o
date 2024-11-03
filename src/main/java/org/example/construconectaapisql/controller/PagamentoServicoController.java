@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.example.construconectaapisql.model.PagamentoServico;
-import org.example.construconectaapisql.model.Usuario;
 import org.example.construconectaapisql.service.PagamentoServicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -49,7 +48,9 @@ public class PagamentoServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public List<PagamentoServico> findAllPaymentsServices() { return pagamentoServicoService.findAllPaymentsServices(); }
+    public List<PagamentoServico> findAllPaymentsServices() {
+        return pagamentoServicoService.findAllPaymentsServices();
+    }
 
     @PostMapping("/add")
     @Operation(summary = "Add a new payment service", description = "Create a new payment service and saves it to the database")
@@ -110,7 +111,7 @@ public class PagamentoServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> deletePaymentServiceById ( @PathVariable Long paymentServiceId ) {
+    public ResponseEntity<?> deletePaymentServiceById(@PathVariable Long paymentServiceId) {
         try {
             pagamentoServicoService.deletePaymentService(paymentServiceId);
             return ResponseEntity.ok("Dados de pagamento de serviço excluídos com sucesso");
@@ -133,8 +134,8 @@ public class PagamentoServicoController {
             @ApiResponse(responseCode = "404", description = "Payment Service not found", content = @Content(mediaType = "text/plain")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> updatePaymentService( @Valid @PathVariable Long paymentServiceId,
-                                         @RequestBody Map<String, Object> updates ) {
+    public ResponseEntity<?> updatePaymentService(@Valid @PathVariable Long paymentServiceId,
+                                                  @RequestBody Map<String, Object> updates) {
         try {
             PagamentoServico paymentService = pagamentoServicoService.findPaymentsServicesById(paymentServiceId);
 
@@ -193,7 +194,7 @@ public class PagamentoServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> findServicePaymentsByServicePaymentId (@PathVariable Long servicePaymentId) {
+    public ResponseEntity<?> findServicePaymentsByServicePaymentId(@PathVariable Long servicePaymentId) {
         try {
             PagamentoServico paymentService = pagamentoServicoService.findPaymentsServicesById(servicePaymentId);
             if (paymentService == null) {
@@ -215,9 +216,9 @@ public class PagamentoServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByServiceId ( @PathVariable Integer serviceId ) {
+    public ResponseEntity<?> searchByServiceId(@PathVariable Integer serviceId) {
         List<PagamentoServico> lServicePayment = pagamentoServicoService.findByServico(serviceId);
-        if(!lServicePayment.isEmpty()) {
+        if (!lServicePayment.isEmpty()) {
             return ResponseEntity.ok(lServicePayment);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dados de pagamento de serviço não encontrados.");
@@ -234,9 +235,9 @@ public class PagamentoServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByPaymentMethod ( @PathVariable String paymentMethod ) {
+    public ResponseEntity<?> searchByPaymentMethod(@PathVariable String paymentMethod) {
         List<PagamentoServico> lServicePayment = pagamentoServicoService.findByTipoPagamento(paymentMethod);
-        if(!lServicePayment.isEmpty()) {
+        if (!lServicePayment.isEmpty()) {
             return ResponseEntity.ok(lServicePayment);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dados de pagamento de serviço não encontrados.");
@@ -253,16 +254,16 @@ public class PagamentoServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByPaymentMethod ( @PathVariable Date paymentDate ) {
+    public ResponseEntity<?> searchByPaymentMethod(@PathVariable Date paymentDate) {
         List<PagamentoServico> lServicePayment = pagamentoServicoService.findByDataPagamento(paymentDate);
-        if(!lServicePayment.isEmpty()) {
+        if (!lServicePayment.isEmpty()) {
             return ResponseEntity.ok(lServicePayment);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dados de pagamento de serviço não encontrados.");
         }
     }
 
-    public Map<String, String> validate( BindingResult resultado ) {
+    public Map<String, String> validate(BindingResult resultado) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : resultado.getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());

@@ -21,24 +21,33 @@ public class ServicoService {
     @Autowired
     private TagServicoRepository tagServicoRepository;
 
-    public ServicoService(ServicoRepository servicoRepository) { this.servicoRepository = servicoRepository; }
+    public ServicoService(ServicoRepository servicoRepository) {
+        this.servicoRepository = servicoRepository;
+    }
 
     // CRUD
     @Transactional
-    public Servico saveServices(Servico servico) { return servicoRepository.save(servico); }
+    public Servico saveServices(Servico servico) {
+        return servicoRepository.save(servico);
+    }
+
     @Transactional
     public Servico deleteService(Long servicoId) {
         Servico servico = findServicoById(servicoId);
         servicoRepository.delete(servico);
         return servico;
     }
-    public List<Servico> findAllServices() { return servicoRepository.findAll(Sort.by(Sort.Direction.ASC, "servicoId")); }
+
+    public List<Servico> findAllServices() {
+        return servicoRepository.findAll(Sort.by(Sort.Direction.ASC, "servicoId"));
+    }
 
     // Other
     public Servico findServicoById(Long servicoId) {
         return servicoRepository.findById(servicoId)
                 .orElseThrow(() -> new RuntimeException("Serviço não encontrado."));
     }
+
     public List<Servico> findByServiceName(String nomeServico) {
         String nomeNormalizado = normalizeString(nomeServico);
         List<Servico> servicos = servicoRepository.findAll();
@@ -46,8 +55,15 @@ public class ServicoService {
                 .filter(c -> normalizeString(c.getNomeServico()).contains(nomeNormalizado))
                 .collect(Collectors.toList());
     }
-    public List<Servico> findByUserId(String usuario) { return servicoRepository.findByUsuario(usuario); }
-    public List<Servico> findByServicesTag(List<TagServico> tagServico) { return servicoRepository.findByTagServicos(new HashSet<>(tagServico)); }
+
+    public List<Servico> findByUserId(String usuario) {
+        return servicoRepository.findByUsuario(usuario);
+    }
+
+    public List<Servico> findByServicesTag(List<TagServico> tagServico) {
+        return servicoRepository.findByTagServicos(new HashSet<>(tagServico));
+    }
+
     public List<TagServico> findByTagServiceName(String nome) {
         String nomeNormalizado = normalizeString(nome);
         List<TagServico> servicos = tagServicoRepository.findAll();

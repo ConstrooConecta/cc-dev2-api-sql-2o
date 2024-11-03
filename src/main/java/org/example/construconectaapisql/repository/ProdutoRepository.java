@@ -10,8 +10,12 @@ import java.util.Set;
 
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     Optional<Produto> findById(Long produtoId);
+
     List<Produto> findByCondicao(Boolean condicao);
+
     List<Produto> findByUsuario(String usuario);
+
     List<Produto> findByTopico(Integer topico);
+
     List<Produto> findByCategorias(Set<Categoria> categorias);
 }

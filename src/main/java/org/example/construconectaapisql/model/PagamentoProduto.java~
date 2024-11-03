@@ -47,7 +47,25 @@ public class PagamentoProduto {
     public PagamentoProduto() {
     }
 
+    public PagamentoProduto(Long pagamentoProdutoId, Integer pedido, String usuario, Date dataPagamento, String tipoPagamento, BigDecimal valorTotal, BigDecimal valorFrete) {
+        this.pagamentoProdutoId = pagamentoProdutoId;
+        this.pedido = pedido;
+        this.usuario = usuario;
+        this.dataPagamento = dataPagamento;
+        this.tipoPagamento = tipoPagamento;
+        this.valorTotal = valorTotal;
+        this.valorFrete = valorFrete;
+    }
+
     // Getters e Setters
+    public Long getPagamentoProdutoId() {
+        return pagamentoProdutoId;
+    }
+
+    public void setPagamentoProdutoId(Long pagamentoProdutoId) {
+        this.pagamentoProdutoId = pagamentoProdutoId;
+    }
+
     public Integer getPedido() {
         return pedido;
     }
@@ -80,8 +98,16 @@ public class PagamentoProduto {
         this.tipoPagamento = tipoPagamento;
     }
 
+    public BigDecimal getValorTotal() {
+        return valorTotal;
+    }
+
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public BigDecimal getValorFrete() {
+        return valorFrete;
     }
 
     public void setValorFrete(BigDecimal valorFrete) {

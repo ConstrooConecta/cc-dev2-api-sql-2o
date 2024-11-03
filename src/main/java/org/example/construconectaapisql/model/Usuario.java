@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
+
 import java.util.Date;
 
 @Entity
@@ -61,14 +62,17 @@ public class Usuario {
     private Integer genero;
 
     // Constructors, Getters and Setters
-    public Usuario() {}
-
-    public String getUid() { return uid; }
-    public void setUid(String uid) { this.uid = uid; }
-
-    public String getNomeCompleto() {
-        return nomeCompleto;
+    public Usuario() {
     }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
     public void setNomeCompleto(String nomeCompleto) {
         this.nomeCompleto = nomeCompleto;
     }
@@ -76,23 +80,27 @@ public class Usuario {
     public String getNomeUsuario() {
         return nomeUsuario;
     }
+
     public void setNomeUsuario(String nomeUsuario) {
         this.nomeUsuario = nomeUsuario;
     }
 
-    public String getCpf() { return cpf; }
-    public void setCpf(String cpf) { this.cpf = cpf; }
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
 
     public String getEmail() {
         return email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getSenha() {
-        return senha;
-    }
     public void setSenha(String senha) {
         this.senha = senha;
     }
@@ -100,19 +108,18 @@ public class Usuario {
     public String getTelefone() {
         return telefone;
     }
+
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
 
-    public Date getDataNascimento() {
-        return dataNascimento;
-    }
     public void setDataNascimento(Date dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
-    public Integer getGenero() { return genero; }
-    public void setGenero(Integer genero) { this.genero = genero; }
+    public void setGenero(Integer genero) {
+        this.genero = genero;
+    }
 
     @Override
     public String toString() {
