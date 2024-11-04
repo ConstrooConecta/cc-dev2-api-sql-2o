@@ -12,6 +12,4 @@ public interface ItemPedidoRepository extends JpaRepository<ItemPedido, Long> {
     List<ItemPedido> findByProduto(Integer produto);
 
     List<ItemPedido> findByPedido(Integer pedido);
-
-    List<ItemPedido> findByUserId(String userId);
 }
