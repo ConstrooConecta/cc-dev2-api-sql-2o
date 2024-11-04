@@ -3,6 +3,7 @@ package org.example.construconectaapisql.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 
@@ -28,7 +29,7 @@ public class Pedido {
 
     @Column(name = "cupom")
     @Schema(description = "Cupom de desconto aplicado ao pedido", example = "CONSTROO20")
-    @Max(value = 20, message = "O cupom deve ter no máximo 20 caracteres")
+    @Size(max = 20, message = "O cupom deve ter no máximo 20 caracteres")
     private String cupom;
 
     @Column(precision = 10, scale = 2, name = "valor_desconto")
