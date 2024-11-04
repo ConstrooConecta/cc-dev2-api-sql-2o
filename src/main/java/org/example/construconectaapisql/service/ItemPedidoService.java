@@ -43,6 +43,4 @@ public class ItemPedidoService {
     }
 
     public List<ItemPedido> findByOrder(Integer orderId) { return itemPedidoRepository.findByPedido(orderId); }
-
-    public List<ItemPedido> findByUserId(String userId) { return itemPedidoRepository.findByUserId(userId); }
 }
