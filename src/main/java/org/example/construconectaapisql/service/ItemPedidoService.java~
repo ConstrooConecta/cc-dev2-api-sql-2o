@@ -42,7 +42,7 @@ public class ItemPedidoService {
         return itemPedidoRepository.findByProduto(productId);
     }
 
-    public List<ItemPedido> findByOrder(Integer orderId) { return itemPedidoRepository.findByPedido(orderId); }
-
-    public List<ItemPedido> findByUserId(String userId) { return itemPedidoRepository.findByUserId(userId); }
+    public List<ItemPedido> findByOrder(Integer orderId) {
+        return itemPedidoRepository.findByPedido(orderId);
+    }
 }

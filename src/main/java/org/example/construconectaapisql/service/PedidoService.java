@@ -65,9 +65,7 @@ public class PedidoService {
                 .orElseThrow(() -> new RuntimeException("Pedido não encontrado."));
     }
 
-    public List<Pedido> findByUsuario(String usuario) {
-        return pedidoRepository.findByUsuario(usuario);
-    }
+    public List<Pedido> findByUsuario(String usuario) { return pedidoRepository.findByUsuario(usuario); }
 
     public List<Pedido> findByCupom(String cupom) {
         return pedidoRepository.findByCupom(cupom);
