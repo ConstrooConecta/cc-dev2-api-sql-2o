@@ -5,7 +5,6 @@ import org.example.construconectaapisql.repository.PagamentoProdutoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -47,7 +46,7 @@ public class PagamentoProdutoService {
         return pagamentoProdutoRepository.findByUsuario(usuario);
     }
 
-    public List<PagamentoProduto> findProductPaymentByDataPagamento(Date dataPagamento) {
+    public List<PagamentoProduto> findProductPaymentByDataPagamento(String dataPagamento) {
         return pagamentoProdutoRepository.findByDataPagamento(dataPagamento);
     }
 

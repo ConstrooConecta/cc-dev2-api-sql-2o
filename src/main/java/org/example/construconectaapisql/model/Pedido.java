@@ -5,11 +5,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Entity
 public class Pedido {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pedido_id")
     @Schema(description = "Identificador Único do pedido", example = "1")
     private Long pedidoId;
@@ -38,13 +38,11 @@ public class Pedido {
 
     @Column(name = "data_pedido", nullable = false)
     @Schema(description = "Data em que o pedido foi realizado")
-    @Temporal(TemporalType.DATE)
-    private Date dataPedido;
+    private String dataPedido;
 
     @Column(name = "data_entrega", nullable = false)
     @Schema(description = "Data estimada para entrega do pedido")
-    @Temporal(TemporalType.DATE)
-    private Date dataEntrega;
+    private String dataEntrega;
 
     // Constructor
     public Pedido() {}
@@ -68,11 +66,11 @@ public class Pedido {
     public BigDecimal getValorDesconto() {return valorDesconto;}
     public void setValorDesconto(BigDecimal valorDesconto) {this.valorDesconto = valorDesconto;}
 
-    public Date getDataPedido() {return dataPedido;}
-    public void setDataPedido(Date dataPedido) {this.dataPedido = dataPedido;}
+    public String getDataPedido() {return dataPedido;}
+    public void setDataPedido(String dataPedido) {this.dataPedido = dataPedido;}
 
-    public Date getDataEntrega() {return dataEntrega;}
-    public void setDataEntrega(Date dataEntrega) {this.dataEntrega = dataEntrega;}
+    public String getDataEntrega() {return dataEntrega;}
+    public void setDataEntrega(String dataEntrega) {this.dataEntrega = dataEntrega;}
 
     @Override
     public String toString() {

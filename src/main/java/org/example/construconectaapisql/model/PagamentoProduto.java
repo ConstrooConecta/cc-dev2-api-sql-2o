@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Entity
 @Table(name = "Pagamento_Produto")
@@ -26,9 +25,8 @@ public class PagamentoProduto {
     private String usuario;
 
     @Column(name = "data_pagamento", nullable = false)
-    @Temporal(TemporalType.DATE)
     @Schema(description = "Data em que o pagamento foi realizado")
-    private Date dataPagamento;
+    private String dataPagamento;
 
     @Column(name = "tipo_pagamento", nullable = false)
     @Size(max = 20, message = "O tipo de pagamento deve ter no máximo 20 caracteres")
@@ -56,8 +54,8 @@ public class PagamentoProduto {
     public String getUsuario() { return usuario; }
     public void setUsuario(String usuario) { this.usuario = usuario; }
 
-    public Date getDataPagamento() { return dataPagamento; }
-    public void setDataPagamento(Date dataPagamento) { this.dataPagamento = dataPagamento; }
+    public String getDataPagamento() { return dataPagamento; }
+    public void setDataPagamento(String dataPagamento) { this.dataPagamento = dataPagamento; }
 
     public String getTipoPagamento() { return tipoPagamento; }
     public void setTipoPagamento(String tipoPagamento) { this.tipoPagamento = tipoPagamento; }

@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
 
-import java.util.Date;
-
 @Entity
 public class Usuario {
     @Id
@@ -52,8 +50,7 @@ public class Usuario {
 
     @Column(name = "data_nascimento", nullable = false)
     @Schema(description = "Data de nascimento do Usuário.")
-    @Temporal(TemporalType.DATE)
-    private Date dataNascimento;
+    private String dataNascimento;
 
     @NotNull(message = "O gênero é obrigatório.")
     @Min(value = 1, message = "O gênero deve ser 1 (masculino), 2 (feminino), 3 (outro) ou 4 (prefiro não dizer).")
@@ -105,10 +102,10 @@ public class Usuario {
         this.telefone = telefone;
     }
 
-    public Date getDataNascimento() {
+    public String getDataNascimento() {
         return dataNascimento;
     }
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(String dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 

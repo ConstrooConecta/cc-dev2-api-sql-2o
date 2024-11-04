@@ -152,7 +152,7 @@ public class PagamentoProdutoController {
 
                 switch (field) {
                     case "dataPagamento":
-                        pagamentoProduto.setDataPagamento((String) entry.getValue());
+                        pagamentoProduto.setDataPagamento((Date) entry.getValue());
                         break;
                     case "tipoPagamento":
                         pagamentoProduto.setTipoPagamento((String) entry.getValue());
@@ -272,7 +272,7 @@ public class PagamentoProdutoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByPaymentDate(@PathVariable String paymentDate) {
+    public ResponseEntity<?> searchByPaymentDate(@PathVariable Date paymentDate) {
         List<PagamentoProduto> lPagamentoProduto = pagamentoProdutoService.findProductPaymentByDataPagamento(paymentDate);
         if (!lPagamentoProduto.isEmpty()) {
             return ResponseEntity.ok(lPagamentoProduto);

@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Entity
 @Table(name = "Pagamento_Servico")
@@ -35,8 +34,7 @@ public class PagamentoServico {
 
     @Column(name = "data_pagamento", nullable = false)
     @Schema(description = "Data em que o pagamento foi realizado", example = "2024-10-13")
-    @Temporal(TemporalType.DATE)
-    private Date dataPagamento;
+    private String dataPagamento;
 
     // Constructor
     public PagamentoServico() {}
@@ -57,8 +55,8 @@ public class PagamentoServico {
     public String getTipoPagamento() { return tipoPagamento; }
     public void setTipoPagamento(String tipoPagamento) { this.tipoPagamento = tipoPagamento; }
 
-    public Date getDataPagamento() { return dataPagamento; }
-    public void setDataPagamento(Date dataPagamento) { this.dataPagamento = dataPagamento; }
+    public String getDataPagamento() { return dataPagamento; }
+    public void setDataPagamento(String dataPagamento) { this.dataPagamento = dataPagamento; }
 
     @Override
     public String toString() {

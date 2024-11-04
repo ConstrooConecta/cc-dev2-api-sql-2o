@@ -172,7 +172,7 @@ public class UsuarioController {
                         usuario.setTelefone((String) entry.getValue());
                         break;
                     case "dataNascimento":
-                        usuario.setDataNascimento((Date) entry.getValue());
+                        usuario.setDataNascimento((String) entry.getValue());
                         break;
                     case "genero":
                         usuario.setGenero((Integer) entry.getValue());
