@@ -195,6 +195,25 @@ public class PedidoController {
         }
     }
 
+    @GetMapping("/findByUserId/{userId}")
+    @Operation(summary = "Search orders by userId", description = "Returns a list of orders with the specified userId")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Orders found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Pedido.class))),
+            @ApiResponse(responseCode = "404", description = "Order not found",
+                    content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "text/plain"))
+    })
+    public ResponseEntity<?> searchByUserId(@PathVariable String userId) {
+        List<Pedido> lOrder = pedidoService.findByUsuario(userId);
+        if (!lOrder.isEmpty()) {
+            return ResponseEntity.ok(lOrder);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não encontrado.");
+        }
+    }
+
     @GetMapping("/findByVoucher/{voucher}")
     @Operation(summary = "Search orders by voucher", description = "Returns a list of orders with the specified voucher")
     @ApiResponses(value = {
