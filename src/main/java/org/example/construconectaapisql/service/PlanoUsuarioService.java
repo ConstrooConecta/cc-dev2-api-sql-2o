@@ -5,7 +5,6 @@ import org.example.construconectaapisql.repository.PlanoUsuarioRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -48,11 +47,11 @@ public class PlanoUsuarioService {
         return planoUsuarioRepository.findByPlano(plano);
     }
 
-    public List<PlanoUsuario> findUserPlanByDataAssinatura(Date dataAssinatura) {
+    public List<PlanoUsuario> findUserPlanByDataAssinatura(String dataAssinatura) {
         return planoUsuarioRepository.findByDataAssinatura(dataAssinatura);
     }
 
-    public List<PlanoUsuario> findUserPlanByDataFinal(Date dataFinal) {
+    public List<PlanoUsuario> findUserPlanByDataFinal(String dataFinal) {
         return planoUsuarioRepository.findByDataFinal(dataFinal);
     }
 

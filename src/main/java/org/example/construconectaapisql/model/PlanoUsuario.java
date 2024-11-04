@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
-import java.util.Date;
 
 @Entity
 @Table(name = "Plano_Usuario")
@@ -26,13 +25,11 @@ public class PlanoUsuario {
 
     @Column(name = "data_assinatura", nullable = false)
     @Schema(description = "Data de assinatura do Plano adquirido")
-    @Temporal(TemporalType.DATE)
-    private Date dataAssinatura;
+    private String dataAssinatura;
 
     @Column(name = "data_final", nullable = false)
     @Schema(description = "Data de expiração do Plano adquirido")
-    @Temporal(TemporalType.DATE)
-    private Date dataFinal;
+    private String dataFinal;
 
     // Constructor
     public PlanoUsuario() {}
@@ -47,11 +44,11 @@ public class PlanoUsuario {
     public Integer getPlano() { return plano; }
     public void setPlano(Integer plano) { this.plano = plano; }
 
-    public Date getDataAssinatura() { return dataAssinatura; }
-    public void setDataAssinatura(Date dataAssinatura) { this.dataAssinatura = dataAssinatura; }
+    public String getDataAssinatura() { return dataAssinatura; }
+    public void setDataAssinatura(String dataAssinatura) { this.dataAssinatura = dataAssinatura; }
 
-    public Date getDataFinal() { return dataFinal; }
-    public void setDataFinal(Date dataFinal) { this.dataFinal = dataFinal; }
+    public String getDataFinal() { return dataFinal; }
+    public void setDataFinal(String dataFinal) { this.dataFinal = dataFinal; }
 
     @Override
     public String toString() {

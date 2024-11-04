@@ -143,10 +143,10 @@ public class PedidoController {
 
                 switch (field) {
                     case "dataPedido":
-                        order.setDataPedido((Date) entry.getValue());
+                        order.setDataPedido((String) entry.getValue());
                         break;
                     case "dataEntrega":
-                        order.setDataEntrega((Date) entry.getValue());
+                        order.setDataEntrega((String) entry.getValue());
                         break;
                     default:
                         // Este default nunca será alcançado devido à verificação da lista `validFields`
@@ -243,7 +243,7 @@ public class PedidoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByOrderDate(@PathVariable Date orderDate) {
+    public ResponseEntity<?> searchByOrderDate(@PathVariable String orderDate) {
         List<Pedido> lOrder = pedidoService.findByDataPedido(orderDate);
         if (!lOrder.isEmpty()) {
             return ResponseEntity.ok(lOrder);
@@ -262,7 +262,7 @@ public class PedidoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByDeliveryDate(@PathVariable Date deliveryDate) {
+    public ResponseEntity<?> searchByDeliveryDate(@PathVariable String deliveryDate) {
         List<Pedido> lOrder = pedidoService.findByDataEntrega(deliveryDate);
         if (!lOrder.isEmpty()) {
             return ResponseEntity.ok(lOrder);

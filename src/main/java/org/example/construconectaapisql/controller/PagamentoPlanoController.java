@@ -161,7 +161,7 @@ public class PagamentoPlanoController {
                         pagamentoPlano.setTipoPagamento((String) entry.getValue());
                         break;
                     case "dataPagamento":
-                        pagamentoPlano.setDataPagamento((Date) entry.getValue());
+                        pagamentoPlano.setDataPagamento((String) entry.getValue());
                         break;
                     default:
                         // Este default nunca será alcançado devido à verificação da lista `validFields`
@@ -273,7 +273,7 @@ public class PagamentoPlanoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByDtPagamento(@PathVariable Date dataPagamento) {
+    public ResponseEntity<?> searchByDtPagamento(@PathVariable String dataPagamento) {
         List<PagamentoPlano> lPagamentoPlano = pagamentoPlanoService.findByDataPagamento(dataPagamento);
         if (!lPagamentoPlano.isEmpty()) {
             return ResponseEntity.ok(lPagamentoPlano);

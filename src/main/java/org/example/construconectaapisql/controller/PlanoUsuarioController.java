@@ -245,7 +245,7 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByDataAssinatura(@PathVariable Date dataAssinatura) {
+    public ResponseEntity<?> searchByDataAssinatura(@PathVariable String dataAssinatura) {
         List<PlanoUsuario> lPlanoUsuario = planoUsuarioService.findUserPlanByDataAssinatura(dataAssinatura);
         if (!lPlanoUsuario.isEmpty()) {
             return ResponseEntity.ok(lPlanoUsuario);
@@ -264,7 +264,7 @@ public class PlanoUsuarioController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByDataFinal(@PathVariable Date dataFinal) {
+    public ResponseEntity<?> searchByDataFinal(@PathVariable String dataFinal) {
         List<PlanoUsuario> lPlanoUsuario = planoUsuarioService.findUserPlanByDataFinal(dataFinal);
         if (!lPlanoUsuario.isEmpty()) {
             return ResponseEntity.ok(lPlanoUsuario);

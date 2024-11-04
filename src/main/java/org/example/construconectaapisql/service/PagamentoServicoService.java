@@ -5,7 +5,6 @@ import org.example.construconectaapisql.repository.PagamentoServicoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -53,7 +52,7 @@ public class PagamentoServicoService {
         return pagamentoServicoRepository.findByTipoPagamentoLikeIgnoreCase(tipoPagamento);
     }
 
-    public List<PagamentoServico> findByDataPagamento(Date dataPagamento) {
+    public List<PagamentoServico> findByDataPagamento(String dataPagamento) {
         return pagamentoServicoRepository.findByDataPagamento(dataPagamento);
     }
 }

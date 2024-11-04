@@ -157,7 +157,7 @@ public class PagamentoServicoController {
                         paymentService.setTipoPagamento((String) entry.getValue());
                         break;
                     case "dataPagamento":
-                        paymentService.setDataPagamento((Date) entry.getValue());
+                        paymentService.setDataPagamento((String) entry.getValue());
                         break;
                     default:
                         // Este default nunca será alcançado devido à verificação da lista `validFields`
@@ -254,7 +254,7 @@ public class PagamentoServicoController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(mediaType = "text/plain"))
     })
-    public ResponseEntity<?> searchByPaymentMethod(@PathVariable Date paymentDate) {
+    public ResponseEntity<?> searchByPaymentDate(@PathVariable String paymentDate) {
         List<PagamentoServico> lServicePayment = pagamentoServicoService.findByDataPagamento(paymentDate);
         if (!lServicePayment.isEmpty()) {
             return ResponseEntity.ok(lServicePayment);

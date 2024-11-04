@@ -3,7 +3,6 @@ package org.example.construconectaapisql.repository;
 import org.example.construconectaapisql.model.PagamentoServico;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,5 +15,5 @@ public interface PagamentoServicoRepository extends JpaRepository<PagamentoServi
 
     List<PagamentoServico> findByTipoPagamentoLikeIgnoreCase(String tipoPagamento);
 
-    List<PagamentoServico> findByDataPagamento(Date dataPagamento);
+    List<PagamentoServico> findByDataPagamento(String dataPagamento);
 }

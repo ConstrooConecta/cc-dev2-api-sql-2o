@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -71,11 +70,11 @@ public class PedidoService {
         return pedidoRepository.findByCupom(cupom);
     }
 
-    public List<Pedido> findByDataPedido(Date dataPedido) {
+    public List<Pedido> findByDataPedido(String dataPedido) {
         return pedidoRepository.findByDataPedido(dataPedido);
     }
 
-    public List<Pedido> findByDataEntrega(Date dataEntrega) {
+    public List<Pedido> findByDataEntrega(String dataEntrega) {
         return pedidoRepository.findByDataEntrega(dataEntrega);
     }
 }
