@@ -189,6 +189,25 @@ public class ItemPedidoController {
         }
     }
 
+    @GetMapping("/findByUserId()/{userId}")
+    @Operation(summary = "Search order item by userId", description = "Returns a list of order item with the specified userId")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Order Items found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ItemPedido.class))),
+            @ApiResponse(responseCode = "404", description = "Order Item not found",
+                    content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "text/plain"))
+    })
+    public ResponseEntity<?> searchByUserId(@PathVariable String userId) {
+        List<ItemPedido> lOrderItem = itemPedidoService.findByUserId(userId);
+        if (!lOrderItem.isEmpty()) {
+            return ResponseEntity.ok(lOrderItem);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Item Pedido não encontrado.");
+        }
+    }
+
     public Map<String, String> validate(BindingResult resultado) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : resultado.getFieldErrors()) {

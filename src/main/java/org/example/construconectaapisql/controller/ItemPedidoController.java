@@ -189,7 +189,7 @@ public class ItemPedidoController {
         }
     }
 
-    @GetMapping("/findByUserId()/{userId}")
+    @GetMapping("/findByUserId/{userId}")
     @Operation(summary = "Search order item by userId", description = "Returns a list of order item with the specified userId")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Order Items found",
