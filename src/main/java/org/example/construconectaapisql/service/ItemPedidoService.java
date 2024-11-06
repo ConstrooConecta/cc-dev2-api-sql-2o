@@ -38,9 +38,7 @@ public class ItemPedidoService {
                 .orElseThrow(() -> new RuntimeException("Item Pedido não encontrado."));
     }
 
-    public List<ItemPedido> findByProduct(Integer productId) {
-        return itemPedidoRepository.findByProduto(productId);
-    }
+    public List<ItemPedido> findByProduct(Integer productId) { return itemPedidoRepository.findByProduto(productId); }
 
     public List<ItemPedido> findByOrder(Integer orderId) { return itemPedidoRepository.findByPedido(orderId); }
 }
