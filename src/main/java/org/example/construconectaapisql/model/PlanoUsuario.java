@@ -1,65 +1,63 @@
 package org.example.construconectaapisql.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import java.util.Date;
+import jakarta.validation.constraints.Size;
+
 
 @Entity
+@Table(name = "Plano_Usuario")
 public class PlanoUsuario {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "plano_usuario_id")
+    @Schema(description = "Identificador único do Plano do Usuário", example = "1")
     private Long planoUsuarioId;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @Column(name = "usuario_id", nullable = false)
+    @Size(min = 28, max = 28, message = "O nome do usuário deve ter 28 caracteres")
+    @Schema(description = "UID do Usuário que possui um Plano", example = "TwbSHSFVasyefyw42SFJAIoQDjJA")
+    private String usuario;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "plano_id", nullable = false)
-    private Plano plano;
+    @Column(name = "plano_id", nullable = false)
+    @Schema(description = "Identificador único do Plano", example = "2")
+    private Integer plano;
 
-    @NotNull
-    @Temporal(TemporalType.DATE)
-    private Date dataAssinatura;
+    @Column(name = "data_assinatura", nullable = false)
+    @Schema(description = "Data de assinatura do Plano adquirido")
+    private String dataAssinatura;
 
-    @Temporal(TemporalType.DATE)
-    private Date dataFinal;
+    @Column(name = "data_final", nullable = false)
+    @Schema(description = "Data de expiração do Plano adquirido")
+    private String dataFinal;
 
-    @NotNull
-    private Boolean ativacao;
-
-    // Constructors, Getters and Setters
+    // Constructor
     public PlanoUsuario() {}
-
-    public PlanoUsuario(Long planoUsuarioId, Usuario usuario, Plano plano, Date dataAssinatura, Date dataFinal, Boolean ativacao) {
-        this.planoUsuarioId = planoUsuarioId;
-        this.usuario = usuario;
-        this.plano = plano;
-        this.dataAssinatura = dataAssinatura;
-        this.dataFinal = dataFinal;
-        this.ativacao = ativacao;
-    }
 
     // Getters and Setters
     public Long getPlanoUsuarioId() { return planoUsuarioId; }
     public void setPlanoUsuarioId(Long planoUsuarioId) { this.planoUsuarioId = planoUsuarioId; }
 
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public String getUsuario() { return usuario; }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
 
-    public Plano getPlano() { return plano; }
-    public void setPlano(Plano plano) { this.plano = plano; }
+    public Integer getPlano() { return plano; }
+    public void setPlano(Integer plano) { this.plano = plano; }
 
-    public Date getDataAssinatura() { return dataAssinatura; }
-    public void setDataAssinatura(Date dataAssinatura) { this.dataAssinatura = dataAssinatura; }
+    public String getDataAssinatura() { return dataAssinatura; }
+    public void setDataAssinatura(String dataAssinatura) { this.dataAssinatura = dataAssinatura; }
 
-    public Date getDataFinal() { return dataFinal; }
-    public void setDataFinal(Date dataFinal) { this.dataFinal = dataFinal; }
+    public String getDataFinal() { return dataFinal; }
+    public void setDataFinal(String dataFinal) { this.dataFinal = dataFinal; }
 
-    public Boolean getAtivacao() { return ativacao; }
-    public void setAtivacao(Boolean ativacao) { this.ativacao = ativacao; }
+    @Override
+    public String toString() {
+        return "PlanoUsuario{" +
+                "planoUsuarioId=" + planoUsuarioId +
+                ", usuario='" + usuario + '\'' +
+                ", plano=" + plano +
+                ", dataAssinatura=" + dataAssinatura +
+                ", dataFinal=" + dataFinal +
+                '}';
+    }
 }

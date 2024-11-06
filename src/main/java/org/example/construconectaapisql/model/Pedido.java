@@ -1,66 +1,89 @@
 package org.example.construconectaapisql.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Size;
+
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Entity
 public class Pedido {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pedido_id")
+    @Schema(description = "Identificador Único do pedido", example = "1")
     private Long pedidoId;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @Column(name = "usuario_id", nullable = false)
+    @Schema(description = "UID do usuário que fez o pedido", example = "TwbSHSFVasyefyw42SFJAIoQDjJA")
+    private String usuario;
 
-    @NotNull
-    @Temporal(TemporalType.DATE)
-    private Date dataPedido;
-
-    @NotNull
-    @Column(precision = 10, scale = 2, nullable = false)
+    @Column(precision = 10, scale = 2, name = "valor_total", nullable = false)
+    @Schema(description = "Valor total do pedido", example = "159.99")
     private BigDecimal valorTotal;
 
-    @NotNull
-    private Boolean pagamentoConcluido;
+    @Column(precision = 10, scale = 2, name = "valor_frete", nullable = false)
+    @Schema(description = "Valor total do frete", example = "7.99")
+    private BigDecimal valorFrete;
 
-    @ManyToOne
-    @JoinColumn(name = "carrinho_id", nullable = false)
-    private Carrinho carrinho;
+    @Column(name = "cupom")
+    @Schema(description = "Cupom de desconto aplicado ao pedido", example = "CONSTROO20")
+    @Size(max = 20, message = "O cupom deve ter no máximo 20 caracteres")
+    private String cupom;
 
-    // Constructors, Getters and Setters
+    @Column(precision = 10, scale = 2, name = "valor_desconto")
+    @Max(value = 1, message = "A porcentagem de desconto deve ser entre 0.0 e 1.0")
+    @Schema(description = "Valor do desconto (em porcentagem) oferecido pelo cupom", example = "0.20")
+    private BigDecimal valorDesconto;
+
+    @Column(name = "data_pedido", nullable = false)
+    @Schema(description = "Data em que o pedido foi realizado")
+    private String dataPedido;
+
+    @Column(name = "data_entrega", nullable = false)
+    @Schema(description = "Data estimada para entrega do pedido")
+    private String dataEntrega;
+
+    // Constructor
     public Pedido() {}
-
-    public Pedido(Long pedidoId, Usuario usuario, Date dataPedido, BigDecimal valorTotal, Boolean pagamentoConcluido, Carrinho carrinho) {
-        this.pedidoId = pedidoId;
-        this.usuario = usuario;
-        this.dataPedido = dataPedido;
-        this.valorTotal = valorTotal;
-        this.pagamentoConcluido = pagamentoConcluido;
-        this.carrinho = carrinho;
-    }
 
     // Getters and Setters
     public Long getPedidoId() { return pedidoId; }
     public void setPedidoId(Long pedidoId) { this.pedidoId = pedidoId; }
 
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public String getUsuario() {return usuario;}
+    public void setUsuario(String usuario) {this.usuario = usuario;}
 
-    public Date getDataPedido() { return dataPedido; }
-    public void setDataPedido(Date dataPedido) { this.dataPedido = dataPedido; }
+    public BigDecimal getValorTotal() {return valorTotal;}
+    public void setValorTotal(BigDecimal valorTotal) {this.valorTotal = valorTotal;}
 
-    public BigDecimal getValorTotal() { return valorTotal; }
-    public void setValorTotal(BigDecimal valorTotal) { this.valorTotal = valorTotal; }
+    public BigDecimal getValorFrete() {return valorFrete;}
+    public void setValorFrete(BigDecimal valorFrete) {this.valorFrete = valorFrete;}
 
-    public Boolean getPagamentoConcluido() { return pagamentoConcluido; }
-    public void setPagamentoConcluido(Boolean pagamentoConcluido) { this.pagamentoConcluido = pagamentoConcluido; }
+    public String getCupom() {return cupom;}
+    public void setCupom(String cupom) {this.cupom = cupom;}
 
-    public Carrinho getCarrinho() { return carrinho; }
-    public void setCarrinho(Carrinho carrinho) { this.carrinho = carrinho; }
+    public BigDecimal getValorDesconto() {return valorDesconto;}
+    public void setValorDesconto(BigDecimal valorDesconto) {this.valorDesconto = valorDesconto;}
+
+    public String getDataPedido() {return dataPedido;}
+    public void setDataPedido(String dataPedido) {this.dataPedido = dataPedido;}
+
+    public String getDataEntrega() {return dataEntrega;}
+    public void setDataEntrega(String dataEntrega) {this.dataEntrega = dataEntrega;}
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "pedidoId=" + pedidoId +
+                ", usuario='" + usuario + '\'' +
+                ", valorTotal=" + valorTotal +
+                ", valorFrete=" + valorFrete +
+                ", cupom='" + cupom + '\'' +
+                ", valorDesconto=" + valorDesconto +
+                ", dataPedido=" + dataPedido +
+                ", dataEntrega=" + dataEntrega +
+                '}';
+    }
 }

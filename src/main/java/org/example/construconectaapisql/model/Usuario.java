@@ -1,130 +1,78 @@
 package org.example.construconectaapisql.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
-import java.util.Date;
-import java.util.Set;
 
 @Entity
 public class Usuario {
-
     @Id
-    @Column(name = "uuid", nullable = false, unique = true)
-    @Size(min = 36, max = 36, message = "O UUID inválido")
-    private String uuid;
-
-    @CPF(message = "CPF Inválido!")
-    @Column(nullable = false, unique = true)
-    @Size(min = 11, max = 11, message = "O CPF deve ter exatamente 11 caracteres")
-    private String cpf;
+    @Column(name = "uid", nullable = false, unique = true)
+    @Size(min = 28, max = 28, message = "O UID deve ter 28 caracteres.")
+    @Schema(description = "UID do Usuário.", example = "TwbSHSFVasyefyw42SFJAIoQDjJA")
+    private String uid;
 
     @Column(name = "nome_completo", nullable = false)
-    @Size(min = 6, max = 300, message = "O nome deve ter no mínimo 6 e no máximo 300 caracteres")
+    @NotBlank(message = "O nome completo é obrigatório.")
+    @Size(min = 5, max = 300, message = "O nome completo deve ter entre 5 e 100 caracteres.")
+    @Schema(description = "Nome Completo do Usuário.", example = "Olecram Olodom ad Avlis")
     private String nomeCompleto;
 
     @Column(name = "nome_usuario", nullable = false, unique = true)
-    @Size(min = 4, max = 20, message = "O nome de usuário deve ter no mínimo 4 e no máximo 20 caracteres")
+    @NotBlank(message = "O nome de usuário é obrigatório.")
+    @Size(min = 5, max = 20, message = "O nome de usuário deve ter entre 5 e 20 caracteres.")
+    @Pattern(regexp = "^[a-zA-Z0-9._]+$", message = "O nome de usuário deve conter apenas letras, números, pontos e sublinhados.")
+    @Schema(description = "Nome de usuário (identifação) do Usuário (no aplicativo). O nome de usuário deve conter apenas letras, números, pontos e sublinhados.", example = "olecram.olodom24")
     private String nomeUsuario;
 
-    @Column(nullable = false, unique = true)
-    @Size(max = 250, message = "O e-mail deve ter no máximo 250 caracteres.")
+    @CPF(message = "CPF Inválido!")
+    @NotBlank(message = "O CPF é obrigatório.")
+    @Pattern(regexp = "\\d{11}", message = "O CPF deve ter 11 dígitos.")
+    @Schema(description = "Cadastro de Pessoa Física do Usuário (válido).", example = "12345678910")
+    private String cpf;
+
+    @Email(message = "O e-mail deve ser válido.")
+    @Size(min = 5, max = 250, message = "O e-mail deve ter no mínimo 5 e no máximo 250 caracteres.")
+    @NotBlank(message = "O e-mail é obrigatório.")
+    @Schema(description = "E-mail do Usuário.", example = "olecramolodum@adsilva.com")
     private String email;
 
-    @NotNull
-    @Size(min = 8, max = 500, message = "A senha deve ter no mínimo 8 e no máximo 500 caracteres")
+    @NotBlank(message = "A senha é obrigatória.")
+    @Size(min = 8, max = 500, message = "A senha deve ter pelo menos 8 caracteres e no máximo 500.")
+    @Schema(description = "Senha do Usuário.", example = "admin123")
     private String senha;
 
-    @NotNull
-    @Size(min = 10, max = 15, message = "O telefone deve ter entre 10 e 15 caracteres")
+    @NotBlank(message = "O telefone é obrigatório.")
+    @Pattern(regexp = "^\\d{11}$", message = "O telefone deve ter 11 dígitos.")
+    @Schema(description = "Telefone do Usuário.", example = "11991234568")
     private String telefone;
 
-    @NotNull
+    @Column(name = "data_nascimento", nullable = false)
+    @Schema(description = "Data de nascimento do Usuário.")
+    private String dataNascimento;
+
+    @NotNull(message = "O gênero é obrigatório.")
+    @Min(value = 1, message = "O gênero deve ser 1 (masculino), 2 (feminino), 3 (outro) ou 4 (prefiro não dizer).")
+    @Max(value = 4, message = "O gênero deve ser 1 (masculino), 2 (feminino), 3 (outro) ou 4 (prefiro não dizer).")
+    @Schema(description = "Gênero do Usuário - 1 (masculino), 2 (feminino), 3 (outro) ou 4 (prefiro não dizer).", example = "3")
     private Integer genero;
 
-    @Column(name = "data_nascimento", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date dataNascimento;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "usuario")
-    private Set<EnderecoUsuario> enderecos;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "usuario")
-    private Set<PlanoUsuario> planosUsuarios;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "usuario")
-    private Set<PagamentoPlano> pagamentosPlanos;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "usuario")
-    private Set<Produto> produtos;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "usuario")
-    private Set<Servico> servicos;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "usuario")
-    private Set<Carrinho> carrinhos;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "usuario")
-    private Set<Pedido> pedidos;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "usuario")
-    private Set<PagamentoProduto> pagamentosProdutos;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "usuario")
-    private Set<PagamentoServico> pagamentosServicos;
-
-    // Constructors, Getters and Setters
-    public Usuario() {}
-
-    public Usuario(
-            String uuid,
-            String cpf,
-            String nomeCompleto,
-            String nomeUsuario,
-            String email,
-            String senha,
-            String telefone,
-            Integer genero,
-            Date dataNascimento
-    ) {
-        this.uuid = uuid;
-        this.cpf = cpf;
-        this.nomeCompleto = nomeCompleto;
-        this.nomeUsuario = nomeUsuario;
-        this.email = email;
-        this.senha = senha;
-        this.telefone = telefone;
-        this.genero = genero;
-        this.dataNascimento = dataNascimento;
+    // Constructor
+    public Usuario() {
     }
 
-    public String getUuid() { return uuid; }
-
-    public void setUuid(String uuid) { this.uuid = uuid; }
-
-    public String getCpf() {
-        return cpf;
+    // Getters and Setters
+    public String getUid() {
+        return uid;
     }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getNomeCompleto() {
         return nomeCompleto;
     }
-
     public void setNomeCompleto(String nomeCompleto) {
         this.nomeCompleto = nomeCompleto;
     }
@@ -132,144 +80,54 @@ public class Usuario {
     public String getNomeUsuario() {
         return nomeUsuario;
     }
-
     public void setNomeUsuario(String nomeUsuario) {
         this.nomeUsuario = nomeUsuario;
     }
 
-    public String getEmail() {
-        return email;
+    public String getCpf() { return cpf; }
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
 
     public String getTelefone() {
         return telefone;
     }
-
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public String getDataNascimento() {
+        return dataNascimento;
+    }
+    public void setDataNascimento(String dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 
     public Integer getGenero() {
         return genero;
     }
-
     public void setGenero(Integer genero) {
         this.genero = genero;
-    }
-
-    public Date getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public void setDataNascimento(Date dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
-
-    public Set<EnderecoUsuario> getEnderecos() {
-        return enderecos;
-    }
-
-    public void setEnderecos(Set<EnderecoUsuario> enderecos) {
-        this.enderecos = enderecos;
-    }
-
-    public Set<PlanoUsuario> getPlanosUsuarios() {
-        return planosUsuarios;
-    }
-
-    public void setPlanosUsuarios(Set<PlanoUsuario> planosUsuarios) {
-        this.planosUsuarios = planosUsuarios;
-    }
-
-    public Set<PagamentoPlano> getPagamentosPlanos() {
-        return pagamentosPlanos;
-    }
-
-    public void setPagamentosPlanos(Set<PagamentoPlano> pagamentosPlanos) {
-        this.pagamentosPlanos = pagamentosPlanos;
-    }
-
-    public Set<Produto> getProdutos() {
-        return produtos;
-    }
-
-    public void setProdutos(Set<Produto> produtos) {
-        this.produtos = produtos;
-    }
-
-    public Set<Servico> getServicos() {
-        return servicos;
-    }
-
-    public void setServicos(Set<Servico> servicos) {
-        this.servicos = servicos;
-    }
-
-    public Set<Carrinho> getCarrinhos() {
-        return carrinhos;
-    }
-
-    public void setCarrinhos(Set<Carrinho> carrinhos) {
-        this.carrinhos = carrinhos;
-    }
-
-    public Set<Pedido> getPedidos() {
-        return pedidos;
-    }
-
-    public void setPedidos(Set<Pedido> pedidos) {
-        this.pedidos = pedidos;
-    }
-
-    public Set<PagamentoProduto> getPagamentosProdutos() {
-        return pagamentosProdutos;
-    }
-
-    public void setPagamentosProdutos(Set<PagamentoProduto> pagamentosProdutos) {
-        this.pagamentosProdutos = pagamentosProdutos;
-    }
-
-    public Set<PagamentoServico> getPagamentosServicos() {
-        return pagamentosServicos;
-    }
-
-    public void setPagamentosServicos(Set<PagamentoServico> pagamentosServicos) {
-        this.pagamentosServicos = pagamentosServicos;
     }
 
     @Override
     public String toString() {
         return "Usuario{" +
-                "uuid='" + uuid + '\'' +
-                ", cpf='" + cpf + '\'' +
+                "uid='" + uid + '\'' +
                 ", nomeCompleto='" + nomeCompleto + '\'' +
                 ", nomeUsuario='" + nomeUsuario + '\'' +
+                ", cpf='" + cpf + '\'' +
                 ", email='" + email + '\'' +
                 ", senha='" + senha + '\'' +
                 ", telefone='" + telefone + '\'' +
-                ", genero=" + genero +
                 ", dataNascimento=" + dataNascimento +
-                ", enderecos=" + enderecos +
-                ", planosUsuarios=" + planosUsuarios +
-                ", pagamentosPlanos=" + pagamentosPlanos +
-                ", produtos=" + produtos +
-                ", servicos=" + servicos +
-                ", carrinhos=" + carrinhos +
-                ", pedidos=" + pedidos +
-                ", pagamentosProdutos=" + pagamentosProdutos +
-                ", pagamentosServicos=" + pagamentosServicos +
+                ", genero=" + genero +
                 '}';
     }
 }
