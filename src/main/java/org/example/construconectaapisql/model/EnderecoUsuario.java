@@ -54,7 +54,7 @@ public class EnderecoUsuario {
     private String usuario;
 
     // Constructor
-    public EnderecoUsuario() {}
+    public EnderecoUsuario() { }
 
     // Getters and Setters
     public Long getEnderecoUsuarioId() { return enderecoUsuarioId; }
